@@ -7,6 +7,8 @@ from tkinter.filedialog import askdirectory
 import itertools
 import shlex
 from decimal import Decimal
+import pandas as pd
+from tabulate import tabulate
 
 #connect database
 db = pymysql.connect(
@@ -164,23 +166,33 @@ def clickClearButtonAT(inputEntry,select,table,position):
 
 
         
-def clickExportButtonAT(auger_window,transition_table,atom_name):
+def clickExportButtonAT(auger_window,transition_table,atom_name,position):
+    
     if transition_table.set(1,'#3')=='':
         tkinter.messagebox.showinfo(title='ERROR',message='Please input or select',parent=auger_window)
     else:
         reminderBox=tkinter.messagebox.askquestion('Confirmation','Do you want to continue?',parent=auger_window)
         if reminderBox=='yes':
             file_path=askdirectory(parent=auger_window)
-            if file_path!='':               
-                print(file_path)
-                print(atom_name)
+            if file_path!='':  
+ 
+                table_header = ['Auger Transition', 'Auger Energies (KE)', 'Auger Energies (BE)']
+                table_data=[]
+                for p in range(position):
+                    temp=[]
+                    temp.append(transition_table.set(p+1,'#1'))
+                    temp.append(transition_table.set(p+1,'#2'))
+                    temp.append(transition_table.set(p+1,'#3'))
+                    table_data.append(temp)
+
                 select_value=float(transition_table.set(1,'#2'))+float(transition_table.set(1,'#3'))
                 select_value=Decimal(select_value).quantize(Decimal('0.00'))
                 select_value=str(select_value)
-                print(select_value)
                 file_path=file_path+'/'+'auger_transition_'+atom_name+'_'+select_value+'.txt'
+                
                 with open(file_path,"w") as f:
-                    f.write("这是个测试！")
+                    f.write(tabulate(table_data, headers=table_header))
+                    
             else:
                 pass
         
@@ -358,7 +370,7 @@ def augerTransitionGUI(index):
     clearButton.place(x=1065,y=30)
     
     
-    exportButton=tkinter.Button(auger_window,text='Export',bg='LightBlue',command=lambda: clickExportButtonAT(auger_window,transition_table,atom_name))
+    exportButton=tkinter.Button(auger_window,text='Export',bg='LightBlue',command=lambda: clickExportButtonAT(auger_window,transition_table,atom_name,position))
     exportButton.place(x=1140,y=30)
     
 
