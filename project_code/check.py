@@ -397,14 +397,16 @@ def augerTransitionGUI(index):
 #----------------------------------------------------------------------------------------
 #---------------------------------------------------------------------------------------- 
 #All about rangeGUI 
-def clickDescendingButton(range_window,transition_table,all_transitions,position):
+def clickSortButton(transition_table,position,descending):
     position_energies=dict()
     for p in range(position):
         p+=1
         position_energies[p]=float(transition_table.set(p,'#3'))
 
-
-    sort_position=sorted(position_energies.items(),key=lambda x:x[1],reverse=True)
+    if descending==True:
+        sort_position=sorted(position_energies.items(),key=lambda x:x[1],reverse=True)
+    else:
+        sort_position=sorted(position_energies.items(),key=lambda x:x[1],reverse=False)
     
     new_table=[]
     for i in sort_position:
@@ -420,7 +422,30 @@ def clickDescendingButton(range_window,transition_table,all_transitions,position
         transition_table.set(p,'#1',new_table[p-1][0])
         transition_table.set(p,'#2',new_table[p-1][1])
         transition_table.set(p,'#3',new_table[p-1][2])
-       
+ 
+
+def clickNumberButton(all_transitions,transition_table,position):
+    new_table=[]
+    for atom_name in all_transitions:   
+        current_transitions=all_transitions[atom_name]
+        for transition in current_transitions:
+            temp=[]
+            temp.append(atom_name)
+            temp.append(transition)
+            temp.append(current_transitions[transition])
+            new_table.append(temp)
+    
+        
+        
+    for p in range(position):
+        p+=1
+        transition_table.set(p,'#1',new_table[p-1][0])
+        transition_table.set(p,'#2',new_table[p-1][1])
+        transition_table.set(p,'#3',new_table[p-1][2])
+
+    
+    
+      
 
 def rangeGUI(selectBE,selectKE,fromEntry,toEntry,selectValue):
     range_window=tkinter.Tk()
@@ -496,11 +521,11 @@ def rangeGUI(selectBE,selectKE,fromEntry,toEntry,selectValue):
     transition_table.configure(yscrollcommand=ybar.set)
     ybar.place(relx=0.95, rely=0.02, relwidth=0.035, relheight=0.958)
     
-    descendingButton=tkinter.Button(range_window,text='Descending order (energies)',bg='LightPink',command=lambda: clickDescendingButton(range_window,transition_table,all_transitions,position))
+    descendingButton=tkinter.Button(range_window,text='Descending order (energies)',bg='LightPink',command=lambda: clickSortButton(transition_table,position,descending=True))
     descendingButton.place(x=900,y=50)
-    ascendingButton=tkinter.Button(range_window,text='Ascending order (energies)',bg='LightBlue')
+    ascendingButton=tkinter.Button(range_window,text='Ascending order (energies)',bg='LightBlue',command=lambda: clickSortButton(transition_table,position,descending=False))
     ascendingButton.place(x=900,y=100)
-    numberButton=tkinter.Button(range_window,text='Sort by atomic number',bg='LightGreen')
+    numberButton=tkinter.Button(range_window,text='Sort by atomic number',bg='LightGreen',command=lambda: clickNumberButton(all_transitions,transition_table,position))
     numberButton.place(x=900,y=150)
     
     
