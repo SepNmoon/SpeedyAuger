@@ -403,6 +403,7 @@ def rangeGUI(selectBE,selectKE,fromEntry,toEntry):
     
 
     number_range=getRange()
+    number_name=getAtom()
 
     rangeMin=min(float(fromEntry.get()),float(toEntry.get()))
     rangeMax=max(float(fromEntry.get()),float(toEntry.get()))
@@ -416,26 +417,42 @@ def rangeGUI(selectBE,selectKE,fromEntry,toEntry):
             else:
                 correctAtom.append(number)
                 
-    all_transition=dict()
+    all_transitions=dict()
     for number in correctAtom:
-        #print(number)
         temp=dict()
+        atom_name=number_name[number]
         current_transitions=calculateAuger(number)
         for t in current_transitions:
             if current_transitions[t]>=rangeMin and current_transitions[t]<=rangeMax:
                 temp[t]=current_transitions[t]
-        all_transition[number]=temp
-            
-    
-            
+        all_transitions[atom_name]=temp
+         
+    if len(all_transitions)<=30:
+        table_row=len(all_transitions)
+    else:
+        table_row=30
         
-        
-    transition_table=ttk.Treeview(range_window,height=10,columns=['1','2'],show='headings')
-    transition_table.column('1',width=300) 
-    transition_table.column('2',width=300) 
-    transition_table.heading('1', text='Auger Transition')
-    transition_table.heading('2', text='Auger Energies')
+    transition_table=ttk.Treeview(range_window,height=table_row,columns=['1','2','3'],show='headings')
+    transition_table.column('1',width=100) 
+    transition_table.column('2',width=200) 
+    transition_table.column('3',width=200) 
+    transition_table.heading('1', text='Atom')
+    transition_table.heading('2', text='Auger Transition')
+    transition_table.heading('3', text='Auger Energies')
     transition_table.pack()    
+    
+    position=0
+    for atom_name in all_transitions:
+        current_transitions=all_transitions[atom_name]
+        for t in current_transitions: 
+            position+=1
+            transition_table.insert('',position,iid=position+1,values=(atom_name,t,current_transitions[t]))
+        
+
+    ybar=Scrollbar(transition_table,orient='vertical', command=transition_table.yview,bg='Gray')
+    transition_table.configure(yscrollcommand=ybar.set)
+    ybar.place(relx=0.95, rely=0.02, relwidth=0.035, relheight=0.958)
+        
     
     
     range_window.mainloop()  
