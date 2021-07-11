@@ -424,9 +424,10 @@ def rangeGUI(selectBE,selectKE,fromEntry,toEntry,selectValue):
                 pass
             else:
                 correctAtom.append(number)
-                
-    all_transitions=dict()
+
+    all_transitions=dict()   
     for number in correctAtom:
+        
         temp=dict()
         atom_name=number_name[number]
         current_transitions=calculateAuger(number)
@@ -438,8 +439,7 @@ def rangeGUI(selectBE,selectKE,fromEntry,toEntry,selectValue):
         elif selectBE==True:
             for t in current_transitions:
                 if (selectValue-float(current_transitions[t]))>=rangeMin and (selectValue-float(current_transitions[t]))<=rangeMax:
-                    temp[t]=Decimal(selectValue-float(current_transitions[t])).quantize(Decimal('0.00'))
-                    
+                    temp[t]=Decimal(selectValue-float(current_transitions[t])).quantize(Decimal('0.00'))                    
             all_transitions[atom_name]=temp
 
          
@@ -468,7 +468,13 @@ def rangeGUI(selectBE,selectKE,fromEntry,toEntry,selectValue):
     ybar=Scrollbar(transition_table,orient='vertical', command=transition_table.yview,bg='Gray')
     transition_table.configure(yscrollcommand=ybar.set)
     ybar.place(relx=0.95, rely=0.02, relwidth=0.035, relheight=0.958)
-        
+    
+    descendingButton=tkinter.Button(range_window,text='Descending order (energies)',bg='LightPink')
+    descendingButton.place(x=900,y=50)
+    ascendingButton=tkinter.Button(range_window,text='Ascending order (energies)',bg='LightBlue')
+    ascendingButton.place(x=900,y=100)
+    numberButton=tkinter.Button(range_window,text='Sort by atomic number',bg='LightGreen')
+    numberButton.place(x=900,y=150)
     
     
     range_window.mainloop()  
@@ -495,6 +501,7 @@ def clickSearchButtonRT(root,fromEntry,toEntry,v,selectButton,inputEntry):
         else:
             if v.get()==1:
                 selectKE=True
+                selectValue=0
             elif v.get()==2:
                 
                 if (selectButton.get()=='No selection' and inputEntry.get()=='') or (selectButton.get()!='No selection' and inputEntry.get()!=''):
