@@ -397,7 +397,7 @@ def augerTransitionGUI(index):
 #----------------------------------------------------------------------------------------
 #---------------------------------------------------------------------------------------- 
 #All about rangeGUI 
-def rangeGUI(selectBE,selectKE,fromEntry,toEntry):
+def rangeGUI(selectBE,selectKE,fromEntry,toEntry,selectValue):
     range_window=tkinter.Tk()
     range_window.geometry("1200x680")
     
@@ -408,11 +408,19 @@ def rangeGUI(selectBE,selectKE,fromEntry,toEntry):
     rangeMin=min(float(fromEntry.get()),float(toEntry.get()))
     rangeMax=max(float(fromEntry.get()),float(toEntry.get()))
     correctAtom=[]
-    if selectKE==True:  
-        
+    if selectKE==True:          
         for number in number_range:
             temp=number_range[number]
             if temp['Max']<rangeMin or temp['Min']>rangeMax:
+                pass
+            else:
+                correctAtom.append(number)
+    elif selectBE==True:
+        for number in number_range:
+            temp=number_range[number]
+            temp_min=selectValue-temp['Max']
+            temp_max=selectValue-temp['Min']
+            if temp_max<rangeMin or temp_min>rangeMax:
                 pass
             else:
                 correctAtom.append(number)
@@ -422,10 +430,18 @@ def rangeGUI(selectBE,selectKE,fromEntry,toEntry):
         temp=dict()
         atom_name=number_name[number]
         current_transitions=calculateAuger(number)
-        for t in current_transitions:
-            if current_transitions[t]>=rangeMin and current_transitions[t]<=rangeMax:
-                temp[t]=current_transitions[t]
-        all_transitions[atom_name]=temp
+        if selectKE==True:           
+            for t in current_transitions:
+                if current_transitions[t]>=rangeMin and current_transitions[t]<=rangeMax:
+                    temp[t]=current_transitions[t]
+            all_transitions[atom_name]=temp
+        elif selectBE==True:
+            for t in current_transitions:
+                if (selectValue-float(current_transitions[t]))>=rangeMin and (selectValue-float(current_transitions[t]))<=rangeMax:
+                    temp[t]=Decimal(selectValue-float(current_transitions[t])).quantize(Decimal('0.00'))
+                    
+            all_transitions[atom_name]=temp
+
          
     if len(all_transitions)<=30:
         table_row=len(all_transitions)
@@ -508,7 +524,7 @@ def clickSearchButtonRT(root,fromEntry,toEntry,v,selectButton,inputEntry):
                 tkinter.messagebox.showinfo(title='ERROR',message='Please select by KE or BE',parent=root)
     
     if selectBE or selectKE:        
-        rangeGUI(selectBE,selectKE,fromEntry,toEntry) 
+        rangeGUI(selectBE,selectKE,fromEntry,toEntry,selectValue) 
                         
               
             
