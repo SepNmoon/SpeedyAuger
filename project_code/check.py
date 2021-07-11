@@ -9,7 +9,8 @@ import shlex
 from decimal import Decimal
 import pandas as pd
 from tabulate import tabulate
-
+#-------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------
 #connect database
 db = pymysql.connect(
     host='localhost',
@@ -103,6 +104,25 @@ def getNotation():
         barkla_orbital[barkla_notation]=orbital_notation   
     return barkla_orbital
 
+
+def getRange():
+    cursor = db.cursor()
+    sql = 'SELECT * FROM energies_range'
+    cursor.execute(sql)
+    results = cursor.fetchall()
+    number_range=dict()
+    for row in results:
+        atom_number=row[0]
+        max_value=row[1]
+        min_value=row[2]
+        temp=dict()
+        temp['Max']=max_value
+        temp['Min']=min_value
+        number_range[atom_number]=temp
+    return number_range
+            
+    
+    
 #----------------------------------------------------------------------------------------------
 #----------------------------------------------------------------------------------------------
 #All about AugerTransitionGUI
@@ -188,14 +208,11 @@ def clickExportButtonAT(auger_window,transition_table,atom_name,position):
                 select_value=float(transition_table.set(1,'#2'))+float(transition_table.set(1,'#3'))
                 select_value=Decimal(select_value).quantize(Decimal('0.00'))
                 select_value=str(select_value)
-                file_path=file_path+'/'+'auger_transition_'+atom_name+'_'+select_value+'.txt'
-                
+                file_path=file_path+'/'+'auger_transition_'+atom_name+'_'+select_value+'.txt'              
                 with open(file_path,"w") as f:
-                    f.write(tabulate(table_data, headers=table_header))
-                    
+                    f.write(tabulate(table_data, headers=table_header))                  
             else:
-                pass
-        
+                pass        
         else:
             pass
         
@@ -380,15 +397,34 @@ def augerTransitionGUI(index):
 #----------------------------------------------------------------------------------------
 #---------------------------------------------------------------------------------------- 
 #All about rangeGUI 
-def rangeGUI():
+def rangeGUI(selectBE,selectKE,fromEntry,toEntry):
     range_window=tkinter.Tk()
     range_window.geometry("1200x680")
+    number_range=getRange()
+
+    selectMin=min(float(fromEntry.get()),float(toEntry.get()))
+    selectMax=max(float(fromEntry.get()),float(toEntry.get()))
+    
+    if selectKE==True:   
+        for number in number_range:
+            temp=number_range[number]
+        
+        
+    
+    
     range_window.mainloop()  
 
 
-def clickSearchButtonRT(root,fromEntry,toEntry):
+
+#----------------------------------------------------------------------------------------
+#---------------------------------------------------------------------------------------- 
+#All about rootGUI 
+
+def clickSearchButtonRT(root,fromEntry,toEntry,v,selectButton,inputEntry):
     fromValue=fromEntry.get()
     toValue=toEntry.get()
+    selectBE=False
+    selectKE=False
     if fromValue=='' or toValue=='':
         tkinter.messagebox.showinfo(title='ERROR',message='Please input values',parent=root)
     else:
@@ -398,15 +434,69 @@ def clickSearchButtonRT(root,fromEntry,toEntry):
         except:
             tkinter.messagebox.showinfo(title='ERROR',message='Please input valid values',parent=root)
         else:
-            rangeGUI()   
+            if v.get()==1:
+                selectKE=True
+            elif v.get()==2:
+                
+                if (selectButton.get()=='No selection' and inputEntry.get()=='') or (selectButton.get()!='No selection' and inputEntry.get()!=''):
+                    tkinter.messagebox.showinfo(title='ERROR',message='Please input or select',parent=root)
+                elif selectButton.get()!='No selection':
+                    selectBE=True
+                    if selectButton.get()=='Mg 1253.6(eV)':           
+                       selectValue=1253.6            
+                    elif selectButton.get()=='Al 1486.7(eV)':
+                       selectValue=1486.7          
+                    elif selectButton.get()=='Ag 2984.3(eV)':
+                       selectValue=2984.3           
+                    elif selectButton.get()=='Cr 5414.9(eV)':
+                       selectValue=5414.9            
+                    elif selectButton.get()=='Ga 9251.74(eV)':
+                       selectValue=9251.74   
+            
+                elif inputEntry.get()!='':
+                    try:
+                        selectValue=float(inputEntry.get())
+                    except:
+                        tkinter.messagebox.showinfo(title='ERROR',message='Please input valid values',parent=root) 
+                    else:
+                        selectBE=True
+               
+            else:
+                tkinter.messagebox.showinfo(title='ERROR',message='Please select by KE or BE',parent=root)
+    
+    if selectBE or selectKE:        
+        rangeGUI(selectBE,selectKE,fromEntry,toEntry) 
+                        
+              
             
             
-def clickClearButtonRT(root,fromEntry,toEntry):
+def clickClearButtonRT(root,fromEntry,toEntry,v,selectButton,orLabel,inputEntry):
     fromEntry.delete(0,'end')
     toEntry.delete(0,'end')
+    v.set(0)
+    selectButton.place_forget()
+    orLabel.place_forget()
+    inputEntry.place_forget()
     
     
- 
+
+def selectRadioButton(v,root,selectButton,orLabel,inputEntry):
+
+    if v.get()==2:
+        selectButton.place(x=490,y=48.5)
+        selectButton['value']=('Mg 1253.6(eV)','Al 1486.7(eV)','Ag 2984.3(eV)','Cr 5414.9(eV)','Ga 9251.74(eV)','No selection')
+        selectButton.current(5)
+        orLabel.place(x=600,y=48)
+        inputEntry.delete(0,'end')
+        inputEntry.place(x=620,y=48.5)
+    else:
+        selectButton.place_forget()
+        orLabel.place_forget()
+        inputEntry.place_forget()
+        
+
+       
+        
     
 #rootGUI
 def rootGUI():
@@ -464,17 +554,28 @@ def rootGUI():
           tkinter.Button(root,text='%(number)d %(name)s'%{'number':i+3,'name':atom_name},command = lambda text=i: augerTransitionGUI(text),width=5,height=2,bg='LightGreen').place(x=30+(i-84)*50, y=520)
 
    fromLabel=tkinter.Label(root,text='from')
-   fromLabel.place(x=300,y=10)
+   fromLabel.place(x=200,y=10)
    fromEntry=tkinter.Entry(root,width=13)
-   fromEntry.place(x=340,y=10)
-   toLabel=tkinter.Label(root,text='to')
-   toLabel.place(x=440,y=10)
+   fromEntry.place(x=240,y=10)
+   toLabel=tkinter.Label(root,text='(eV)  to')
+   toLabel.place(x=340,y=10)
    toEntry=tkinter.Entry(root,width=13)
-   toEntry.place(x=465,y=10)
-   searchButton=tkinter.Button(root,text='Search',command=lambda: clickSearchButtonRT(root,fromEntry,toEntry))
-   searchButton.place(x=580,y=10)
-   clearButton=tkinter.Button(root,text='Clear',command=lambda: clickClearButtonRT(root,fromEntry,toEntry))
-   clearButton.place(x=650,y=10)
+   toEntry.place(x=400,y=10)
+   unitLabel=tkinter.Label(root,text='(eV)')
+   unitLabel.place(x=500,y=10)
+   v = tkinter.IntVar()
+
+   selectButton=ttk.Combobox(root,width=12)
+   orLabel=tkinter.Label(root,text='or')
+   inputEntry=tkinter.Entry(root,width=10)  
+   keSelect=tkinter.Radiobutton(root,text='by kinetic energies',value=1,variable=v,command=lambda: selectRadioButton(v,root,selectButton,orLabel,inputEntry))
+   keSelect.place(x=530,y=1)
+   beSelect=tkinter.Radiobutton(root,text='by binding energies',value=2,variable=v,command=lambda: selectRadioButton(v,root,selectButton,orLabel,inputEntry))
+   beSelect.place(x=530,y=21.5)
+   searchButton=tkinter.Button(root,text='Search',bg='Orange',command=lambda: clickSearchButtonRT(root,fromEntry,toEntry,v,selectButton,inputEntry))
+   searchButton.place(x=685,y=10)
+   clearButton=tkinter.Button(root,text='Clear',command=lambda: clickClearButtonRT(root,fromEntry,toEntry,v,selectButton,orLabel,inputEntry))
+   clearButton.place(x=750,y=10)
     
 
    root.mainloop()
@@ -486,3 +587,4 @@ if __name__ == "__main__":
 
 
     rootGUI()
+
