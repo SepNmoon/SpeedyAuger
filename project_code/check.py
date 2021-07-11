@@ -337,6 +337,11 @@ def augerTransitionGUI(index):
     print(atom_number)
     print(max(transition_energies.values()))
     print(min(transition_energies.values()))
+    index=0
+    for v in transition_energies.values():
+        if v>5000:
+            print(index)
+        index+=1
     print('')
     
     #transition table
@@ -397,7 +402,7 @@ def augerTransitionGUI(index):
 #----------------------------------------------------------------------------------------
 #---------------------------------------------------------------------------------------- 
 #All about rangeGUI 
-def clickSortButton(transition_table,position,descending):
+def clickSortButtonRG(transition_table,position,descending):
     position_energies=dict()
     for p in range(position):
         p+=1
@@ -424,7 +429,7 @@ def clickSortButton(transition_table,position,descending):
         transition_table.set(p,'#3',new_table[p-1][2])
  
 
-def clickNumberButton(all_transitions,transition_table,position):
+def clickNumberButtonRG(all_transitions,transition_table,position):
     new_table=[]
     for atom_name in all_transitions:   
         current_transitions=all_transitions[atom_name]
@@ -521,13 +526,15 @@ def rangeGUI(selectBE,selectKE,fromEntry,toEntry,selectValue):
     transition_table.configure(yscrollcommand=ybar.set)
     ybar.place(relx=0.95, rely=0.02, relwidth=0.035, relheight=0.958)
     
-    descendingButton=tkinter.Button(range_window,text='Descending order (energies)',bg='LightPink',command=lambda: clickSortButton(transition_table,position,descending=True))
+    descendingButton=tkinter.Button(range_window,text='Descending order (energies)',bg='LightPink',command=lambda: clickSortButtonRG(transition_table,position,descending=True))
     descendingButton.place(x=900,y=50)
-    ascendingButton=tkinter.Button(range_window,text='Ascending order (energies)',bg='LightBlue',command=lambda: clickSortButton(transition_table,position,descending=False))
+    ascendingButton=tkinter.Button(range_window,text='Ascending order (energies)',bg='LightBlue',command=lambda: clickSortButtonRG(transition_table,position,descending=False))
     ascendingButton.place(x=900,y=100)
-    numberButton=tkinter.Button(range_window,text='Sort by atomic number',bg='LightGreen',command=lambda: clickNumberButton(all_transitions,transition_table,position))
+    numberButton=tkinter.Button(range_window,text='Sort by atomic number',bg='LightGreen',command=lambda: clickNumberButtonRG(all_transitions,transition_table,position))
     numberButton.place(x=900,y=150)
     
+    exportButton=tkinter.Button(range_window,text='Export',bg='Yellow')
+    exportButton.place(x=900,y=300)
     
     range_window.mainloop()  
 
@@ -599,7 +606,6 @@ def clickClearButtonRT(root,fromEntry,toEntry,v,selectButton,orLabel,inputEntry)
     
 
 def selectRadioButton(v,root,selectButton,orLabel,inputEntry):
-
     if v.get()==2:
         selectButton.place(x=490,y=48.5)
         selectButton['value']=('Mg 1253.6(eV)','Al 1486.7(eV)','Ag 2984.3(eV)','Cr 5414.9(eV)','Ga 9251.74(eV)','No selection')
@@ -617,7 +623,7 @@ def selectRadioButton(v,root,selectButton,orLabel,inputEntry):
         
     
 #rootGUI
-def rootGUI():
+def rootGUI():    
    number_name=getAtom() #dict
    root=tkinter.Tk() 
    root.geometry("1000x680")
