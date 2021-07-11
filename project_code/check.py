@@ -400,16 +400,42 @@ def augerTransitionGUI(index):
 def rangeGUI(selectBE,selectKE,fromEntry,toEntry):
     range_window=tkinter.Tk()
     range_window.geometry("1200x680")
+    
+
     number_range=getRange()
 
-    selectMin=min(float(fromEntry.get()),float(toEntry.get()))
-    selectMax=max(float(fromEntry.get()),float(toEntry.get()))
-    
-    if selectKE==True:   
+    rangeMin=min(float(fromEntry.get()),float(toEntry.get()))
+    rangeMax=max(float(fromEntry.get()),float(toEntry.get()))
+    correctAtom=[]
+    if selectKE==True:  
+        
         for number in number_range:
             temp=number_range[number]
+            if temp['Max']<rangeMin or temp['Min']>rangeMax:
+                pass
+            else:
+                correctAtom.append(number)
+                
+    all_transition=dict()
+    for number in correctAtom:
+        #print(number)
+        temp=dict()
+        current_transitions=calculateAuger(number)
+        for t in current_transitions:
+            if current_transitions[t]>=rangeMin and current_transitions[t]<=rangeMax:
+                temp[t]=current_transitions[t]
+        all_transition[number]=temp
+            
+    
+            
         
         
+    transition_table=ttk.Treeview(range_window,height=10,columns=['1','2'],show='headings')
+    transition_table.column('1',width=300) 
+    transition_table.column('2',width=300) 
+    transition_table.heading('1', text='Auger Transition')
+    transition_table.heading('2', text='Auger Energies')
+    transition_table.pack()    
     
     
     range_window.mainloop()  
