@@ -397,6 +397,31 @@ def augerTransitionGUI(index):
 #----------------------------------------------------------------------------------------
 #---------------------------------------------------------------------------------------- 
 #All about rangeGUI 
+def clickDescendingButton(range_window,transition_table,all_transitions,position):
+    position_energies=dict()
+    for p in range(position):
+        p+=1
+        position_energies[p]=float(transition_table.set(p,'#3'))
+
+
+    sort_position=sorted(position_energies.items(),key=lambda x:x[1],reverse=True)
+    
+    new_table=[]
+    for i in sort_position:
+        p=i[0]
+        temp=[]
+        temp.append(transition_table.set(p,'#1'))
+        temp.append(transition_table.set(p,'#2'))
+        temp.append(transition_table.set(p,'#3'))
+        new_table.append(temp)
+    
+    for p in range(position):
+        p+=1              
+        transition_table.set(p,'#1',new_table[p-1][0])
+        transition_table.set(p,'#2',new_table[p-1][1])
+        transition_table.set(p,'#3',new_table[p-1][2])
+       
+
 def rangeGUI(selectBE,selectKE,fromEntry,toEntry,selectValue):
     range_window=tkinter.Tk()
     range_window.geometry("1200x680")
@@ -460,16 +485,18 @@ def rangeGUI(selectBE,selectKE,fromEntry,toEntry,selectValue):
     position=0
     for atom_name in all_transitions:
         current_transitions=all_transitions[atom_name]
-        for t in current_transitions: 
-            position+=1
+        for t in current_transitions:            
             transition_table.insert('',position,iid=position+1,values=(atom_name,t,current_transitions[t]))
+            position+=1
+    
+
         
 
     ybar=Scrollbar(transition_table,orient='vertical', command=transition_table.yview,bg='Gray')
     transition_table.configure(yscrollcommand=ybar.set)
     ybar.place(relx=0.95, rely=0.02, relwidth=0.035, relheight=0.958)
     
-    descendingButton=tkinter.Button(range_window,text='Descending order (energies)',bg='LightPink')
+    descendingButton=tkinter.Button(range_window,text='Descending order (energies)',bg='LightPink',command=lambda: clickDescendingButton(range_window,transition_table,all_transitions,position))
     descendingButton.place(x=900,y=50)
     ascendingButton=tkinter.Button(range_window,text='Ascending order (energies)',bg='LightBlue')
     ascendingButton.place(x=900,y=100)
