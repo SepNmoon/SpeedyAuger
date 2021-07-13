@@ -134,7 +134,11 @@ def updateTable(table,value,position):
         ke_result=table.set(index,'#2')
         ke_result=float(ke_result)
         result=Decimal(value-ke_result).quantize(Decimal('0.00'))
-        table.set(index,'#3',result)
+        if result<0:
+            table.set(index,'#3','Not Accessible')
+        else:
+            table.set(index,'#3',result)
+
                 
 def clickConvertButtonAT(select,table,position,inputEntry,auger_window,lastLabel):
     global lastChoice
@@ -334,16 +338,8 @@ def augerTransitionGUI(index):
     
     #calculate energies for transitions
     transition_energies=calculateAuger(atom_number)
-    print(atom_number)
-    print(max(transition_energies.values()))
-    print(min(transition_energies.values()))
-    index=0
-    for v in transition_energies.values():
-        if v>5000:
-            print(index)
-        index+=1
-    print('')
     
+
     #transition table
     if len(transition_energies)<=30:
         table_row=len(transition_energies)
@@ -402,15 +398,50 @@ def augerTransitionGUI(index):
 #----------------------------------------------------------------------------------------
 #---------------------------------------------------------------------------------------- 
 #All about rangeGUI 
+def clickExportButtonRG(range_window,transition_table,position,rangeMin,rangeMax,selectKE,selectBE,selectValue):
+    reminderBox=tkinter.messagebox.askquestion('Confirmation','Do you want to continue?',parent=range_window)
+    rangeMin=str(rangeMin)
+    rangeMax=str(rangeMax)
+    selectValue=str(selectValue)
+    if reminderBox=='yes':
+        file_path=askdirectory(parent=range_window)
+        if file_path!='':
+            table_header=['Atom','Auger Transition','Auger Energy']
+            table_data=[]
+            for p in range(position):
+                temp=[]
+                temp.append(transition_table.set(p+1,'#1'))
+                temp.append(transition_table.set(p+1,'#2'))
+                temp.append(transition_table.set(p+1,'#3'))
+                table_data.append(temp)
+            
+            if selectKE==True:
+                file_path=file_path+'/'+'from_'+rangeMin+'_to_'+rangeMax+'_KE_'+sortOrder+'.txt'
+            elif selectBE==True:               
+                file_path=file_path+'/'+'from_'+rangeMin+'_to_'+rangeMax+'_BE_'+selectValue+sortOrder+'.txt'
+            with open(file_path,'w') as f:
+                f.write(tabulate(table_data,headers=table_header))
+        
+        
+        else:
+            pass
+    else:
+        pass
+    
+
 def clickSortButtonRG(transition_table,position,descending):
+    global sortOrder
+    
     position_energies=dict()
     for p in range(position):
         p+=1
         position_energies[p]=float(transition_table.set(p,'#3'))
 
     if descending==True:
+        sortOrder='descending'
         sort_position=sorted(position_energies.items(),key=lambda x:x[1],reverse=True)
     else:
+        sortOrder='ascending'
         sort_position=sorted(position_energies.items(),key=lambda x:x[1],reverse=False)
     
     new_table=[]
@@ -430,6 +461,8 @@ def clickSortButtonRG(transition_table,position,descending):
  
 
 def clickNumberButtonRG(all_transitions,transition_table,position):
+    global sortOrder
+    sortOrder='by_number'
     new_table=[]
     for atom_name in all_transitions:   
         current_transitions=all_transitions[atom_name]
@@ -480,9 +513,9 @@ def rangeGUI(selectBE,selectKE,fromEntry,toEntry,selectValue):
             else:
                 correctAtom.append(number)
 
-    all_transitions=dict()   
-    for number in correctAtom:
-        
+    all_transitions=dict()  
+   
+    for number in correctAtom:        
         temp=dict()
         atom_name=number_name[number]
         current_transitions=calculateAuger(number)
@@ -491,13 +524,13 @@ def rangeGUI(selectBE,selectKE,fromEntry,toEntry,selectValue):
                 if current_transitions[t]>=rangeMin and current_transitions[t]<=rangeMax:
                     temp[t]=current_transitions[t]
             all_transitions[atom_name]=temp
-        elif selectBE==True:
+        elif selectBE==True:            
             for t in current_transitions:
                 if (selectValue-float(current_transitions[t]))>=rangeMin and (selectValue-float(current_transitions[t]))<=rangeMax:
                     temp[t]=Decimal(selectValue-float(current_transitions[t])).quantize(Decimal('0.00'))                    
             all_transitions[atom_name]=temp
 
-         
+
     if len(all_transitions)<=30:
         table_row=len(all_transitions)
     else:
@@ -533,7 +566,7 @@ def rangeGUI(selectBE,selectKE,fromEntry,toEntry,selectValue):
     numberButton=tkinter.Button(range_window,text='Sort by atomic number',bg='LightGreen',command=lambda: clickNumberButtonRG(all_transitions,transition_table,position))
     numberButton.place(x=900,y=150)
     
-    exportButton=tkinter.Button(range_window,text='Export',bg='Yellow')
+    exportButton=tkinter.Button(range_window,text='Export',bg='Yellow',command=lambda: clickExportButtonRG(range_window,transition_table,position,rangeMin,rangeMax,selectKE,selectBE,selectValue))
     exportButton.place(x=900,y=300)
     
     range_window.mainloop()  
@@ -708,6 +741,7 @@ def rootGUI():
 if __name__ == "__main__":
     
     lastChoice=0
+    sortOrder='by_number'
 
 
     rootGUI()
