@@ -720,6 +720,23 @@ def rootGUI():
    toEntry.place(x=400,y=10)
    unitLabel=tkinter.Label(root,text='(eV)')
    unitLabel.place(x=500,y=10)
+   
+   v2=tkinter.IntVar()
+   transitionSelect=tkinter.Radiobutton(root, text='Auger Transitions',value=1,variable=v2)
+   transitionSelect.place(x=210,y=40)
+   coreStateSelect=tkinter.Radiobutton(root,text='Core State Energies',value=2,variable=v2)
+   coreStateSelect.place(x=210,y=60.5)
+   sep1 = ttk.Separator(root, orient='vertical')
+   sep1.place(relx=0.37, rely=0.05, relheight=0.1, relwidth=0.0005)
+   v3=tkinter.IntVar()
+   allAtomSelect=tkinter.Radiobutton(root, text='from all elements',value=1,variable=v3)
+   allAtomSelect.place(x=380,y=40)
+   someAtomSelect=tkinter.Radiobutton(root,text='from selected elements',value=2,variable=v3)
+   someAtomSelect.place(x=380,y=60.5)
+   
+   
+   
+   
    v = tkinter.IntVar()
 
    selectButton=ttk.Combobox(root,width=12)
