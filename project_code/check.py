@@ -578,7 +578,7 @@ def rangeGUI(selectBE,selectKE,fromEntry,toEntry,selectValue):
 #---------------------------------------------------------------------------------------- 
 #All about rootGUI 
 
-def clickSearchButtonRT(root,fromEntry,toEntry,v,selectButton,inputEntry):
+def clickSearchButtonRT(root,fromEntry,toEntry,v2,selectButton,inputEntry):
     fromValue=fromEntry.get()
     toValue=toEntry.get()
     selectBE=False
@@ -592,10 +592,10 @@ def clickSearchButtonRT(root,fromEntry,toEntry,v,selectButton,inputEntry):
         except:
             tkinter.messagebox.showinfo(title='ERROR',message='Please input valid values',parent=root)
         else:
-            if v.get()==1:
+            if v2.get()==1:
                 selectKE=True
                 selectValue=0
-            elif v.get()==2:
+            elif v2.get()==2:
                 
                 if (selectButton.get()=='No selection' and inputEntry.get()=='') or (selectButton.get()!='No selection' and inputEntry.get()!=''):
                     tkinter.messagebox.showinfo(title='ERROR',message='Please input or select',parent=root)
@@ -639,8 +639,8 @@ def clickClearButtonRT(root,fromEntry,toEntry,v,selectButton,orLabel,inputEntry)
     
     
 
-def selectRadioButton(v,root,selectButton,orLabel,inputEntry):
-    if v.get()==2:
+def selectRadioButton(v2,root,selectButton,orLabel,inputEntry):
+    if v2.get()==2:
         selectButton.place(x=490,y=48.5)
         selectButton['value']=('Mg 1253.6(eV)','Al 1486.7(eV)','Ag 2984.3(eV)','Cr 5414.9(eV)','Ga 9251.74(eV)','No selection')
         selectButton.current(5)
@@ -729,6 +729,15 @@ def clickSelectAtomButton(root):
     clearButton.place(x=660,y=250)
     
     
+def selectTranCoreButton(v1,keSelect,beSelect,v2):
+    v2.set(0)
+    if v1.get()==1:
+        keSelect.place(x=530,y=1)
+        beSelect.place(x=530,y=21.5)
+    else:
+        keSelect.place_forget()
+        beSelect.place_forget()
+        
     
        
         
@@ -799,45 +808,50 @@ def rootGUI():
    unitLabel=tkinter.Label(root,text='(eV)')
    unitLabel.place(x=500,y=10)
    
+   
+   
+   
+   
+   v1=tkinter.IntVar()
    v2=tkinter.IntVar()
-   transitionSelect=tkinter.Radiobutton(root, text='Auger Transitions',value=1,variable=v2)
-   transitionSelect.place(x=210,y=40)
-   coreStateSelect=tkinter.Radiobutton(root,text='Core State Energies',value=2,variable=v2)
-   coreStateSelect.place(x=210,y=60.5)
-   sep1 = ttk.Separator(root, orient='vertical')
-   sep1.place(relx=0.37, rely=0.05, relheight=0.1, relwidth=0.0005)
-   v3=tkinter.IntVar()
-   allAtomSelect=tkinter.Radiobutton(root, text='from all elements',value=1,variable=v3,command=lambda: selectElements(selectAtomButton,v3))
-   allAtomSelect.place(x=380,y=40)
-   selectAtomButton=tkinter.Button(root,text='Select Elements',command=lambda: clickSelectAtomButton(root))
-   someAtomSelect=tkinter.Radiobutton(root,text='from selected elements',value=2,variable=v3,command=lambda: selectElements(selectAtomButton,v3))
-   someAtomSelect.place(x=380,y=60.5)
-   
-   #selectAtomButton.place(x=380,y=90)
-   
-   
-   
-   
-   
-   
-   
-
-   
-   
-   
-   
-   v = tkinter.IntVar()
-
    selectButton=ttk.Combobox(root,width=12)
    orLabel=tkinter.Label(root,text='or')
-   inputEntry=tkinter.Entry(root,width=10)  
-   keSelect=tkinter.Radiobutton(root,text='by kinetic energies',value=1,variable=v,command=lambda: selectRadioButton(v,root,selectButton,orLabel,inputEntry))
-   keSelect.place(x=530,y=1)
-   beSelect=tkinter.Radiobutton(root,text='by binding energies',value=2,variable=v,command=lambda: selectRadioButton(v,root,selectButton,orLabel,inputEntry))
-   beSelect.place(x=530,y=21.5)
-   searchButton=tkinter.Button(root,text='Search',bg='Orange',command=lambda: clickSearchButtonRT(root,fromEntry,toEntry,v,selectButton,inputEntry))
+   inputEntry=tkinter.Entry(root,width=10) 
+   keSelect=tkinter.Radiobutton(root,text='by kinetic energies',value=1,variable=v2,command=lambda: selectRadioButton(v2,root,selectButton,orLabel,inputEntry))
+   beSelect=tkinter.Radiobutton(root,text='by binding energies',value=2,variable=v2,command=lambda: selectRadioButton(v2,root,selectButton,orLabel,inputEntry))
+   transitionSelect=tkinter.Radiobutton(root, text='Auger Transitions',value=1,variable=v1,command=lambda: selectTranCoreButton(v1,keSelect,beSelect,v2))
+   transitionSelect.place(x=150,y=40)
+   coreStateSelect=tkinter.Radiobutton(root,text='Core State Energies',value=2,variable=v1,command=lambda: selectTranCoreButton(v1,keSelect,beSelect,v2))
+   coreStateSelect.place(x=150,y=60.5)
+   
+   
+   sep1 = ttk.Separator(root, orient='vertical')
+   sep1.place(relx=0.3, rely=0.05, relheight=0.1, relwidth=0.0005)
+   
+   v3=tkinter.IntVar()
+   allAtomSelect=tkinter.Radiobutton(root, text='from all elements',value=1,variable=v3,command=lambda: selectElements(selectAtomButton,v3))
+   allAtomSelect.place(x=320,y=40)
+   selectAtomButton=tkinter.Button(root,text='Select Elements',command=lambda: clickSelectAtomButton(root))
+   someAtomSelect=tkinter.Radiobutton(root,text='from selected elements',value=2,variable=v3,command=lambda: selectElements(selectAtomButton,v3))
+   someAtomSelect.place(x=320,y=60.5)
+   
+
+   
+
+   
+   
+   #v = tkinter.IntVar()
+
+   #selectButton=ttk.Combobox(root,width=12)
+   #orLabel=tkinter.Label(root,text='or')
+   #inputEntry=tkinter.Entry(root,width=10)  
+   #keSelect=tkinter.Radiobutton(root,text='by kinetic energies',value=1,variable=v,command=lambda: selectRadioButton(v,root,selectButton,orLabel,inputEntry))
+   #keSelect.place(x=530,y=1)
+   #beSelect=tkinter.Radiobutton(root,text='by binding energies',value=2,variable=v,command=lambda: selectRadioButton(v,root,selectButton,orLabel,inputEntry))
+   #beSelect.place(x=530,y=21.5)
+   searchButton=tkinter.Button(root,text='Search',bg='Orange',command=lambda: clickSearchButtonRT(root,fromEntry,toEntry,v2,selectButton,inputEntry))
    searchButton.place(x=685,y=10)
-   clearButton=tkinter.Button(root,text='Clear',command=lambda: clickClearButtonRT(root,fromEntry,toEntry,v,selectButton,orLabel,inputEntry))
+   clearButton=tkinter.Button(root,text='Clear',command=lambda: clickClearButtonRT(root,fromEntry,toEntry,v2,selectButton,orLabel,inputEntry))
    clearButton.place(x=750,y=10)
     
 
