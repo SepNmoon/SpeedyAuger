@@ -652,6 +652,14 @@ def selectRadioButton(v,root,selectButton,orLabel,inputEntry):
         inputEntry.place_forget()
         
 
+def selectElements(selectAtomButton,v3):
+    if v3.get()==2:
+        selectAtomButton.place(x=380,y=90)
+    else:
+        
+        selectAtomButton.place_forget()
+    
+    
        
         
     
@@ -729,10 +737,15 @@ def rootGUI():
    sep1 = ttk.Separator(root, orient='vertical')
    sep1.place(relx=0.37, rely=0.05, relheight=0.1, relwidth=0.0005)
    v3=tkinter.IntVar()
-   allAtomSelect=tkinter.Radiobutton(root, text='from all elements',value=1,variable=v3)
+   allAtomSelect=tkinter.Radiobutton(root, text='from all elements',value=1,variable=v3,command=lambda: selectElements(selectAtomButton,v3))
    allAtomSelect.place(x=380,y=40)
-   someAtomSelect=tkinter.Radiobutton(root,text='from selected elements',value=2,variable=v3)
+   selectAtomButton=tkinter.Button(root,text='Select Elements')
+   someAtomSelect=tkinter.Radiobutton(root,text='from selected elements',value=2,variable=v3,command=lambda: selectElements(selectAtomButton,v3))
    someAtomSelect.place(x=380,y=60.5)
+   
+   #selectAtomButton.place(x=380,y=90)
+   
+   
    
    
    
