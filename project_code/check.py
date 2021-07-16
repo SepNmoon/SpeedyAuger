@@ -655,9 +655,53 @@ def selectRadioButton(v,root,selectButton,orLabel,inputEntry):
 def selectElements(selectAtomButton,v3):
     if v3.get()==2:
         selectAtomButton.place(x=380,y=90)
-    else:
-        
+    else:      
         selectAtomButton.place_forget()
+
+def clickSaveButtonSA(elementArray):
+    print(elementArray)
+
+    
+    
+def clickSelectAtomButton(root):
+    selectAtomGUI=tkinter.Tk()
+    selectAtomGUI.geometry("750x450")
+    number_name=getAtom()
+    #index=3
+    elementArray=[]
+    for number in number_name:
+        atom_name=number_name[number]
+        #v=tkinter.IntVar(value=number)        
+        
+        atomButton=tkinter.Checkbutton(selectAtomGUI,text='%(number)d %(name)s'%{'number':number,'name':atom_name},command=lambda element=number: elementArray.append(element))
+        if number>=3 and number<10:   
+            #atomButton=tkinter.Checkbutton(selectAtomGUI,text='%(number)d %(name)s'%{'number':number,'name':atom_name},variable=v,command=lambda text=number: print(text))
+            atomButton.place(x=20,y=20+(number-3)*40)
+        elif number>=10 and number<20:
+            atomButton.place(x=80,y=20+(number-10)*40)
+        elif number>=20 and number<30:
+            atomButton.place(x=150,y=20+(number-20)*40)
+        elif number>=30 and number<40:
+            atomButton.place(x=220,y=20+(number-30)*40)
+        elif number>=40 and number<50:
+            atomButton.place(x=290,y=20+(number-40)*40)
+        elif number>=50 and number<60:
+            atomButton.place(x=360,y=20+(number-50)*40)
+        elif number>=60 and number<70:
+            atomButton.place(x=430,y=20+(number-60)*40)
+        elif number>=70 and number<80:
+            atomButton.place(x=500,y=20+(number-70)*40)
+        elif number>=80 and number<90:
+            atomButton.place(x=570,y=20+(number-80)*40)
+        elif number>=90:
+            atomButton.place(x=640,y=20+(number-90)*40)
+            
+            
+    saveButton=tkinter.Button(selectAtomGUI,text='Save',bg='orange',command=lambda: clickSaveButtonSA(elementArray))
+    saveButton.place(x=660,y=200)
+    clearButton=tkinter.Button(selectAtomGUI,text='Clear')
+    clearButton.place(x=660,y=250)
+    
     
     
        
@@ -739,7 +783,7 @@ def rootGUI():
    v3=tkinter.IntVar()
    allAtomSelect=tkinter.Radiobutton(root, text='from all elements',value=1,variable=v3,command=lambda: selectElements(selectAtomButton,v3))
    allAtomSelect.place(x=380,y=40)
-   selectAtomButton=tkinter.Button(root,text='Select Elements')
+   selectAtomButton=tkinter.Button(root,text='Select Elements',command=lambda: clickSelectAtomButton(root))
    someAtomSelect=tkinter.Radiobutton(root,text='from selected elements',value=2,variable=v3,command=lambda: selectElements(selectAtomButton,v3))
    someAtomSelect.place(x=380,y=60.5)
    
