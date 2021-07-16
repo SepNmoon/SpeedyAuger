@@ -578,11 +578,15 @@ def rangeGUI(selectBE,selectKE,fromEntry,toEntry,selectValue):
 #---------------------------------------------------------------------------------------- 
 #All about rootGUI 
 
-def clickSearchButtonRT(root,fromEntry,toEntry,v2,selectButton,inputEntry):
+def clickSearchButtonRT(root,fromEntry,toEntry,v2,selectButton,inputEntry,v1,v3):
     fromValue=fromEntry.get()
     toValue=toEntry.get()
     selectBE=False
     selectKE=False
+    augerTran=False
+    coreState=False
+    fromAll=False
+    fromSome=False
     if fromValue=='' or toValue=='':
         tkinter.messagebox.showinfo(title='ERROR',message='Please input values',parent=root)
     else:
@@ -592,36 +596,52 @@ def clickSearchButtonRT(root,fromEntry,toEntry,v2,selectButton,inputEntry):
         except:
             tkinter.messagebox.showinfo(title='ERROR',message='Please input valid values',parent=root)
         else:
-            if v2.get()==1:
-                selectKE=True
-                selectValue=0
-            elif v2.get()==2:
-                
-                if (selectButton.get()=='No selection' and inputEntry.get()=='') or (selectButton.get()!='No selection' and inputEntry.get()!=''):
-                    tkinter.messagebox.showinfo(title='ERROR',message='Please input or select',parent=root)
-                elif selectButton.get()!='No selection':
-                    selectBE=True
-                    if selectButton.get()=='Mg 1253.6(eV)':           
-                       selectValue=1253.6            
-                    elif selectButton.get()=='Al 1486.7(eV)':
-                       selectValue=1486.7          
-                    elif selectButton.get()=='Ag 2984.3(eV)':
-                       selectValue=2984.3           
-                    elif selectButton.get()=='Cr 5414.9(eV)':
-                       selectValue=5414.9            
-                    elif selectButton.get()=='Ga 9251.74(eV)':
-                       selectValue=9251.74   
-            
-                elif inputEntry.get()!='':
-                    try:
-                        selectValue=float(inputEntry.get())
-                    except:
-                        tkinter.messagebox.showinfo(title='ERROR',message='Please input valid values',parent=root) 
-                    else:
-                        selectBE=True
-               
+            if v1.get()==1:
+                augerTran=True
+            elif v1.get()==2:
+                coreState=True
             else:
-                tkinter.messagebox.showinfo(title='ERROR',message='Please select by KE or BE',parent=root)
+                tkinter.messagebox.showinfo(title='ERROR',message='Please select Auger Transitions or core state energies',parent=root)
+            if augerTran==True or coreState==True:
+                if v3.get()==1:
+                    fromAll=True
+                elif v3.get()==2:                   
+                    if len(unique_array)==0:                     
+                        tkinter.messagebox.showinfo(title='ERROR',message='Please select elements',parent=root)  
+                    else:
+                        fromSome=True
+                else:
+                    tkinter.messagebox.showinfo(title='ERROR',message='Please select from all elements or from some elements',parent=root)
+            if augerTran==True and (fromAll==True or fromSome==True):
+                if v2.get()==1:
+                    selectKE=True
+                    selectValue=0
+                elif v2.get()==2:
+                    if (selectButton.get()=='No selection' and inputEntry.get()=='') or (selectButton.get()!='No selection' and inputEntry.get()!=''):
+                        tkinter.messagebox.showinfo(title='ERROR',message='Please input or select',parent=root)
+                    elif selectButton.get()!='No selection':
+                        selectBE=True
+                        if selectButton.get()=='Mg 1253.6(eV)':                              
+                            selectValue=1253.6   
+                        elif selectButton.get()=='Al 1486.7(eV)':
+                            selectValue=1486.7  
+                        elif selectButton.get()=='Ag 2984.3(eV)':
+                            selectValue=2984.3  
+                        elif selectButton.get()=='Cr 5414.9(eV)':
+                            selectValue=5414.9 
+                        elif selectButton.get()=='Ga 9251.74(eV)':
+                            selectValue=9251.74   
+                    elif inputEntry.get()!='':
+                        try:
+                            selectValue=float(inputEntry.get())
+                        except:
+                            tkinter.messagebox.showinfo(title='ERROR',message='Please input valid values',parent=root)
+                        else:
+                            selectBE=True
+                else:
+                    tkinter.messagebox.showinfo(title='ERROR',message='Please select by KE or BE',parent=root)
+                    
+
     
     if selectBE or selectKE:        
         rangeGUI(selectBE,selectKE,fromEntry,toEntry,selectValue) 
@@ -739,9 +759,7 @@ def selectTranCoreButton(v1,keSelect,beSelect,v2):
         beSelect.place_forget()
         
     
-       
-        
-    
+ 
 #rootGUI
 def rootGUI():    
    number_name=getAtom() #dict
@@ -829,27 +847,14 @@ def rootGUI():
    sep1.place(relx=0.3, rely=0.05, relheight=0.1, relwidth=0.0005)
    
    v3=tkinter.IntVar()
-   allAtomSelect=tkinter.Radiobutton(root, text='from all elements',value=1,variable=v3,command=lambda: selectElements(selectAtomButton,v3))
+   allAtomSelect=tkinter.Radiobutton(root, text='From All Elements',value=1,variable=v3,command=lambda: selectElements(selectAtomButton,v3))
    allAtomSelect.place(x=320,y=40)
    selectAtomButton=tkinter.Button(root,text='Select Elements',command=lambda: clickSelectAtomButton(root))
-   someAtomSelect=tkinter.Radiobutton(root,text='from selected elements',value=2,variable=v3,command=lambda: selectElements(selectAtomButton,v3))
+   someAtomSelect=tkinter.Radiobutton(root,text='From Selected Elements',value=2,variable=v3,command=lambda: selectElements(selectAtomButton,v3))
    someAtomSelect.place(x=320,y=60.5)
    
 
-   
-
-   
-   
-   #v = tkinter.IntVar()
-
-   #selectButton=ttk.Combobox(root,width=12)
-   #orLabel=tkinter.Label(root,text='or')
-   #inputEntry=tkinter.Entry(root,width=10)  
-   #keSelect=tkinter.Radiobutton(root,text='by kinetic energies',value=1,variable=v,command=lambda: selectRadioButton(v,root,selectButton,orLabel,inputEntry))
-   #keSelect.place(x=530,y=1)
-   #beSelect=tkinter.Radiobutton(root,text='by binding energies',value=2,variable=v,command=lambda: selectRadioButton(v,root,selectButton,orLabel,inputEntry))
-   #beSelect.place(x=530,y=21.5)
-   searchButton=tkinter.Button(root,text='Search',bg='Orange',command=lambda: clickSearchButtonRT(root,fromEntry,toEntry,v2,selectButton,inputEntry))
+   searchButton=tkinter.Button(root,text='Search',bg='Orange',command=lambda: clickSearchButtonRT(root,fromEntry,toEntry,v2,selectButton,inputEntry,v1,v3))
    searchButton.place(x=685,y=10)
    clearButton=tkinter.Button(root,text='Clear',command=lambda: clickClearButtonRT(root,fromEntry,toEntry,v2,selectButton,orLabel,inputEntry))
    clearButton.place(x=750,y=10)
