@@ -1,5 +1,6 @@
 import pymysql
 import tkinter
+import numpy as np
 from tkinter import messagebox 
 from tkinter import ttk
 from tkinter import Scrollbar
@@ -659,7 +660,24 @@ def selectElements(selectAtomButton,v3):
         selectAtomButton.place_forget()
 
 def clickSaveButtonSA(elementArray):
-    print(elementArray)
+    
+    elementArray=sorted(elementArray)
+    unique_element=np.unique(elementArray)
+    resdata = []
+    for ii in unique_element:
+        resdata.append(elementArray.count(ii))
+
+    new_array=[]
+    index=0
+    for d in resdata:
+        if d%2==0:
+            pass
+        else:
+            new_array.append(unique_element[index])
+        index+=1
+    print(new_array)
+            
+        
 
     
     
