@@ -659,9 +659,10 @@ def selectElements(selectAtomButton,v3):
     else:      
         selectAtomButton.place_forget()
 
-def clickSaveButtonSA(elementArray):
-    
+def clickSaveButtonSA(element,elementArray):
+    elementArray.append(element)
     elementArray=sorted(elementArray)
+    print(elementArray)
     unique_element=np.unique(elementArray)
     resdata = []
     for ii in unique_element:
@@ -676,7 +677,15 @@ def clickSaveButtonSA(elementArray):
             new_array.append(unique_element[index])
         index+=1
     print(new_array)
+    global unique_array
+    unique_array=new_array
+    
+   
+
             
+def clickClearButtonSA(elementArray,atomButton):
+    atomButton.deselect()
+ 
         
 
     
@@ -685,15 +694,17 @@ def clickSelectAtomButton(root):
     selectAtomGUI=tkinter.Tk()
     selectAtomGUI.geometry("750x450")
     number_name=getAtom()
-    #index=3
-    elementArray=[]
+    
+
+    global elementArray
     for number in number_name:
+        v=tkinter.IntVar()
         atom_name=number_name[number]
-        #v=tkinter.IntVar(value=number)        
-        
-        atomButton=tkinter.Checkbutton(selectAtomGUI,text='%(number)d %(name)s'%{'number':number,'name':atom_name},command=lambda element=number: elementArray.append(element))
+        atomButton=tkinter.Checkbutton(selectAtomGUI,text='%(number)d %(name)s'%{'number':number,'name':atom_name},variable=v,command=lambda element=number: clickSaveButtonSA(element,elementArray))
+        if number in unique_array:
+            atomButton.select()
+   
         if number>=3 and number<10:   
-            #atomButton=tkinter.Checkbutton(selectAtomGUI,text='%(number)d %(name)s'%{'number':number,'name':atom_name},variable=v,command=lambda text=number: print(text))
             atomButton.place(x=20,y=20+(number-3)*40)
         elif number>=10 and number<20:
             atomButton.place(x=80,y=20+(number-10)*40)
@@ -715,9 +726,9 @@ def clickSelectAtomButton(root):
             atomButton.place(x=640,y=20+(number-90)*40)
             
             
-    saveButton=tkinter.Button(selectAtomGUI,text='Save',bg='orange',command=lambda: clickSaveButtonSA(elementArray))
-    saveButton.place(x=660,y=200)
-    clearButton=tkinter.Button(selectAtomGUI,text='Clear')
+    #saveButton=tkinter.Button(selectAtomGUI,text='Save',bg='orange',command=lambda: clickSaveButtonSA(elementArray))
+    #saveButton.place(x=660,y=200)
+    clearButton=tkinter.Button(selectAtomGUI,text='Clear',command=lambda:clickClearButtonSA(elementArray,atomButton))
     clearButton.place(x=660,y=250)
     
     
@@ -840,6 +851,9 @@ if __name__ == "__main__":
     
     lastChoice=0
     sortOrder='by_number'
+
+    elementArray=[]
+    unique_array=[]
 
 
     rootGUI()
