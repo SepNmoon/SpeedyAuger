@@ -444,36 +444,59 @@ def clickExportButtonRG(range_window,transition_table,position,rangeMin,rangeMax
 
 def clickSortButtonRG(table,position,descending,auger_range):
     
+    global sortOrder
+    position_energies=dict()
     
     if auger_range==True:
+        for p in range(position):
+            p+=1
+            position_energies[p]=float(table.set(p,'#3'))
+    elif auger_range==False:
+        for p in range(position):
+            p+=1
+            position_energies[p]=float(table.set(p,'#4'))
+    
+    if descending==True: 
+        sortOrder='descending'
+        sort_position=sorted(position_energies.items(),key=lambda x:x[1],reverse=True)
+    else:
+        sortOrder='ascending'
+        sort_position=sorted(position_energies.items(),key=lambda x:x[1],reverse=False)
+    
+    
+    new_table=[]
+    if auger_range==True:        
+        for i in sort_position:
+            p=i[0]
+            temp=[]
+            temp.append(table.set(p,'#1'))
+            temp.append(table.set(p,'#2'))
+            temp.append(table.set(p,'#3'))
+            new_table.append(temp)
         
-    #global sortOrder   
-    #position_energies=dict()
-    #for p in range(position):
-        #p+=1
-        #position_energies[p]=float(table.set(p,'#3'))
+        for p in range(position):
+            p+=1              
+            table.set(p,'#1',new_table[p-1][0])
+            table.set(p,'#2',new_table[p-1][1])
+            table.set(p,'#3',new_table[p-1][2])
+    elif auger_range==False:
+        for i in sort_position:
+            p=i[0]
+            temp=[]
+            temp.append(table.set(p,'#1'))
+            temp.append(table.set(p,'#2'))
+            temp.append(table.set(p,'#3'))
+            temp.append(table.set(p,'#4'))
+            new_table.append(temp)
+            
+        for p in range(position):
+            p+=1              
+            table.set(p,'#1',new_table[p-1][0])
+            table.set(p,'#2',new_table[p-1][1])
+            table.set(p,'#3',new_table[p-1][2])
+            table.set(p,'#4',new_table[p-1][3])
 
-    #if descending==True:
-        #sortOrder='descending'
-        #sort_position=sorted(position_energies.items(),key=lambda x:x[1],reverse=True)
-    #else:
-        #sortOrder='ascending'
-        #sort_position=sorted(position_energies.items(),key=lambda x:x[1],reverse=False)
-    
-    #new_table=[]
-    #for i in sort_position:
-        #p=i[0]
-        #temp=[]
-        #temp.append(table.set(p,'#1'))
-        #temp.append(table.set(p,'#2'))
-        #temp.append(table.set(p,'#3'))
-        #new_table.append(temp)
-    
-    #for p in range(position):
-        #p+=1              
-        #table.set(p,'#1',new_table[p-1][0])
-        #table.set(p,'#2',new_table[p-1][1])
-        #table.set(p,'#3',new_table[p-1][2])
+
  
 
 def clickNumberButtonRG(all_transitions,transition_table,position):
