@@ -643,19 +643,50 @@ def clickSearchButtonRT(root,fromEntry,toEntry,v2,selectButton,inputEntry,v1,v3)
                     
 
     
-    if selectBE or selectKE:        
-        rangeGUI(selectBE,selectKE,fromEntry,toEntry,selectValue) 
+    #if selectBE or selectKE:        
+        #rangeGUI(selectBE,selectKE,fromEntry,toEntry,selectValue) 
+    if augerTran==True and (fromAll==True or fromSome==True) and (selectBE==True or selectKE==True):
+        print(11)
                         
               
+def clickCheckButtonSA(element,elementArray):
+    elementArray.append(element)
+    elementArray=sorted(elementArray)
+    unique_element=np.unique(elementArray)
+    resdata = []
+    for ii in unique_element:
+        resdata.append(elementArray.count(ii))
+
+    new_array=[]
+    index=0
+    for d in resdata:
+        if d%2==0:
+            pass
+        else:
+            new_array.append(unique_element[index])
+        index+=1
+    global unique_array
+    unique_array=new_array            
             
-            
-def clickClearButtonRT(root,fromEntry,toEntry,v,selectButton,orLabel,inputEntry):
+def clickClearButtonRT(root,fromEntry,toEntry,v2,selectButton,orLabel,inputEntry,v1,v3):
     fromEntry.delete(0,'end')
     toEntry.delete(0,'end')
-    v.set(0)
+    v1.set(0)
+    v2.set(0)
+    v3.set(0)
     selectButton.place_forget()
     orLabel.place_forget()
     inputEntry.place_forget()
+    
+    global unique_array
+    
+    for element in unique_array:
+        clickCheckButtonSA(element,elementArray)
+    
+    
+    unique_array=[]
+    
+    print(unique_array)
     
     
 
@@ -679,34 +710,33 @@ def selectElements(selectAtomButton,v3):
     else:      
         selectAtomButton.place_forget()
 
-def clickCheckButtonSA(element,elementArray):
-    elementArray.append(element)
-    elementArray=sorted(elementArray)
-    unique_element=np.unique(elementArray)
-    resdata = []
-    for ii in unique_element:
-        resdata.append(elementArray.count(ii))
+#def clickCheckButtonSA(element,elementArray):
+    #elementArray.append(element)
+    #elementArray=sorted(elementArray)
+    #unique_element=np.unique(elementArray)
+    #resdata = []
+    #for ii in unique_element:
+        #resdata.append(elementArray.count(ii))
 
-    new_array=[]
-    index=0
-    for d in resdata:
-        if d%2==0:
-            pass
-        else:
-            new_array.append(unique_element[index])
-        index+=1
-    global unique_array
-    unique_array=new_array
+    #new_array=[]
+    #index=0
+    #for d in resdata:
+        #if d%2==0:
+            #pass
+        #else:
+            #new_array.append(unique_element[index])
+        #index+=1
+    #global unique_array
+    #unique_array=new_array
     
    
 
             
-def clickClearButtonSA(elementArray,elementCheck):
-    
+def clickClearButtonSA(elementArray,elementCheck):    
+
     for number in elementCheck:
         elementCheck[number].deselect()
     
-
     for element in unique_array:
         clickCheckButtonSA(element,elementArray)
     
@@ -718,10 +748,13 @@ def clickSelectAtomButton(root):
     
     elementCheck={}
     global elementArray
+    global unique_array
+    print(unique_array)
     for number in number_name:
         v=tkinter.IntVar()
         atom_name=number_name[number]
         elementCheck[number]=tkinter.Checkbutton(selectAtomGUI,text='%(number)d %(name)s'%{'number':number,'name':atom_name},variable=v,command=lambda element=number: clickCheckButtonSA(element,elementArray))
+        
         if number in unique_array:
             elementCheck[number].select()
         if number>=3 and number<10:   
@@ -856,7 +889,7 @@ def rootGUI():
 
    searchButton=tkinter.Button(root,text='Search',bg='Orange',command=lambda: clickSearchButtonRT(root,fromEntry,toEntry,v2,selectButton,inputEntry,v1,v3))
    searchButton.place(x=685,y=10)
-   clearButton=tkinter.Button(root,text='Clear',command=lambda: clickClearButtonRT(root,fromEntry,toEntry,v2,selectButton,orLabel,inputEntry))
+   clearButton=tkinter.Button(root,text='Clear',command=lambda: clickClearButtonRT(root,fromEntry,toEntry,v2,selectButton,orLabel,inputEntry,v1,v3))
    clearButton.place(x=750,y=10)
     
 
@@ -870,6 +903,7 @@ if __name__ == "__main__":
 
     elementArray=[]
     unique_array=[]
+
 
 
     rootGUI()
