@@ -1,0 +1,18 @@
+Atom    Auger Transition      Auger Energy
+------  ------------------  --------------
+Se      L3,M3,N1                     11.83
+Ba      M1,O2,P1                     11.41
+Pm      M1,N1,O1                     10.93
+Pm      M1,N3,N4                     11.69
+Sm      M2,N2,P1                     10.56
+Sm      M2,N4,N4                     10.86
+Sm      M3,N5,O3                     11.67
+Dy      M5,O3,O3                     10.77
+Ho      M5,O1,O1                     10.22
+Er      M4,N4,O3                     11.5
+Tm      M5,N4,O2                     10.15
+Hf      M5,N3,O3                     11.48
+Os      L1,L3,N1                     10.77
+Os      M5,N1,N7                     10.03
+Os      M5,N1,O2                     10.22
+Pt      L2,L3,N5                     10.61
