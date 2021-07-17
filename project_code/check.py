@@ -417,9 +417,9 @@ def clickExportButtonRG(range_window,transition_table,position,rangeMin,rangeMax
                 table_data.append(temp)
             
             if selectKE==True:
-                file_path=file_path+'/'+'from_'+rangeMin+'_to_'+rangeMax+'_KE_'+sortOrder+'.txt'
+                file_path=file_path+'/'+'Auger_transitions_'+'from_'+rangeMin+'_to_'+rangeMax+'_KE_'+sortOrder+'.txt'
             elif selectBE==True:               
-                file_path=file_path+'/'+'from_'+rangeMin+'_to_'+rangeMax+'_BE_'+selectValue+sortOrder+'.txt'
+                file_path=file_path+'/'+'Auger_transitions_'+'from_'+rangeMin+'_to_'+rangeMax+'_BE_'+selectValue+sortOrder+'.txt'
             with open(file_path,'w') as f:
                 f.write(tabulate(table_data,headers=table_header))
         
@@ -486,36 +486,41 @@ def clickNumberButtonRG(all_transitions,transition_table,position):
     
       
 
-def rangeGUI(selectBE,selectKE,fromEntry,toEntry,selectValue):
+def augerRangeGUI(selectBE,selectKE,fromEntry,toEntry,selectValue,fromAll,fromSome):
     range_window=tkinter.Tk()
     range_window.geometry("1200x680")
     
-
     number_range=getRange()
     number_name=getAtom()
+
 
     rangeMin=min(float(fromEntry.get()),float(toEntry.get()))
     rangeMax=max(float(fromEntry.get()),float(toEntry.get()))
     correctAtom=[]
-    if selectKE==True:          
-        for number in number_range:
-            temp=number_range[number]
-            if temp['Max']<rangeMin or temp['Min']>rangeMax:
-                pass
-            else:
-                correctAtom.append(number)
-    elif selectBE==True:
-        for number in number_range:
-            temp=number_range[number]
-            temp_min=selectValue-temp['Max']
-            temp_max=selectValue-temp['Min']
-            if temp_max<rangeMin or temp_min>rangeMax:
-                pass
-            else:
-                correctAtom.append(number)
+    
+    if fromAll==True:
+        if selectKE==True:
+            for number in number_range:
+                temp=number_range[number]
+                if temp['Max']<rangeMin or temp['Min']>rangeMax:
+                    pass
+                else:
+                    correctAtom.append(number)
+        elif selectBE==True:
+            for number in number_range:
+                temp=number_range[number]
+                temp_min=selectValue-temp['Max']
+                temp_max=selectValue-temp['Min']
+                if temp_max<rangeMin or temp_min>rangeMax:
+                    pass
+                else:
+                    correctAtom.append(number)
+        print(correctAtom)
+    elif fromSome==True:
+        correctAtom=unique_array
 
     all_transitions=dict()  
-   
+    transitions_length=0
     for number in correctAtom:        
         temp=dict()
         atom_name=number_name[number]
@@ -523,52 +528,57 @@ def rangeGUI(selectBE,selectKE,fromEntry,toEntry,selectValue):
         if selectKE==True:           
             for t in current_transitions:
                 if current_transitions[t]>=rangeMin and current_transitions[t]<=rangeMax:
+                    transitions_length+=1
                     temp[t]=current_transitions[t]
-            all_transitions[atom_name]=temp
+                    all_transitions[atom_name]=temp
         elif selectBE==True:            
             for t in current_transitions:
                 if (selectValue-float(current_transitions[t]))>=rangeMin and (selectValue-float(current_transitions[t]))<=rangeMax:
+                    transitions_length+=1
                     temp[t]=Decimal(selectValue-float(current_transitions[t])).quantize(Decimal('0.00'))                    
-            all_transitions[atom_name]=temp
+                    all_transitions[atom_name]=temp
 
+    if transitions_length>0:
+        
+        if transitions_length<=30:
+            table_row=transitions_length
+        else:
+            table_row=30
+        
+        transition_table=ttk.Treeview(range_window,height=table_row,columns=['1','2','3'],show='headings')
+        transition_table.column('1',width=100) 
+        transition_table.column('2',width=200) 
+        transition_table.column('3',width=200) 
+        transition_table.heading('1', text='Atom')
+        transition_table.heading('2', text='Auger Transition')
+        transition_table.heading('3', text='Auger Energies')
+        transition_table.pack()    
+    
+        position=0
+        for atom_name in all_transitions:
+            current_transitions=all_transitions[atom_name]
+            for t in current_transitions:            
+                transition_table.insert('',position,iid=position+1,values=(atom_name,t,current_transitions[t]))
+                position+=1
+    
 
-    if len(all_transitions)<=30:
-        table_row=len(all_transitions)
+        
+
+        ybar=Scrollbar(transition_table,orient='vertical', command=transition_table.yview,bg='Gray')
+        transition_table.configure(yscrollcommand=ybar.set)
+        ybar.place(relx=0.95, rely=0.02, relwidth=0.035, relheight=0.958)
+    
+        descendingButton=tkinter.Button(range_window,text='Descending order (energies)',bg='LightPink',command=lambda: clickSortButtonRG(transition_table,position,descending=True))
+        descendingButton.place(x=900,y=50)
+        ascendingButton=tkinter.Button(range_window,text='Ascending order (energies)',bg='LightBlue',command=lambda: clickSortButtonRG(transition_table,position,descending=False))
+        ascendingButton.place(x=900,y=100)
+        numberButton=tkinter.Button(range_window,text='Sort by atomic number',bg='LightGreen',command=lambda: clickNumberButtonRG(all_transitions,transition_table,position))
+        numberButton.place(x=900,y=150)
+    
+        exportButton=tkinter.Button(range_window,text='Export',bg='Yellow',command=lambda: clickExportButtonRG(range_window,transition_table,position,rangeMin,rangeMax,selectKE,selectBE,selectValue))
+        exportButton.place(x=900,y=300)
     else:
-        table_row=30
-        
-    transition_table=ttk.Treeview(range_window,height=table_row,columns=['1','2','3'],show='headings')
-    transition_table.column('1',width=100) 
-    transition_table.column('2',width=200) 
-    transition_table.column('3',width=200) 
-    transition_table.heading('1', text='Atom')
-    transition_table.heading('2', text='Auger Transition')
-    transition_table.heading('3', text='Auger Energies')
-    transition_table.pack()    
-    
-    position=0
-    for atom_name in all_transitions:
-        current_transitions=all_transitions[atom_name]
-        for t in current_transitions:            
-            transition_table.insert('',position,iid=position+1,values=(atom_name,t,current_transitions[t]))
-            position+=1
-    
-
-        
-
-    ybar=Scrollbar(transition_table,orient='vertical', command=transition_table.yview,bg='Gray')
-    transition_table.configure(yscrollcommand=ybar.set)
-    ybar.place(relx=0.95, rely=0.02, relwidth=0.035, relheight=0.958)
-    
-    descendingButton=tkinter.Button(range_window,text='Descending order (energies)',bg='LightPink',command=lambda: clickSortButtonRG(transition_table,position,descending=True))
-    descendingButton.place(x=900,y=50)
-    ascendingButton=tkinter.Button(range_window,text='Ascending order (energies)',bg='LightBlue',command=lambda: clickSortButtonRG(transition_table,position,descending=False))
-    ascendingButton.place(x=900,y=100)
-    numberButton=tkinter.Button(range_window,text='Sort by atomic number',bg='LightGreen',command=lambda: clickNumberButtonRG(all_transitions,transition_table,position))
-    numberButton.place(x=900,y=150)
-    
-    exportButton=tkinter.Button(range_window,text='Export',bg='Yellow',command=lambda: clickExportButtonRG(range_window,transition_table,position,rangeMin,rangeMax,selectKE,selectBE,selectValue))
-    exportButton.place(x=900,y=300)
+        tkinter.messagebox.showinfo(title='REMINDER',message='No relevant results',parent=range_window)
     
     range_window.mainloop()  
 
@@ -646,7 +656,8 @@ def clickSearchButtonRT(root,fromEntry,toEntry,v2,selectButton,inputEntry,v1,v3)
     #if selectBE or selectKE:        
         #rangeGUI(selectBE,selectKE,fromEntry,toEntry,selectValue) 
     if augerTran==True and (fromAll==True or fromSome==True) and (selectBE==True or selectKE==True):
-        print(11)
+        augerRangeGUI(selectBE,selectKE,fromEntry,toEntry,selectValue,fromAll,fromSome)
+        
                         
               
 def clickCheckButtonSA(element,elementArray):
@@ -682,11 +693,10 @@ def clickClearButtonRT(root,fromEntry,toEntry,v2,selectButton,orLabel,inputEntry
     
     for element in unique_array:
         clickCheckButtonSA(element,elementArray)
-    
-    
+      
     unique_array=[]
     
-    print(unique_array)
+
     
     
 
@@ -710,28 +720,7 @@ def selectElements(selectAtomButton,v3):
     else:      
         selectAtomButton.place_forget()
 
-#def clickCheckButtonSA(element,elementArray):
-    #elementArray.append(element)
-    #elementArray=sorted(elementArray)
-    #unique_element=np.unique(elementArray)
-    #resdata = []
-    #for ii in unique_element:
-        #resdata.append(elementArray.count(ii))
-
-    #new_array=[]
-    #index=0
-    #for d in resdata:
-        #if d%2==0:
-            #pass
-        #else:
-            #new_array.append(unique_element[index])
-        #index+=1
-    #global unique_array
-    #unique_array=new_array
-    
-   
-
-            
+           
 def clickClearButtonSA(elementArray,elementCheck):    
 
     for number in elementCheck:
@@ -749,7 +738,6 @@ def clickSelectAtomButton(root):
     elementCheck={}
     global elementArray
     global unique_array
-    print(unique_array)
     for number in number_name:
         v=tkinter.IntVar()
         atom_name=number_name[number]
