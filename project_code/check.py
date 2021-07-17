@@ -434,8 +434,7 @@ def clickExportButtonRG(range_window,transition_table,position,rangeMin,rangeMax
                     file_path=file_path+'/'+'Auger_transitions_'+'from_'+rangeMin+'_to_'+rangeMax+'_BE_'+selectValue+'_'+sortOrder+'_'+name_str+'.txt'
                 with open(file_path,'w') as f:
                     f.write(tabulate(table_data,headers=table_header))
-                
-        
+
         
         else:
             pass
@@ -443,35 +442,38 @@ def clickExportButtonRG(range_window,transition_table,position,rangeMin,rangeMax
         pass
     
 
-def clickSortButtonRG(transition_table,position,descending):
-    global sortOrder
+def clickSortButtonRG(table,position,descending,auger_range):
     
-    position_energies=dict()
-    for p in range(position):
-        p+=1
-        position_energies[p]=float(transition_table.set(p,'#3'))
+    
+    if auger_range==True:
+        
+    #global sortOrder   
+    #position_energies=dict()
+    #for p in range(position):
+        #p+=1
+        #position_energies[p]=float(table.set(p,'#3'))
 
-    if descending==True:
-        sortOrder='descending'
-        sort_position=sorted(position_energies.items(),key=lambda x:x[1],reverse=True)
-    else:
-        sortOrder='ascending'
-        sort_position=sorted(position_energies.items(),key=lambda x:x[1],reverse=False)
+    #if descending==True:
+        #sortOrder='descending'
+        #sort_position=sorted(position_energies.items(),key=lambda x:x[1],reverse=True)
+    #else:
+        #sortOrder='ascending'
+        #sort_position=sorted(position_energies.items(),key=lambda x:x[1],reverse=False)
     
-    new_table=[]
-    for i in sort_position:
-        p=i[0]
-        temp=[]
-        temp.append(transition_table.set(p,'#1'))
-        temp.append(transition_table.set(p,'#2'))
-        temp.append(transition_table.set(p,'#3'))
-        new_table.append(temp)
+    #new_table=[]
+    #for i in sort_position:
+        #p=i[0]
+        #temp=[]
+        #temp.append(table.set(p,'#1'))
+        #temp.append(table.set(p,'#2'))
+        #temp.append(table.set(p,'#3'))
+        #new_table.append(temp)
     
-    for p in range(position):
-        p+=1              
-        transition_table.set(p,'#1',new_table[p-1][0])
-        transition_table.set(p,'#2',new_table[p-1][1])
-        transition_table.set(p,'#3',new_table[p-1][2])
+    #for p in range(position):
+        #p+=1              
+        #table.set(p,'#1',new_table[p-1][0])
+        #table.set(p,'#2',new_table[p-1][1])
+        #table.set(p,'#3',new_table[p-1][2])
  
 
 def clickNumberButtonRG(all_transitions,transition_table,position):
@@ -580,9 +582,9 @@ def augerRangeGUI(selectBE,selectKE,fromEntry,toEntry,selectValue,fromAll,fromSo
         transition_table.configure(yscrollcommand=ybar.set)
         ybar.place(relx=0.95, rely=0.02, relwidth=0.035, relheight=0.958)
     
-        descendingButton=tkinter.Button(range_window,text='Descending order (energies)',bg='LightPink',command=lambda: clickSortButtonRG(transition_table,position,descending=True))
+        descendingButton=tkinter.Button(range_window,text='Descending order (energies)',bg='LightPink',command=lambda: clickSortButtonRG(transition_table,position,descending=True,auger_range=True))
         descendingButton.place(x=900,y=50)
-        ascendingButton=tkinter.Button(range_window,text='Ascending order (energies)',bg='LightBlue',command=lambda: clickSortButtonRG(transition_table,position,descending=False))
+        ascendingButton=tkinter.Button(range_window,text='Ascending order (energies)',bg='LightBlue',command=lambda: clickSortButtonRG(transition_table,position,descending=False,auger_range=True))
         ascendingButton.place(x=900,y=100)
         numberButton=tkinter.Button(range_window,text='Sort by atomic number',bg='LightGreen',command=lambda: clickNumberButtonRG(all_transitions,transition_table,position))
         numberButton.place(x=900,y=150)
@@ -594,6 +596,92 @@ def augerRangeGUI(selectBE,selectKE,fromEntry,toEntry,selectValue,fromAll,fromSo
     
     range_window.mainloop()  
 
+
+def coreStateGUI(fromEntry,toEntry,fromAll,fromSome):
+    range_window=tkinter.Tk()
+    range_window.geometry("1200x680")
+    
+    rangeMin=min(float(fromEntry.get()),float(toEntry.get()))
+    rangeMax=max(float(fromEntry.get()),float(toEntry.get()))
+    
+    number_energies=getEnergies()
+    number_name=getAtom()
+    barkla_orbital=getNotation()
+    
+    correct_core=dict()
+    core_length=0
+    if fromAll==True:
+        for number in number_energies:
+            temp=number_energies[number]
+            temp2=dict()
+            for key,value in temp.items():
+                if value!=None:                   
+                    if value<=rangeMax and value>=rangeMin:                       
+                        temp2[key]=value
+                        core_length+=1
+                             
+                else:
+                    pass
+            
+            if temp2!={} and number!=94:
+                atom_name=number_name[number]
+                correct_core[atom_name]=temp2
+    elif fromSome==True:
+        for number in unique_array:
+            temp=number_energies[number]
+            temp2=dict()
+            for key,value in temp.items():
+                if value!=None:                   
+                    if value<=rangeMax and value>=rangeMin:                       
+                        temp2[key]=value
+                        core_length+=1
+                else:
+                    pass
+            if temp2!={} and number!=94:   
+                atom_name=number_name[number]
+                correct_core[atom_name]=temp2
+    if len(correct_core)!=0:
+        if core_length<=30:
+            table_row=core_length
+        else:
+            table_row=30
+        
+        binding_table=ttk.Treeview(range_window,height=table_row,columns=['1','2','3','4'],show='headings')
+        binding_table.column('1',width=100) 
+        binding_table.column('2',width=150) 
+        binding_table.column('3',width=150) 
+        binding_table.column('4',width=160) 
+        binding_table.heading('1', text='Atom')
+        binding_table.heading('2', text='Barkla Notation')
+        binding_table.heading('3', text='Orbital Notation')
+        binding_table.heading('4', text='Binding Energies')
+        position=0       
+        binding_table.pack() 
+        for name in correct_core:
+            temp=correct_core[name]
+            for shell in temp:
+                binding_table.insert('',position,iid=position+1,values=(name,shell,barkla_orbital[shell],temp[shell]))
+                position+=1
+        ybar=Scrollbar(binding_table,orient='vertical', command=binding_table.yview,bg='Gray')
+        binding_table.configure(yscrollcommand=ybar.set)
+        ybar.place(relx=0.95, rely=0.02, relwidth=0.035, relheight=0.958)    
+        
+        descendingButton=tkinter.Button(range_window,text='Descending order (energies)',bg='LightPink',command=lambda: clickSortButtonRG(binding_table,position,descending=True,auger_range=False))
+        descendingButton.place(x=900,y=50)
+        ascendingButton=tkinter.Button(range_window,text='Ascending order (energies)',bg='LightBlue',command=lambda: clickSortButtonRG(binding_table,position,descending=False,auger_range=False))
+        ascendingButton.place(x=900,y=100)
+        numberButton=tkinter.Button(range_window,text='Sort by atomic number',bg='LightGreen',command=lambda: clickNumberButtonRG(correct_core,binding_table,position))
+        numberButton.place(x=900,y=150)
+    
+        #exportButton=tkinter.Button(range_window,text='Export',bg='Yellow',command=lambda: clickExportButtonRG(range_window,binding_table,position,rangeMin,rangeMax,selectKE,selectBE,selectValue,fromAll,fromSome,correctAtom))
+        #exportButton.place(x=900,y=300)
+    else:
+        tkinter.messagebox.showinfo(title='REMINDER',message='No relevant results',parent=range_window)
+
+    
+    range_window.mainloop()
+    
+    
 
 
 #----------------------------------------------------------------------------------------
@@ -662,13 +750,11 @@ def clickSearchButtonRT(root,fromEntry,toEntry,v2,selectButton,inputEntry,v1,v3)
                             selectBE=True
                 else:
                     tkinter.messagebox.showinfo(title='ERROR',message='Please select by KE or BE',parent=root)
-                    
 
-    
-    #if selectBE or selectKE:        
-        #rangeGUI(selectBE,selectKE,fromEntry,toEntry,selectValue) 
     if augerTran==True and (fromAll==True or fromSome==True) and (selectBE==True or selectKE==True):
         augerRangeGUI(selectBE,selectKE,fromEntry,toEntry,selectValue,fromAll,fromSome)
+    elif coreState==True and (fromAll==True or fromSome==True):
+        coreStateGUI(fromEntry,toEntry,fromAll,fromSome)
         
                         
               
