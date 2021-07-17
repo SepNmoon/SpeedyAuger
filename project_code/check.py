@@ -499,30 +499,47 @@ def clickSortButtonRG(table,position,descending,auger_range):
 
  
 
-def clickNumberButtonRG(all_transitions,transition_table,position):
+def clickNumberButtonRG(correct_energies,table,position,auger_range):
     global sortOrder
+    barkla_orbital=getNotation()
     sortOrder='by_number'
     new_table=[]
-    for atom_name in all_transitions:   
-        current_transitions=all_transitions[atom_name]
-        for transition in current_transitions:
-            temp=[]
-            temp.append(atom_name)
-            temp.append(transition)
-            temp.append(current_transitions[transition])
-            new_table.append(temp)
+    print(correct_energies)
     
-        
-        
-    for p in range(position):
-        p+=1
-        transition_table.set(p,'#1',new_table[p-1][0])
-        transition_table.set(p,'#2',new_table[p-1][1])
-        transition_table.set(p,'#3',new_table[p-1][2])
+    if auger_range==True:
+        for atom_name in correct_energies: 
+            current_transitions=correct_energies[atom_name]
+            for transition in current_transitions:
+                temp=[]
+                temp.append(atom_name)
+                temp.append(transition)
+                temp.append(current_transitions[transition])
+                new_table.append(temp)
+                
+        for p in range(position):
+            p+=1
+            table.set(p,'#1',new_table[p-1][0])
+            table.set(p,'#2',new_table[p-1][1])
+            table.set(p,'#3',new_table[p-1][2])
+    elif auger_range==False:
+        for atom_name in correct_energies:
+            current_energies=correct_energies[atom_name]
+            for shell in current_energies:
+                temp=[]
+                temp.append(atom_name)
+                temp.append(shell)
+                temp.append(barkla_orbital[shell])
+                temp.append(current_energies[shell])
+                new_table.append(temp)
+                
+            for p in range(position):
+                p+=1
+                table.set(p,'#1',new_table[p-1][0])
+                table.set(p,'#2',new_table[p-1][1])
+                table.set(p,'#3',new_table[p-1][2])
+                table.set(p,'#4',new_table[p-1][3])
+   
 
-    
-    
-      
 
 def augerRangeGUI(selectBE,selectKE,fromEntry,toEntry,selectValue,fromAll,fromSome):
     range_window=tkinter.Tk()
@@ -609,7 +626,7 @@ def augerRangeGUI(selectBE,selectKE,fromEntry,toEntry,selectValue,fromAll,fromSo
         descendingButton.place(x=900,y=50)
         ascendingButton=tkinter.Button(range_window,text='Ascending order (energies)',bg='LightBlue',command=lambda: clickSortButtonRG(transition_table,position,descending=False,auger_range=True))
         ascendingButton.place(x=900,y=100)
-        numberButton=tkinter.Button(range_window,text='Sort by atomic number',bg='LightGreen',command=lambda: clickNumberButtonRG(all_transitions,transition_table,position))
+        numberButton=tkinter.Button(range_window,text='Sort by atomic number',bg='LightGreen',command=lambda: clickNumberButtonRG(all_transitions,transition_table,position,auger_range=True))
         numberButton.place(x=900,y=150)
     
         exportButton=tkinter.Button(range_window,text='Export',bg='Yellow',command=lambda: clickExportButtonRG(range_window,transition_table,position,rangeMin,rangeMax,selectKE,selectBE,selectValue,fromAll,fromSome,correctAtom))
@@ -693,7 +710,7 @@ def coreStateGUI(fromEntry,toEntry,fromAll,fromSome):
         descendingButton.place(x=900,y=50)
         ascendingButton=tkinter.Button(range_window,text='Ascending order (energies)',bg='LightBlue',command=lambda: clickSortButtonRG(binding_table,position,descending=False,auger_range=False))
         ascendingButton.place(x=900,y=100)
-        numberButton=tkinter.Button(range_window,text='Sort by atomic number',bg='LightGreen',command=lambda: clickNumberButtonRG(correct_core,binding_table,position))
+        numberButton=tkinter.Button(range_window,text='Sort by atomic number',bg='LightGreen',command=lambda: clickNumberButtonRG(correct_core,binding_table,position,auger_range=False))
         numberButton.place(x=900,y=150)
     
         #exportButton=tkinter.Button(range_window,text='Export',bg='Yellow',command=lambda: clickExportButtonRG(range_window,binding_table,position,rangeMin,rangeMax,selectKE,selectBE,selectValue,fromAll,fromSome,correctAtom))
