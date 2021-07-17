@@ -399,7 +399,7 @@ def augerTransitionGUI(index):
 #----------------------------------------------------------------------------------------
 #---------------------------------------------------------------------------------------- 
 #All about rangeGUI 
-def clickExportButtonRG(range_window,transition_table,position,rangeMin,rangeMax,selectKE,selectBE,selectValue,fromAll,fromSome,correctAtom):
+def clickExportButtonRG(range_window,table,position,rangeMin,rangeMax,selectKE,selectBE,selectValue,fromAll,fromSome,correctAtom,auger_range):
     number_name=getAtom()
     reminderBox=tkinter.messagebox.askquestion('Confirmation','Do you want to continue?',parent=range_window)
     rangeMin=str(rangeMin)
@@ -408,32 +408,53 @@ def clickExportButtonRG(range_window,transition_table,position,rangeMin,rangeMax
     if reminderBox=='yes':
         file_path=askdirectory(parent=range_window)
         if file_path!='':
-            table_header=['Atom','Auger Transition','Auger Energy']
-            table_data=[]
-            for p in range(position):
-                temp=[]
-                temp.append(transition_table.set(p+1,'#1'))
-                temp.append(transition_table.set(p+1,'#2'))
-                temp.append(transition_table.set(p+1,'#3'))
-                table_data.append(temp)
-            if fromAll==True:
-                
-                if selectKE==True:
-                    file_path=file_path+'/'+'Auger_transitions_'+'from_'+rangeMin+'_to_'+rangeMax+'_KE_'+sortOrder+'.txt'
-                elif selectBE==True:               
-                    file_path=file_path+'/'+'Auger_transitions_'+'from_'+rangeMin+'_to_'+rangeMax+'_BE_'+selectValue+'_'+sortOrder+'.txt'
+            if auger_range==True:
+                table_header=['Atom','Auger Transition','Auger Energy']
+                table_data=[]
+                for p in range(position):
+                    temp=[]
+                    temp.append(table.set(p+1,'#1'))
+                    temp.append(table.set(p+1,'#2'))
+                    temp.append(table.set(p+1,'#3'))
+                    table_data.append(temp)
+                if fromAll==True:
+                    if selectKE==True:
+                        file_path=file_path+'/'+'Auger_transitions_'+'from_'+rangeMin+'_to_'+rangeMax+'_KE_'+sortOrder+'.txt'
+                    elif selectBE==True:               
+                        file_path=file_path+'/'+'Auger_transitions_'+'from_'+rangeMin+'_to_'+rangeMax+'_BE_'+selectValue+'_'+sortOrder+'.txt'
+                    with open(file_path,'w') as f:
+                        f.write(tabulate(table_data,headers=table_header))
+                elif fromSome==True:                    
+                    name_str=''
+                    for number in correctAtom:
+                        name_str=name_str+number_name[number]
+                    if selectKE==True:
+                        file_path=file_path+'/'+'Auger_transitions_'+'from_'+rangeMin+'_to_'+rangeMax+'_KE_'+sortOrder+'_'+name_str+'.txt'
+                    elif selectBE==True:               
+                        file_path=file_path+'/'+'Auger_transitions_'+'from_'+rangeMin+'_to_'+rangeMax+'_BE_'+selectValue+'_'+sortOrder+'_'+name_str+'.txt'
+                    with open(file_path,'w') as f:
+                        f.write(tabulate(table_data,headers=table_header))
+            elif auger_range==False:
+                table_header=['Atom','Barkla Notation','Orbital Notation','Binding Energies']
+                table_data=[]
+                for p in range(position):
+                    temp=[]
+                    temp.append(table.set(p+1,'#1'))
+                    temp.append(table.set(p+1,'#2'))
+                    temp.append(table.set(p+1,'#3'))
+                    temp.append(table.set(p+1,'#4'))
+                    table_data.append(temp)
+                if fromAll==True:
+                    file_path=file_path+'/'+'Core_State_Energies_'+'from_'+rangeMin+'_to_'+rangeMax+'_'+sortOrder+'.txt'
+                elif fromSome==True:
+                    name_str=''
+                    for number in unique_array:
+                        name_str=name_str+number_name[number]
+                    file_path=file_path+'/'+'Core_State_Energies_'+'from_'+rangeMin+'_to_'+rangeMax+'_'+sortOrder+'_'+name_str+'.txt'
                 with open(file_path,'w') as f:
                     f.write(tabulate(table_data,headers=table_header))
-            elif fromSome==True:
-                name_str=''
-                for number in correctAtom:
-                    name_str=name_str+number_name[number]
-                if selectKE==True:
-                    file_path=file_path+'/'+'Auger_transitions_'+'from_'+rangeMin+'_to_'+rangeMax+'_KE_'+sortOrder+'_'+name_str+'.txt'
-                elif selectBE==True:               
-                    file_path=file_path+'/'+'Auger_transitions_'+'from_'+rangeMin+'_to_'+rangeMax+'_BE_'+selectValue+'_'+sortOrder+'_'+name_str+'.txt'
-                with open(file_path,'w') as f:
-                    f.write(tabulate(table_data,headers=table_header))
+                    
+                    
 
         
         else:
@@ -504,8 +525,7 @@ def clickNumberButtonRG(correct_energies,table,position,auger_range):
     barkla_orbital=getNotation()
     sortOrder='by_number'
     new_table=[]
-    print(correct_energies)
-    
+
     if auger_range==True:
         for atom_name in correct_energies: 
             current_transitions=correct_energies[atom_name]
@@ -531,14 +551,15 @@ def clickNumberButtonRG(correct_energies,table,position,auger_range):
                 temp.append(barkla_orbital[shell])
                 temp.append(current_energies[shell])
                 new_table.append(temp)
-                
-            for p in range(position):
-                p+=1
-                table.set(p,'#1',new_table[p-1][0])
-                table.set(p,'#2',new_table[p-1][1])
-                table.set(p,'#3',new_table[p-1][2])
-                table.set(p,'#4',new_table[p-1][3])
-   
+        
+
+        for p in range(position):
+            p+=1               
+            table.set(p,'#1',new_table[p-1][0])
+            table.set(p,'#2',new_table[p-1][1])
+            table.set(p,'#3',new_table[p-1][2])
+            table.set(p,'#4',new_table[p-1][3])
+
 
 
 def augerRangeGUI(selectBE,selectKE,fromEntry,toEntry,selectValue,fromAll,fromSome):
@@ -629,7 +650,7 @@ def augerRangeGUI(selectBE,selectKE,fromEntry,toEntry,selectValue,fromAll,fromSo
         numberButton=tkinter.Button(range_window,text='Sort by atomic number',bg='LightGreen',command=lambda: clickNumberButtonRG(all_transitions,transition_table,position,auger_range=True))
         numberButton.place(x=900,y=150)
     
-        exportButton=tkinter.Button(range_window,text='Export',bg='Yellow',command=lambda: clickExportButtonRG(range_window,transition_table,position,rangeMin,rangeMax,selectKE,selectBE,selectValue,fromAll,fromSome,correctAtom))
+        exportButton=tkinter.Button(range_window,text='Export',bg='Yellow',command=lambda: clickExportButtonRG(range_window,transition_table,position,rangeMin,rangeMax,selectKE,selectBE,selectValue,fromAll,fromSome,correctAtom,auger_range=True))
         exportButton.place(x=900,y=300)
     else:
         tkinter.messagebox.showinfo(title='REMINDER',message='No relevant results',parent=range_window)
@@ -713,8 +734,8 @@ def coreStateGUI(fromEntry,toEntry,fromAll,fromSome):
         numberButton=tkinter.Button(range_window,text='Sort by atomic number',bg='LightGreen',command=lambda: clickNumberButtonRG(correct_core,binding_table,position,auger_range=False))
         numberButton.place(x=900,y=150)
     
-        #exportButton=tkinter.Button(range_window,text='Export',bg='Yellow',command=lambda: clickExportButtonRG(range_window,binding_table,position,rangeMin,rangeMax,selectKE,selectBE,selectValue,fromAll,fromSome,correctAtom))
-        #exportButton.place(x=900,y=300)
+        exportButton=tkinter.Button(range_window,text='Export',bg='Yellow',command=lambda: clickExportButtonRG(range_window,binding_table,position,rangeMin,rangeMax,None,None,None,fromAll,fromSome,None,auger_range=False))
+        exportButton.place(x=900,y=300)
     else:
         tkinter.messagebox.showinfo(title='REMINDER',message='No relevant results',parent=range_window)
 
