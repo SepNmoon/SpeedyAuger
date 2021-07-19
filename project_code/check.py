@@ -741,6 +741,85 @@ def coreStateGUI(fromEntry,toEntry,fromAll,fromSome):
 
     
     range_window.mainloop()
+
+def bothSearchGUI(selectBE,selectKE,fromEntry,toEntry,selectValue,fromAll,fromSome):
+    range_window=tkinter.Tk()
+    range_window.geometry("1200x680")
+    
+    rangeMin=min(float(fromEntry.get()),float(toEntry.get()))
+    rangeMax=max(float(fromEntry.get()),float(toEntry.get()))
+    
+    number_energies=getEnergies()
+    number_name=getAtom()
+    barkla_orbital=getNotation()
+    
+    correct_core=dict()
+    core_length=0
+    if fromAll==True:
+        for number in number_energies:
+            temp=number_energies[number]
+            temp2=dict()
+            for key,value in temp.items():
+                if value!=None:                   
+                    if value<=rangeMax and value>=rangeMin:                       
+                        temp2[key]=value
+                        core_length+=1
+                             
+                else:
+                    pass
+            
+            if temp2!={} and number!=94:
+                atom_name=number_name[number]
+                correct_core[atom_name]=temp2
+    elif fromSome==True:
+        for number in unique_array:
+            temp=number_energies[number]
+            temp2=dict()
+            for key,value in temp.items():
+                if value!=None:                   
+                    if value<=rangeMax and value>=rangeMin:                       
+                        temp2[key]=value
+                        core_length+=1
+                else:
+                    pass
+            if temp2!={} and number!=94:   
+                atom_name=number_name[number]
+                correct_core[atom_name]=temp2
+    if len(correct_core)!=0:
+        if core_length<=30:
+            table_row=core_length
+        else:
+            table_row=30
+     
+    binding_table=ttk.Treeview(range_window,height=table_row,columns=['1','2','3','4'],show='headings')
+    binding_table.column('1',width=80) 
+    binding_table.column('2',width=130) 
+    binding_table.column('3',width=130) 
+    binding_table.column('4',width=150) 
+    binding_table.heading('1', text='Atom')
+    binding_table.heading('2', text='Barkla Notation')
+    binding_table.heading('3', text='Orbital Notation')
+    binding_table.heading('4', text='Binding Energies')
+    position=0 
+    binding_table.place(x=30,y=0)  
+    for name in correct_core:
+        
+        temp=correct_core[name]
+        for shell in temp:
+            binding_table.insert('',position,iid=position+1,values=(name,shell,barkla_orbital[shell],temp[shell]))
+            position+=1
+    ybar=Scrollbar(binding_table,orient='vertical', command=binding_table.yview,bg='Gray')
+    binding_table.configure(yscrollcommand=ybar.set)
+    ybar.place(relx=0.95, rely=0.02, relwidth=0.035, relheight=0.958)
+    
+    
+    
+    
+    
+    
+    
+    range_window.mainloop()
+    
     
     
 
@@ -820,7 +899,7 @@ def clickSearchButtonRT(root,fromEntry,toEntry,v2,selectButton,inputEntry,v1,v3)
     elif coreState==True and (fromAll==True or fromSome==True):
         coreStateGUI(fromEntry,toEntry,fromAll,fromSome)
     elif bothSearch==True and (fromAll==True or fromSome==True) and (selectBE==True or selectKE==True):
-        print(1)
+        bothSearchGUI(selectBE,selectKE,fromEntry,toEntry,selectValue,fromAll,fromSome)
         
                         
               
