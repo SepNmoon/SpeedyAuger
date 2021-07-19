@@ -752,6 +752,7 @@ def bothSearchGUI(selectBE,selectKE,fromEntry,toEntry,selectValue,fromAll,fromSo
     number_energies=getEnergies()
     number_name=getAtom()
     barkla_orbital=getNotation()
+    number_range=getRange()
     
     correct_core=dict()
     core_length=0
@@ -813,6 +814,78 @@ def bothSearchGUI(selectBE,selectKE,fromEntry,toEntry,selectValue,fromAll,fromSo
     ybar.place(relx=0.95, rely=0.02, relwidth=0.035, relheight=0.958)
     
     
+    
+    
+    correctAtom=[]
+    
+    if fromAll==True:
+        if selectKE==True:
+            for number in number_range:
+                temp=number_range[number]
+                if temp['Max']<rangeMin or temp['Min']>rangeMax:
+                    pass
+                else:
+                    correctAtom.append(number)
+        elif selectBE==True:
+            for number in number_range:
+                temp=number_range[number]
+                temp_min=selectValue-temp['Max']
+                temp_max=selectValue-temp['Min']
+                if temp_max<rangeMin or temp_min>rangeMax:
+                    pass
+                else:
+                    correctAtom.append(number)
+    elif fromSome==True:
+        correctAtom=unique_array
+
+    all_transitions=dict()  
+    transitions_length=0
+    for number in correctAtom:        
+        temp=dict()
+        atom_name=number_name[number]
+        current_transitions=calculateAuger(number)
+        if selectKE==True:           
+            for t in current_transitions:
+                if current_transitions[t]>=rangeMin and current_transitions[t]<=rangeMax:
+                    transitions_length+=1
+                    temp[t]=current_transitions[t]
+                    all_transitions[atom_name]=temp
+        elif selectBE==True:            
+            for t in current_transitions:
+                if (selectValue-float(current_transitions[t]))>=rangeMin and (selectValue-float(current_transitions[t]))<=rangeMax:
+                    transitions_length+=1
+                    temp[t]=Decimal(selectValue-float(current_transitions[t])).quantize(Decimal('0.00'))                    
+                    all_transitions[atom_name]=temp
+
+    if transitions_length>0:
+        
+        if transitions_length<=30:
+            table_row=transitions_length
+        else:
+            table_row=30
+        
+        transition_table=ttk.Treeview(range_window,height=table_row,columns=['1','2','3'],show='headings')
+        transition_table.column('1',width=80) 
+        transition_table.column('2',width=180) 
+        transition_table.column('3',width=180) 
+        transition_table.heading('1', text='Atom')
+        transition_table.heading('2', text='Auger Transition')
+        transition_table.heading('3', text='Auger Energies')
+        transition_table.place(x=700,y=0)   
+    
+        position=0
+        for atom_name in all_transitions:
+            current_transitions=all_transitions[atom_name]
+            for t in current_transitions:            
+                transition_table.insert('',position,iid=position+1,values=(atom_name,t,current_transitions[t]))
+                position+=1
+    
+
+        
+
+        ybar2=Scrollbar(transition_table,orient='vertical', command=transition_table.yview,bg='Gray')
+        transition_table.configure(yscrollcommand=ybar2.set)
+        ybar2.place(relx=0.95, rely=0.02, relwidth=0.035, relheight=0.958)
     
     
     
