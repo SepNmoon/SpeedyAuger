@@ -756,6 +756,7 @@ def clickSearchButtonRT(root,fromEntry,toEntry,v2,selectButton,inputEntry,v1,v3)
     selectKE=False
     augerTran=False
     coreState=False
+    bothSearch=False
     fromAll=False
     fromSome=False
     if fromValue=='' or toValue=='':
@@ -771,9 +772,11 @@ def clickSearchButtonRT(root,fromEntry,toEntry,v2,selectButton,inputEntry,v1,v3)
                 augerTran=True
             elif v1.get()==2:
                 coreState=True
+            elif v1.get()==3:
+                bothSearch=True
             else:
                 tkinter.messagebox.showinfo(title='ERROR',message='Please select Auger Transitions or core state energies',parent=root)
-            if augerTran==True or coreState==True:
+            if augerTran==True or coreState==True or bothSearch==True:
                 if v3.get()==1:
                     fromAll=True
                 elif v3.get()==2:                   
@@ -783,7 +786,7 @@ def clickSearchButtonRT(root,fromEntry,toEntry,v2,selectButton,inputEntry,v1,v3)
                         fromSome=True
                 else:
                     tkinter.messagebox.showinfo(title='ERROR',message='Please select from all elements or from some elements',parent=root)
-            if augerTran==True and (fromAll==True or fromSome==True):
+            if (augerTran==True or bothSearch==True) and (fromAll==True or fromSome==True):
                 if v2.get()==1:
                     selectKE=True
                     selectValue=0
@@ -816,6 +819,8 @@ def clickSearchButtonRT(root,fromEntry,toEntry,v2,selectButton,inputEntry,v1,v3)
         augerRangeGUI(selectBE,selectKE,fromEntry,toEntry,selectValue,fromAll,fromSome)
     elif coreState==True and (fromAll==True or fromSome==True):
         coreStateGUI(fromEntry,toEntry,fromAll,fromSome)
+    elif bothSearch==True and (fromAll==True or fromSome==True) and (selectBE==True or selectKE==True):
+        print(1)
         
                         
               
@@ -931,7 +936,7 @@ def clickSelectAtomButton(root):
     
 def selectTranCoreButton(v1,keSelect,beSelect,v2):
     v2.set(0)
-    if v1.get()==1:
+    if v1.get()==1 or v1.get()==3:
         keSelect.place(x=530,y=1)
         beSelect.place(x=530,y=21.5)
     else:
@@ -1021,6 +1026,8 @@ def rootGUI():
    transitionSelect.place(x=150,y=40)
    coreStateSelect=tkinter.Radiobutton(root,text='Core State Energies',value=2,variable=v1,command=lambda: selectTranCoreButton(v1,keSelect,beSelect,v2))
    coreStateSelect.place(x=150,y=60.5)
+   bothSelect=tkinter.Radiobutton(root,text='Both',value=3,variable=v1,command=lambda: selectTranCoreButton(v1,keSelect,beSelect,v2))
+   bothSelect.place(x=150,y=81)
    
    
    sep1 = ttk.Separator(root, orient='vertical')
