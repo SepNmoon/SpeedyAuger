@@ -848,24 +848,47 @@ def bothSearchGUI(selectBE,selectKE,fromEntry,toEntry,selectValue,fromAll,fromSo
         table.heading('3', text='Auger Energies / Core State Energies')
         table.pack()
         
+        two_tables=dict()
         
+       
+            
         print(correct_core)
         print(all_transitions)
         
+        for number in number_name:
+            name=number_name[number]
+            if name in correct_core.keys() and name in all_transitions.keys():
+                temp1=correct_core[name]
+                temp2=all_transitions[name]
+                temp3=dict()
+                for key1 in temp1:
+                    temp3[key1]=temp1[key1]
+                for key2 in temp2:
+                    temp3[key2]=temp2[key2]
+                two_tables[name]=temp3
+            elif name in correct_core.keys():
+                two_tables[name]=correct_core[name]
+            elif name in all_transitions.keys():
+                two_tables[name]=all_transitions[name]
+                
+                
+        print(two_tables)
+                
         
-        #position=0
-        #for atom_name in all_transitions:
-            #current_transitions=all_transitions[atom_name]
-            #for t in current_transitions:            
-                #transition_table.insert('',position,iid=position+1,values=(atom_name,t,current_transitions[t]))
-                #position+=1
+        
+        position=0
+        for atom_name in two_tables:
+            current_transitions=two_tables[atom_name]
+            for t in current_transitions:            
+                table.insert('',position,iid=position+1,values=(atom_name,t,current_transitions[t]))
+                position+=1
     
 
         
 
-        #ybar2=Scrollbar(transition_table,orient='vertical', command=transition_table.yview,bg='Gray')
-        #transition_table.configure(yscrollcommand=ybar2.set)
-        #ybar2.place(relx=0.95, rely=0.02, relwidth=0.035, relheight=0.958)
+        ybar2=Scrollbar(table,orient='vertical', command=table.yview,bg='Gray')
+        table.configure(yscrollcommand=ybar2.set)
+        ybar2.place(relx=0.95, rely=0.02, relwidth=0.035, relheight=0.958)
     
     
     
