@@ -176,9 +176,6 @@ def clickConvertButtonAT(select,table,position,inputEntry,auger_window,lastLabel
             lastChoice='Ga 9251.74(eV)'
         updateTable(table,selectValue,position)
         
- 
-        
-        
         
 def clickClearButtonAT(inputEntry,select,table,position):
     inputEntry.delete(0,'end')
@@ -187,10 +184,7 @@ def clickClearButtonAT(inputEntry,select,table,position):
         index+=1
         table.set(index,'#3','')    
 
-
-
-
-        
+   
 def clickExportButtonAT(auger_window,transition_table,atom_name,position):
     
     if transition_table.set(1,'#3')=='':
@@ -399,7 +393,7 @@ def augerTransitionGUI(index):
 #----------------------------------------------------------------------------------------
 #---------------------------------------------------------------------------------------- 
 #All about rangeGUI 
-def clickExportButtonRG(range_window,table,position,rangeMin,rangeMax,selectKE,selectBE,selectValue,fromAll,fromSome,correctAtom,auger_range):
+def clickExportButtonRG(range_window,table,position,rangeMin,rangeMax,selectKE,selectBE,selectValue,fromAll,fromSome,correctAtom,auger_range,core_state):
     number_name=getAtom()
     reminderBox=tkinter.messagebox.askquestion('Confirmation','Do you want to continue?',parent=range_window)
     rangeMin=str(rangeMin)
@@ -408,7 +402,7 @@ def clickExportButtonRG(range_window,table,position,rangeMin,rangeMax,selectKE,s
     if reminderBox=='yes':
         file_path=askdirectory(parent=range_window)
         if file_path!='':
-            if auger_range==True:
+            if auger_range==True and core_state==False:
                 table_header=['Atom','Auger Transition','Auger Energy']
                 table_data=[]
                 for p in range(position):
@@ -434,7 +428,7 @@ def clickExportButtonRG(range_window,table,position,rangeMin,rangeMax,selectKE,s
                         file_path=file_path+'/'+'Auger_transitions_'+'from_'+rangeMin+'_to_'+rangeMax+'_BE_'+selectValue+'_'+sortOrder+'_'+name_str+'.txt'
                     with open(file_path,'w') as f:
                         f.write(tabulate(table_data,headers=table_header))
-            elif auger_range==False:
+            elif auger_range==False and core_state==True:
                 table_header=['Atom','Barkla Notation','Orbital Notation','Binding Energies']
                 table_data=[]
                 for p in range(position):
@@ -454,7 +448,33 @@ def clickExportButtonRG(range_window,table,position,rangeMin,rangeMax,selectKE,s
                 with open(file_path,'w') as f:
                     f.write(tabulate(table_data,headers=table_header))
                     
-                    
+            elif auger_range==True and core_state==True:
+                table_header=['Atom','Auger Transition/Notation','Auger Energies/Core State Energies']
+                table_data=[]
+                for p in range(position):
+                    temp=[]
+                    temp.append(table.set(p+1,'#1'))
+                    temp.append(table.set(p+1,'#2'))
+                    temp.append(table.set(p+1,'#3'))
+                    table_data.append(temp)
+                
+                if fromAll==True:
+                    if selectKE==True:
+                        file_path=file_path+'/'+'Search_Both_'+'from_'+rangeMin+'_to_'+rangeMax+'_KE_'+sortOrder+'.txt'
+                    elif selectBE==True:               
+                        file_path=file_path+'/'+'Search_Both_'+'from_'+rangeMin+'_to_'+rangeMax+'_BE_'+selectValue+'_'+sortOrder+'.txt'
+                    with open(file_path,'w') as f:
+                        f.write(tabulate(table_data,headers=table_header))
+                elif fromSome==True:                    
+                    name_str=''
+                    for number in correctAtom:
+                        name_str=name_str+number_name[number]
+                    if selectKE==True:
+                        file_path=file_path+'/'+'Search_Both_'+'from_'+rangeMin+'_to_'+rangeMax+'_KE_'+sortOrder+'_'+name_str+'.txt'
+                    elif selectBE==True:               
+                        file_path=file_path+'/'+'Search_Both_'+'from_'+rangeMin+'_to_'+rangeMax+'_BE_'+selectValue+'_'+sortOrder+'_'+name_str+'.txt'
+                    with open(file_path,'w') as f:
+                        f.write(tabulate(table_data,headers=table_header))
 
         
         else:
@@ -656,7 +676,7 @@ def augerRangeGUI(selectBE,selectKE,fromEntry,toEntry,selectValue,fromAll,fromSo
         numberButton=tkinter.Button(range_window,text='Sort by atomic number',bg='LightGreen',command=lambda: clickNumberButtonRG(all_transitions,transition_table,position,auger_range=True,core_state=False))
         numberButton.place(x=900,y=150)
     
-        exportButton=tkinter.Button(range_window,text='Export',bg='Yellow',command=lambda: clickExportButtonRG(range_window,transition_table,position,rangeMin,rangeMax,selectKE,selectBE,selectValue,fromAll,fromSome,correctAtom,auger_range=True))
+        exportButton=tkinter.Button(range_window,text='Export',bg='Yellow',command=lambda: clickExportButtonRG(range_window,transition_table,position,rangeMin,rangeMax,selectKE,selectBE,selectValue,fromAll,fromSome,correctAtom,auger_range=True,core_state=False))
         exportButton.place(x=900,y=300)
     else:
         tkinter.messagebox.showinfo(title='REMINDER',message='No relevant results',parent=range_window)
@@ -740,7 +760,7 @@ def coreStateGUI(fromEntry,toEntry,fromAll,fromSome):
         numberButton=tkinter.Button(range_window,text='Sort by atomic number',bg='LightGreen',command=lambda: clickNumberButtonRG(correct_core,binding_table,position,auger_range=False,core_state=True))
         numberButton.place(x=900,y=150)
     
-        exportButton=tkinter.Button(range_window,text='Export',bg='Yellow',command=lambda: clickExportButtonRG(range_window,binding_table,position,rangeMin,rangeMax,None,None,None,fromAll,fromSome,None,auger_range=False))
+        exportButton=tkinter.Button(range_window,text='Export',bg='Yellow',command=lambda: clickExportButtonRG(range_window,binding_table,position,rangeMin,rangeMax,None,None,None,fromAll,fromSome,None,auger_range=False,core_state=True))
         exportButton.place(x=900,y=300)
     else:
         tkinter.messagebox.showinfo(title='REMINDER',message='No relevant results',parent=range_window)
@@ -897,7 +917,7 @@ def bothSearchGUI(selectBE,selectKE,fromEntry,toEntry,selectValue,fromAll,fromSo
     numberButton=tkinter.Button(range_window,text='Sort by atomic number',bg='LightGreen',command=lambda: clickNumberButtonRG(two_tables,table,position,auger_range=True,core_state=True))
     numberButton.place(x=900,y=150)
     
-    exportButton=tkinter.Button(range_window,text='Export',bg='Yellow',command=lambda: clickExportButtonRG(range_window,transition_table,position,rangeMin,rangeMax,selectKE,selectBE,selectValue,fromAll,fromSome,correctAtom,auger_range=True,core_state=True))
+    exportButton=tkinter.Button(range_window,text='Export',bg='Yellow',command=lambda: clickExportButtonRG(range_window,table,position,rangeMin,rangeMax,selectKE,selectBE,selectValue,fromAll,fromSome,correctAtom,auger_range=True,core_state=True))
     exportButton.place(x=900,y=300)
     
     range_window.mainloop()
