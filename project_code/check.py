@@ -463,19 +463,23 @@ def clickExportButtonRG(range_window,table,position,rangeMin,rangeMax,selectKE,s
         pass
     
 
-def clickSortButtonRG(table,position,descending,auger_range):
+def clickSortButtonRG(table,position,descending,auger_range,core_state):
     
     global sortOrder
     position_energies=dict()
+    
     
     if auger_range==True:
         for p in range(position):
             p+=1
             position_energies[p]=float(table.set(p,'#3'))
+          
     elif auger_range==False:
         for p in range(position):
             p+=1
             position_energies[p]=float(table.set(p,'#4'))
+    
+ 
     
     if descending==True: 
         sortOrder='descending'
@@ -520,7 +524,7 @@ def clickSortButtonRG(table,position,descending,auger_range):
 
  
 
-def clickNumberButtonRG(correct_energies,table,position,auger_range):
+def clickNumberButtonRG(correct_energies,table,position,auger_range,core_state):
     global sortOrder
     barkla_orbital=getNotation()
     sortOrder='by_number'
@@ -541,6 +545,8 @@ def clickNumberButtonRG(correct_energies,table,position,auger_range):
             table.set(p,'#1',new_table[p-1][0])
             table.set(p,'#2',new_table[p-1][1])
             table.set(p,'#3',new_table[p-1][2])
+            
+            
     elif auger_range==False:
         for atom_name in correct_energies:
             current_energies=correct_energies[atom_name]
@@ -643,11 +649,11 @@ def augerRangeGUI(selectBE,selectKE,fromEntry,toEntry,selectValue,fromAll,fromSo
         transition_table.configure(yscrollcommand=ybar.set)
         ybar.place(relx=0.95, rely=0.02, relwidth=0.035, relheight=0.958)
     
-        descendingButton=tkinter.Button(range_window,text='Descending order (energies)',bg='LightPink',command=lambda: clickSortButtonRG(transition_table,position,descending=True,auger_range=True))
+        descendingButton=tkinter.Button(range_window,text='Descending order (energies)',bg='LightPink',command=lambda: clickSortButtonRG(transition_table,position,descending=True,auger_range=True,core_state=False))
         descendingButton.place(x=900,y=50)
-        ascendingButton=tkinter.Button(range_window,text='Ascending order (energies)',bg='LightBlue',command=lambda: clickSortButtonRG(transition_table,position,descending=False,auger_range=True))
+        ascendingButton=tkinter.Button(range_window,text='Ascending order (energies)',bg='LightBlue',command=lambda: clickSortButtonRG(transition_table,position,descending=False,auger_range=True,core_state=False))
         ascendingButton.place(x=900,y=100)
-        numberButton=tkinter.Button(range_window,text='Sort by atomic number',bg='LightGreen',command=lambda: clickNumberButtonRG(all_transitions,transition_table,position,auger_range=True))
+        numberButton=tkinter.Button(range_window,text='Sort by atomic number',bg='LightGreen',command=lambda: clickNumberButtonRG(all_transitions,transition_table,position,auger_range=True,core_state=False))
         numberButton.place(x=900,y=150)
     
         exportButton=tkinter.Button(range_window,text='Export',bg='Yellow',command=lambda: clickExportButtonRG(range_window,transition_table,position,rangeMin,rangeMax,selectKE,selectBE,selectValue,fromAll,fromSome,correctAtom,auger_range=True))
@@ -727,11 +733,11 @@ def coreStateGUI(fromEntry,toEntry,fromAll,fromSome):
         binding_table.configure(yscrollcommand=ybar.set)
         ybar.place(relx=0.95, rely=0.02, relwidth=0.035, relheight=0.958)    
         
-        descendingButton=tkinter.Button(range_window,text='Descending order (energies)',bg='LightPink',command=lambda: clickSortButtonRG(binding_table,position,descending=True,auger_range=False))
+        descendingButton=tkinter.Button(range_window,text='Descending order (energies)',bg='LightPink',command=lambda: clickSortButtonRG(binding_table,position,descending=True,auger_range=False,core_state=True))
         descendingButton.place(x=900,y=50)
-        ascendingButton=tkinter.Button(range_window,text='Ascending order (energies)',bg='LightBlue',command=lambda: clickSortButtonRG(binding_table,position,descending=False,auger_range=False))
+        ascendingButton=tkinter.Button(range_window,text='Ascending order (energies)',bg='LightBlue',command=lambda: clickSortButtonRG(binding_table,position,descending=False,auger_range=False,core_state=True))
         ascendingButton.place(x=900,y=100)
-        numberButton=tkinter.Button(range_window,text='Sort by atomic number',bg='LightGreen',command=lambda: clickNumberButtonRG(correct_core,binding_table,position,auger_range=False))
+        numberButton=tkinter.Button(range_window,text='Sort by atomic number',bg='LightGreen',command=lambda: clickNumberButtonRG(correct_core,binding_table,position,auger_range=False,core_state=True))
         numberButton.place(x=900,y=150)
     
         exportButton=tkinter.Button(range_window,text='Export',bg='Yellow',command=lambda: clickExportButtonRG(range_window,binding_table,position,rangeMin,rangeMax,None,None,None,fromAll,fromSome,None,auger_range=False))
@@ -788,9 +794,6 @@ def bothSearchGUI(selectBE,selectKE,fromEntry,toEntry,selectValue,fromAll,fromSo
                 correct_core[atom_name]=temp2
 
     
-    
-    
-    
     correctAtom=[]
     
     if fromAll==True:
@@ -831,11 +834,13 @@ def bothSearchGUI(selectBE,selectKE,fromEntry,toEntry,selectValue,fromAll,fromSo
                     transitions_length+=1
                     temp[t]=Decimal(selectValue-float(current_transitions[t])).quantize(Decimal('0.00'))                    
                     all_transitions[atom_name]=temp
-
-    if transitions_length>0:
-        
-        if transitions_length<=30:
-            table_row=transitions_length
+    
+    
+    table_length=transitions_length+core_length
+    
+    if table_length>0:        
+        if table_length<=30:
+            table_row=table_length
         else:
             table_row=30
         
@@ -851,10 +856,7 @@ def bothSearchGUI(selectBE,selectKE,fromEntry,toEntry,selectValue,fromAll,fromSo
         two_tables=dict()
         
        
-            
-        print(correct_core)
-        print(all_transitions)
-        
+     
         for number in number_name:
             name=number_name[number]
             if name in correct_core.keys() and name in all_transitions.keys():
@@ -871,10 +873,6 @@ def bothSearchGUI(selectBE,selectKE,fromEntry,toEntry,selectValue,fromAll,fromSo
             elif name in all_transitions.keys():
                 two_tables[name]=all_transitions[name]
                 
-                
-        print(two_tables)
-                
-        
         
         position=0
         for atom_name in two_tables:
@@ -889,10 +887,18 @@ def bothSearchGUI(selectBE,selectKE,fromEntry,toEntry,selectValue,fromAll,fromSo
         ybar2=Scrollbar(table,orient='vertical', command=table.yview,bg='Gray')
         table.configure(yscrollcommand=ybar2.set)
         ybar2.place(relx=0.95, rely=0.02, relwidth=0.035, relheight=0.958)
+        
     
     
+    descendingButton=tkinter.Button(range_window,text='Descending order (energies)',bg='LightPink',command=lambda: clickSortButtonRG(table,position,descending=True,auger_range=True,core_state=True))
+    descendingButton.place(x=900,y=50)
+    ascendingButton=tkinter.Button(range_window,text='Ascending order (energies)',bg='LightBlue',command=lambda: clickSortButtonRG(table,position,descending=False,auger_range=True,core_state=True))
+    ascendingButton.place(x=900,y=100)
+    numberButton=tkinter.Button(range_window,text='Sort by atomic number',bg='LightGreen',command=lambda: clickNumberButtonRG(two_tables,table,position,auger_range=True,core_state=True))
+    numberButton.place(x=900,y=150)
     
-    
+    exportButton=tkinter.Button(range_window,text='Export',bg='Yellow',command=lambda: clickExportButtonRG(range_window,transition_table,position,rangeMin,rangeMax,selectKE,selectBE,selectValue,fromAll,fromSome,correctAtom,auger_range=True,core_state=True))
+    exportButton.place(x=900,y=300)
     
     range_window.mainloop()
     
