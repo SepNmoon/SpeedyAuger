@@ -50,14 +50,14 @@ def getShell():
         ele_l1,ele_l2,ele_l3=row[2],row[3],row[4]
         ele_m1,ele_m2,ele_m3,ele_m4,ele_m5=row[5],row[6],row[7],row[8],row[9]
         ele_n1,ele_n2,ele_n3,ele_n4,ele_n5,ele_n6,ele_n7=row[10],row[11],row[12],row[13],row[14],row[15],row[16]
-        ele_o1,ele_o2,ele_o3,ele_o4,ele_o5,ele_o6=row[17],row[18],row[19],row[20],row[21],row[22]
-        ele_p1,ele_p2,ele_p3,ele_p4,ele_p5=row[23],row[24],row[25],row[26],row[27]
-        ele_q1=row[28]
+        ele_o1,ele_o2,ele_o3,ele_o4,ele_o5,ele_o6,ele_o7=row[17],row[18],row[19],row[20],row[21],row[22],row[23]
+        ele_p1,ele_p2,ele_p3,ele_p4,ele_p5=row[24],row[25],row[26],row[27],row[28]
+        ele_q1=row[29]
         temp['K']=ele_k
         temp['L1'],temp['L2'],temp['L3']=ele_l1,ele_l2,ele_l3
         temp['M1'],temp['M2'],temp['M3'],temp['M4'],temp['M5']=ele_m1,ele_m2,ele_m3,ele_m4,ele_m5
         temp['N1'],temp['N2'],temp['N3'],temp['N4'],temp['N5'],temp['N6'],temp['N7']=ele_n1,ele_n2,ele_n3,ele_n4,ele_n5,ele_n6,ele_n7
-        temp['O1'],temp['O2'],temp['O3'],temp['O4'],temp['O5'],temp['O6']=ele_o1,ele_o2,ele_o3,ele_o4,ele_o5,ele_o6
+        temp['O1'],temp['O2'],temp['O3'],temp['O4'],temp['O5'],temp['O6'],temp['O7']=ele_o1,ele_o2,ele_o3,ele_o4,ele_o5,ele_o6,ele_o7
         temp['P1'],temp['P2'],temp['P3'],temp['P4'],temp['P5']=ele_p1,ele_p2,ele_p3,ele_p4,ele_p5
         temp['Q1']=ele_q1
         number_shell[atom_number]=temp
@@ -223,6 +223,10 @@ def clickExportButtonAT(auger_window,transition_table,atom_name,position):
 #Calculate Auger energies for transitions
 def calculateAuger(number):
     #read from database
+    number_shell=getShell()
+    shell_electrons=number_shell[number]
+    #print(shell_electrons)
+    
     number_energies=getEnergies()
     current_energies=number_energies[number]
     next_energies=number_energies[number+1]
@@ -271,6 +275,7 @@ def calculateAuger(number):
             transition_array.remove(t)
     
     transition_energies=dict()
+    
     for transition in transition_array:
         temp=shlex.shlex(transition,posix=True)
         temp.whitespace += ','
@@ -284,7 +289,31 @@ def calculateAuger(number):
  
         if energies>=10:
            transition_energies[transition]=energies
-    return transition_energies
+    
+    mult_array=[]
+    for transition in transition_energies:
+        temp=shlex.shlex(transition,posix=True)
+        temp.whitespace += ','
+        temp.whitespace_split = True
+        temp=list(temp)
+
+        mult=shell_electrons[temp[0]]*shell_electrons[temp[1]]*shell_electrons[temp[2]]      
+        mult=Decimal(mult).quantize(Decimal('0.0000'))
+        mult_array.append(mult)
+    #print(mult_array)
+    max_mult=max(mult_array)
+    #print(max_mult)
+    
+    norm_array=[]
+    for mult in mult_array:
+        norm=(100*mult)/max_mult
+        norm=Decimal(norm).quantize(Decimal('0.0'))
+        norm_array.append(norm)
+    #print(norm_array)
+        
+        
+        
+    return transition_energies,norm_array
 
 
     
@@ -306,6 +335,7 @@ def augerTransitionGUI(index):
     #read from database
     number_energies=getEnergies()
     barkla_orbital=getNotation()
+    #number_shell=getShell()
     
     #nonNone energies for this atom
     current_energies=number_energies[atom_number]
@@ -317,6 +347,8 @@ def augerTransitionGUI(index):
             nonNone_orbital.append(barkla_orbital[shell])
     length=len(nonNone_value)
     
+    citationLabel1=tkinter.Label(auger_window,text='*The data of core state energies comes from EADL')
+    citationLabel1.place(x=10,y=40)
     #binding energies table
     core_table = ttk.Treeview(auger_window,height=length,columns=['1','2','3'],show='headings')
     core_table.column('1', width=150) 
@@ -329,62 +361,78 @@ def augerTransitionGUI(index):
     for item in nonNone_value:
         core_table.insert('',index,values=(item,nonNone_orbital[index],nonNone_value[item]))
         index+=1
-    core_table.place(x=10,y=70)
+    core_table.place(x=10,y=60)
     
-    #calculate energies for transitions
-    transition_energies=calculateAuger(atom_number)
+
+    #calculate energies and norm mult for transitions
+    transition_energies,norm_array=calculateAuger(atom_number)
     
 
     #transition table
     if len(transition_energies)<=30:
         table_row=len(transition_energies)
     else:
-        table_row=27
-    transition_table=ttk.Treeview(auger_window,height=table_row,columns=['1','2','3'],show='headings')
-    transition_table.column('1', width=200) 
-    transition_table.column('2', width=200) 
-    transition_table.column('3', width=200) 
+        table_row=26
+    transition_table=ttk.Treeview(auger_window,height=table_row,columns=['1','2','3','4'],show='headings')
+    transition_table.column('1', width=150) 
+    transition_table.column('2', width=150) 
+    transition_table.column('3', width=150) 
+    transition_table.column('4', width=150) 
     transition_table.heading('1', text='Auger Transition')
     transition_table.heading('2', text='Auger Energies (KE)')
     transition_table.heading('3', text='Auger Energies (BE)')
+    transition_table.heading('4', text='Norm Mult')
     position=0
+    
 
     for t in transition_energies:
-        transition_table.insert('',position,iid=position+1,values=(t,transition_energies[t],''))
+        transition_table.insert('',position,iid=position+1,values=(t,transition_energies[t],'',norm_array[position]))
         position+=1
-    transition_table.place(x=550,y=90)
+    transition_table.place(x=550,y=120)
     ybar=Scrollbar(transition_table,orient='vertical', command=transition_table.yview,bg='Gray')
     transition_table.configure(yscrollcommand=ybar.set)
     ybar.place(relx=0.95, rely=0.02, relwidth=0.035, relheight=0.958)
     
     
+    citationLabel2=tkinter.Label(auger_window,text="*Empirical expression: E_vxy=E_v-E_x'-E_y', where E_x'=[E_x(Z) + E_x(Z+1)]/2, E_y'=[E_y(Z) + E_y(Z+1)]/2")
+    citationLabel2.place(x=550,y=5)
+    citationLabel3=tkinter.Label(auger_window,text="*Norm Mult: Taking the product of the electron populations in the subshells and normalizing these quantities ")
+    citationLabel3.place(x=550,y=25)
+    citationLabel4=tkinter.Label(auger_window,text="to 100 for the largest such product for each element (Auger Catalog, 1973)")
+    citationLabel4.place(x=630,y=45)
+    #citationLabel3=tkinter.Label(auger_window,text="E_v is the binding energy of the initially ejected electron, E_x(Z) and E_x(Z+1) are the atomic binding energies")
+    #citationLabel3.place(x=555,y=25)
+    #citationLabel4=tkinter.Label(auger_window,text="for the x-shell electron in atoms having atomic number Z and Z+1  (Auger Catalog, 1973)")
+    #citationLabel4.place(x=555,y=45)
+    
+    
     #Add convert function
     selectButton=ttk.Combobox(auger_window)    
-    selectButton.place(x=550,y=30)
+    selectButton.place(x=550,y=70)
     selectButton['value']=('Mg 1253.6(eV)','Al 1486.7(eV)','Ag 2984.3(eV)','Cr 5414.9(eV)','Ga 9251.74(eV)','No selection')
     selectButton.current(5)
     
     orLabel=tkinter.Label(auger_window,text='or')
-    orLabel.place(x=750,y=30)
+    orLabel.place(x=750,y=70)
     
     inputEntry=tkinter.Entry(auger_window)
-    inputEntry.place(x=800,y=30)
+    inputEntry.place(x=800,y=70)
     
     unitLabel=tkinter.Label(auger_window,text='(eV)')
-    unitLabel.place(x=950,y=30)
+    unitLabel.place(x=950,y=70)
     
     lastLabel=tkinter.Label(auger_window,text='Values in table calculated for: %s'%lastChoice)
-    lastLabel.place(x=930,y=65)
+    lastLabel.place(x=930,y=97)
     
     convertButton=tkinter.Button(auger_window,text='Convert',bg='Orange',command=lambda: clickConvertButtonAT(selectButton,transition_table,position,inputEntry,auger_window,lastLabel))
-    convertButton.place(x=1000,y=30)
+    convertButton.place(x=1000,y=70)
     
     clearButton=tkinter.Button(auger_window,text='Clear',command=lambda: clickClearButtonAT(inputEntry,selectButton,transition_table,position))
-    clearButton.place(x=1065,y=30)
+    clearButton.place(x=1065,y=70)
     
     
     exportButton=tkinter.Button(auger_window,text='Export',bg='LightBlue',command=lambda: clickExportButtonAT(auger_window,transition_table,atom_name,position))
-    exportButton.place(x=1140,y=30)
+    exportButton.place(x=1140,y=70)
     
 
     auger_window.mainloop()
@@ -625,7 +673,7 @@ def augerRangeGUI(selectBE,selectKE,fromEntry,toEntry,selectValue,fromAll,fromSo
     for number in correctAtom:        
         temp=dict()
         atom_name=number_name[number]
-        current_transitions=calculateAuger(number)
+        current_transitions,norm_array=calculateAuger(number)
         if selectKE==True:           
             for t in current_transitions:
                 if current_transitions[t]>=rangeMin and current_transitions[t]<=rangeMax:
@@ -678,6 +726,9 @@ def augerRangeGUI(selectBE,selectKE,fromEntry,toEntry,selectValue,fromAll,fromSo
     
         exportButton=tkinter.Button(range_window,text='Export',bg='Yellow',command=lambda: clickExportButtonRG(range_window,transition_table,position,rangeMin,rangeMax,selectKE,selectBE,selectValue,fromAll,fromSome,correctAtom,auger_range=True,core_state=False))
         exportButton.place(x=900,y=300)
+        
+        citationLabel1=tkinter.Label(range_window,text='*All the data comes from "Tables and Graphs of Atomic Subshell and Relaxation Data Derived from the LLNL Evaluated Atomic Data Library (EADL), Z=1-100"')
+        citationLabel1.place(x=200,y=630)
     else:
         tkinter.messagebox.showinfo(title='REMINDER',message='No relevant results',parent=range_window)
     
@@ -762,6 +813,9 @@ def coreStateGUI(fromEntry,toEntry,fromAll,fromSome):
     
         exportButton=tkinter.Button(range_window,text='Export',bg='Yellow',command=lambda: clickExportButtonRG(range_window,binding_table,position,rangeMin,rangeMax,None,None,None,fromAll,fromSome,None,auger_range=False,core_state=True))
         exportButton.place(x=900,y=300)
+        
+        citationLabel1=tkinter.Label(range_window,text='*All the data comes from "Tables and Graphs of Atomic Subshell and Relaxation Data Derived from the LLNL Evaluated Atomic Data Library (EADL), Z=1-100"')
+        citationLabel1.place(x=200,y=630)
     else:
         tkinter.messagebox.showinfo(title='REMINDER',message='No relevant results',parent=range_window)
 
@@ -841,7 +895,7 @@ def bothSearchGUI(selectBE,selectKE,fromEntry,toEntry,selectValue,fromAll,fromSo
     for number in correctAtom:        
         temp=dict()
         atom_name=number_name[number]
-        current_transitions=calculateAuger(number)
+        current_transitions,norm_array=calculateAuger(number)
         if selectKE==True:           
             for t in current_transitions:
                 if current_transitions[t]>=rangeMin and current_transitions[t]<=rangeMax:
@@ -919,6 +973,10 @@ def bothSearchGUI(selectBE,selectKE,fromEntry,toEntry,selectValue,fromAll,fromSo
     
     exportButton=tkinter.Button(range_window,text='Export',bg='Yellow',command=lambda: clickExportButtonRG(range_window,table,position,rangeMin,rangeMax,selectKE,selectBE,selectValue,fromAll,fromSome,correctAtom,auger_range=True,core_state=True))
     exportButton.place(x=900,y=300)
+    
+    
+    citationLabel1=tkinter.Label(range_window,text='*All the data comes from "Tables and Graphs of Atomic Subshell and Relaxation Data Derived from the LLNL Evaluated Atomic Data Library (EADL), Z=1-100"')
+    citationLabel1.place(x=200,y=630)
     
     range_window.mainloop()
     
@@ -1226,6 +1284,12 @@ def rootGUI():
    searchButton.place(x=685,y=10)
    clearButton=tkinter.Button(root,text='Clear',command=lambda: clickClearButtonRT(root,fromEntry,toEntry,v2,selectButton,orLabel,inputEntry,v1,v3))
    clearButton.place(x=750,y=10)
+   
+   citationLabel1=tkinter.Label(root,text='*All the data comes from "Tables and Graphs of Atomic Subshell and Relaxation Data Derived from the LLNL"')
+   citationLabel1.place(x=150,y=600)
+   
+   citationLabel2=tkinter.Label(root,text='Evaluated Atomic Data Library (EADL), Z=1-100"')
+   citationLabel2.place(x=300,y=620)
     
 
    root.mainloop()
