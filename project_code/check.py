@@ -435,6 +435,7 @@ def augerTransitionGUI(index):
     exportButton.place(x=1140,y=70)
     
 
+
     auger_window.mainloop()
 
 
@@ -1252,7 +1253,7 @@ def rootGUI():
    
    
    
-   
+
    
    v1=tkinter.IntVar()
    v2=tkinter.IntVar()
@@ -1306,6 +1307,6 @@ if __name__ == "__main__":
 
 
     rootGUI()
-    print(getRange())
+
 
 

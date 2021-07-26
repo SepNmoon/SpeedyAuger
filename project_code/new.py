@@ -196,9 +196,6 @@ def clickExportButtonAT(auger_window,transition_table,atom_name,position):
         else:
             pass
         
-   
-
-
 
     
 #Calculate Auger energies for transitions
@@ -296,7 +293,16 @@ def calculateAuger(number):
         
     return transition_energies,norm_array
 
-
+def selectPlot(auger_window,v,selectPlotButton,orLabel2,inputEntry2):   
+    if v.get()==1:
+        selectPlotButton.place(x=140,y=10)
+        orLabel2.place(x=250,y=10)
+        inputEntry2.place(x=275,y=10)       
+    else:
+        selectPlotButton.place_forget()
+        orLabel2.place_forget()
+        inputEntry2.place_forget()
+        
     
 #AugerGUI
 def augerTransitionGUI(index):
@@ -306,7 +312,8 @@ def augerTransitionGUI(index):
     atom_number=index+3
     
     #auger window
-    auger_window=tkinter.Tk()
+    #auger_window=tkinter.Tk()
+    auger_window=tkinter.Toplevel()
     auger_window.geometry("1200x680")
     number_name=getAtom()
     atom_name=number_name[atom_number]
@@ -328,8 +335,9 @@ def augerTransitionGUI(index):
             nonNone_orbital.append(barkla_orbital[shell])
     length=len(nonNone_value)
     
-    citationLabel1=tkinter.Label(auger_window,text='*The data of core state energies comes from EADL')
-    citationLabel1.place(x=10,y=40)
+    #citationLabel1=tkinter.Label(auger_window,text='*The data of core state energies comes from EADL')
+    #citationLabel1.place(x=10,y=40)
+    
     #binding energies table
     core_table = ttk.Treeview(auger_window,height=length,columns=['1','2','3'],show='headings')
     core_table.column('1', width=150) 
@@ -347,7 +355,7 @@ def augerTransitionGUI(index):
 
     #calculate energies and norm mult for transitions
     transition_energies,norm_array=calculateAuger(atom_number)
-    
+
 
     #transition table
     if len(transition_energies)<=30:
@@ -381,12 +389,7 @@ def augerTransitionGUI(index):
     citationLabel3.place(x=550,y=25)
     citationLabel4=tkinter.Label(auger_window,text="to 100 for the largest such product for each element (Auger Catalog, 1973)")
     citationLabel4.place(x=630,y=45)
-    #citationLabel3=tkinter.Label(auger_window,text="E_v is the binding energy of the initially ejected electron, E_x(Z) and E_x(Z+1) are the atomic binding energies")
-    #citationLabel3.place(x=555,y=25)
-    #citationLabel4=tkinter.Label(auger_window,text="for the x-shell electron in atoms having atomic number Z and Z+1  (Auger Catalog, 1973)")
-    #citationLabel4.place(x=555,y=45)
-    
-    
+        
     #Add convert function
     selectButton=ttk.Combobox(auger_window)    
     selectButton.place(x=550,y=70)
@@ -415,6 +418,23 @@ def augerTransitionGUI(index):
     exportButton=tkinter.Button(auger_window,text='Export',bg='LightBlue',command=lambda: clickExportButtonAT(auger_window,transition_table,atom_name,position))
     exportButton.place(x=1140,y=70)
     
+    selectPlotButton=ttk.Combobox(auger_window,width=12) 
+    selectPlotButton['value']=('Mg 1253.6(eV)','Al 1486.7(eV)','Ag 2984.3(eV)','Cr 5414.9(eV)','Ga 9251.74(eV)','No selection')
+    selectPlotButton.current(5)
+    orLabel2=tkinter.Label(auger_window,text='or')
+    inputEntry2=tkinter.Entry(auger_window,width=10)
+    v=tkinter.IntVar()
+    
+    plotBindingButton=tkinter.Radiobutton(auger_window,text='Binding Energies',value=1,variable=v,command=lambda: selectPlot(auger_window,v,selectPlotButton,orLabel2,inputEntry2))
+    plotBindingButton.place(x=5,y=10)
+    plotKineticButton=tkinter.Radiobutton(auger_window,text='Kinetic Energies',value=2,variable=v,command=lambda: selectPlot(auger_window,v,selectPlotButton,orLabel2,inputEntry2))
+    plotKineticButton.place(x=5,y=30)
+    plotButton=tkinter.Button(auger_window,text='Plot',bg='Pink')
+    plotButton.place(x=360,y=10)
+    
+
+
+
 
     auger_window.mainloop()
 
@@ -1286,5 +1306,6 @@ if __name__ == "__main__":
 
 
 
+
     rootGUI()
-    print(getRange())
+
