@@ -10,7 +10,7 @@ import shlex
 from decimal import Decimal
 import pandas as pd
 from tabulate import tabulate
-
+import webbrowser
 #-------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------
 #connect database
@@ -335,8 +335,7 @@ def augerTransitionGUI(index):
             nonNone_orbital.append(barkla_orbital[shell])
     length=len(nonNone_value)
     
-    #citationLabel1=tkinter.Label(auger_window,text='*The data of core state energies comes from EADL')
-    #citationLabel1.place(x=10,y=40)
+
     
     #binding energies table
     core_table = ttk.Treeview(auger_window,height=length,columns=['1','2','3'],show='headings')
@@ -383,12 +382,22 @@ def augerTransitionGUI(index):
     ybar.place(relx=0.95, rely=0.02, relwidth=0.035, relheight=0.958)
     
     
-    citationLabel2=tkinter.Label(auger_window,text="*Empirical expression: E_vxy=E_v-E_x'-E_y', where E_x'=[E_x(Z) + E_x(Z+1)]/2, E_y'=[E_y(Z) + E_y(Z+1)]/2")
-    citationLabel2.place(x=550,y=5)
-    citationLabel3=tkinter.Label(auger_window,text="*Norm Mult: Taking the product of the electron populations in the subshells and normalizing these quantities ")
+    citationLabel1=tkinter.Label(auger_window,text="*W.A.Coghlan, R.E.Clausing, ")
+    citationLabel1.place(x=550,y=5)
+    citationLabel2=tkinter.Label(auger_window,text="Auger catalog calculated transition energies listed by energy and element,",font=('Times',10,'italic'))
+    citationLabel2.place(x=713,y=6)
+    citationLabel3=tkinter.Label(auger_window,text="Atomic Data and Nuclear Data Tables, Volume 5, Issue 4, 1973, Pages 317-469, ISSN 0092-640X,")
     citationLabel3.place(x=550,y=25)
-    citationLabel4=tkinter.Label(auger_window,text="to 100 for the largest such product for each element (Auger Catalog, 1973)")
-    citationLabel4.place(x=630,y=45)
+    
+   
+    linkLabel1 = tkinter.Label(auger_window, text='https://doi.org/10.1016/S0092-640X(73)80005-1', fg='blue',font=('Arial', 10,'italic','underline'))
+    linkLabel1.place(x=550, y=46)
+ 
+
+    def open_url(event):
+        webbrowser.open("https://doi.org/10.1016/S0092-640X(73)80005-1", new=0)
+       
+    linkLabel1.bind("<Button-1>", open_url)
         
     #Add convert function
     selectButton=ttk.Combobox(auger_window)    
@@ -431,6 +440,8 @@ def augerTransitionGUI(index):
     plotKineticButton.place(x=5,y=30)
     plotButton=tkinter.Button(auger_window,text='Plot',bg='Pink')
     plotButton.place(x=360,y=10)
+    
+    
     
 
 
@@ -690,10 +701,10 @@ def augerRangeGUI(selectBE,selectKE,fromEntry,toEntry,selectValue,fromAll,fromSo
 
     if transitions_length>0:
         
-        if transitions_length<=30:
+        if transitions_length<=29:
             table_row=transitions_length
         else:
-            table_row=30
+            table_row=29
         
         transition_table=ttk.Treeview(range_window,height=table_row,columns=['1','2','3'],show='headings')
         transition_table.column('1',width=100) 
@@ -728,8 +739,18 @@ def augerRangeGUI(selectBE,selectKE,fromEntry,toEntry,selectValue,fromAll,fromSo
         exportButton=tkinter.Button(range_window,text='Export',bg='Yellow',command=lambda: clickExportButtonRG(range_window,transition_table,position,rangeMin,rangeMax,selectKE,selectBE,selectValue,fromAll,fromSome,correctAtom,auger_range=True,core_state=False))
         exportButton.place(x=900,y=300)
         
-        citationLabel1=tkinter.Label(range_window,text='*All the data comes from "Tables and Graphs of Atomic Subshell and Relaxation Data Derived from the LLNL Evaluated Atomic Data Library (EADL), Z=1-100"')
-        citationLabel1.place(x=200,y=630)
+        citationLabel1=tkinter.Label(range_window,text='*S.T.Perkins, D.E.Cullen, et al.,')
+        citationLabel1.place(x=150,y=610)   
+        citationLabel2=tkinter.Label(range_window,text='Tables and Graphs of Atomic Subshell and Relaxation Data Derived from the LLNL Evaluated Atomic Data Library (EADL), Z = 1--100, ',font=('Times',10,'italic'))
+        citationLabel2.place(x=325,y=611)
+        citationLabel3=tkinter.Label(range_window,text='Lawrence Livermore National Laboratory, UCRL-50400, Vol. 30,')
+        citationLabel3.place(x=150,y=630)   
+        linkLabel1 = tkinter.Label(range_window, text='https://www.osti.gov/biblio/10121422-tables-graphs-atomic-subshell-relaxation-data-derived-from-llnl-evaluated-atomic-data-library-eadl', fg='blue',font=('Arial', 10,'italic','underline'))
+        linkLabel1.place(x=150, y=650)
+        def open_url(event):
+            webbrowser.open("https://www.osti.gov/biblio/10121422-tables-graphs-atomic-subshell-relaxation-data-derived-from-llnl-evaluated-atomic-data-library-eadl", new=0)
+       
+        linkLabel1.bind("<Button-1>", open_url)
     else:
         tkinter.messagebox.showinfo(title='REMINDER',message='No relevant results',parent=range_window)
     
@@ -780,10 +801,10 @@ def coreStateGUI(fromEntry,toEntry,fromAll,fromSome):
                 atom_name=number_name[number]
                 correct_core[atom_name]=temp2
     if len(correct_core)!=0:
-        if core_length<=30:
+        if core_length<=29:
             table_row=core_length
         else:
-            table_row=30
+            table_row=29
         
         binding_table=ttk.Treeview(range_window,height=table_row,columns=['1','2','3','4'],show='headings')
         binding_table.column('1',width=100) 
@@ -815,8 +836,18 @@ def coreStateGUI(fromEntry,toEntry,fromAll,fromSome):
         exportButton=tkinter.Button(range_window,text='Export',bg='Yellow',command=lambda: clickExportButtonRG(range_window,binding_table,position,rangeMin,rangeMax,None,None,None,fromAll,fromSome,None,auger_range=False,core_state=True))
         exportButton.place(x=900,y=300)
         
-        citationLabel1=tkinter.Label(range_window,text='*All the data comes from "Tables and Graphs of Atomic Subshell and Relaxation Data Derived from the LLNL Evaluated Atomic Data Library (EADL), Z=1-100"')
-        citationLabel1.place(x=200,y=630)
+        citationLabel1=tkinter.Label(range_window,text='*S.T.Perkins, D.E.Cullen, et al.,')
+        citationLabel1.place(x=150,y=610)   
+        citationLabel2=tkinter.Label(range_window,text='Tables and Graphs of Atomic Subshell and Relaxation Data Derived from the LLNL Evaluated Atomic Data Library (EADL), Z = 1--100, ',font=('Times',10,'italic'))
+        citationLabel2.place(x=325,y=611)
+        citationLabel3=tkinter.Label(range_window,text='Lawrence Livermore National Laboratory, UCRL-50400, Vol. 30,')
+        citationLabel3.place(x=150,y=630)   
+        linkLabel1 = tkinter.Label(range_window, text='https://www.osti.gov/biblio/10121422-tables-graphs-atomic-subshell-relaxation-data-derived-from-llnl-evaluated-atomic-data-library-eadl', fg='blue',font=('Arial', 10,'italic','underline'))
+        linkLabel1.place(x=150, y=650)
+        def open_url(event):
+            webbrowser.open("https://www.osti.gov/biblio/10121422-tables-graphs-atomic-subshell-relaxation-data-derived-from-llnl-evaluated-atomic-data-library-eadl", new=0)
+       
+        linkLabel1.bind("<Button-1>", open_url)
     else:
         tkinter.messagebox.showinfo(title='REMINDER',message='No relevant results',parent=range_window)
 
@@ -914,10 +945,10 @@ def bothSearchGUI(selectBE,selectKE,fromEntry,toEntry,selectValue,fromAll,fromSo
     table_length=transitions_length+core_length
     
     if table_length>0:        
-        if table_length<=30:
+        if table_length<=29:
             table_row=table_length
         else:
-            table_row=30
+            table_row=29
         
         table=ttk.Treeview(range_window,height=table_row,columns=['1','2','3'],show='headings')
         table.column('1',width=120) 
@@ -976,8 +1007,18 @@ def bothSearchGUI(selectBE,selectKE,fromEntry,toEntry,selectValue,fromAll,fromSo
     exportButton.place(x=900,y=300)
     
     
-    citationLabel1=tkinter.Label(range_window,text='*All the data comes from "Tables and Graphs of Atomic Subshell and Relaxation Data Derived from the LLNL Evaluated Atomic Data Library (EADL), Z=1-100"')
-    citationLabel1.place(x=200,y=630)
+    citationLabel1=tkinter.Label(range_window,text='*S.T.Perkins, D.E.Cullen, et al.,')
+    citationLabel1.place(x=150,y=610)   
+    citationLabel2=tkinter.Label(range_window,text='Tables and Graphs of Atomic Subshell and Relaxation Data Derived from the LLNL Evaluated Atomic Data Library (EADL), Z = 1--100, ',font=('Times',10,'italic'))
+    citationLabel2.place(x=325,y=611)
+    citationLabel3=tkinter.Label(range_window,text='Lawrence Livermore National Laboratory, UCRL-50400, Vol. 30,')
+    citationLabel3.place(x=150,y=630)   
+    linkLabel1 = tkinter.Label(range_window, text='https://www.osti.gov/biblio/10121422-tables-graphs-atomic-subshell-relaxation-data-derived-from-llnl-evaluated-atomic-data-library-eadl', fg='blue',font=('Arial', 10,'italic','underline'))
+    linkLabel1.place(x=150, y=650)
+    def open_url(event):
+        webbrowser.open("https://www.osti.gov/biblio/10121422-tables-graphs-atomic-subshell-relaxation-data-derived-from-llnl-evaluated-atomic-data-library-eadl", new=0)
+       
+    linkLabel1.bind("<Button-1>", open_url)
     
     range_window.mainloop()
     
@@ -1286,11 +1327,31 @@ def rootGUI():
    clearButton=tkinter.Button(root,text='Clear',command=lambda: clickClearButtonRT(root,fromEntry,toEntry,v2,selectButton,orLabel,inputEntry,v1,v3))
    clearButton.place(x=750,y=10)
    
-   citationLabel1=tkinter.Label(root,text='*All the data comes from "Tables and Graphs of Atomic Subshell and Relaxation Data Derived from the LLNL"')
-   citationLabel1.place(x=150,y=600)
+   citationLabel1=tkinter.Label(root,text='*S.T.Perkins, D.E.Cullen, et al.,')
+   citationLabel1.place(x=150,y=590)
    
-   citationLabel2=tkinter.Label(root,text='Evaluated Atomic Data Library (EADL), Z=1-100"')
-   citationLabel2.place(x=300,y=620)
+   citationLabel2=tkinter.Label(root,text='Tables and Graphs of Atomic Subshell and Relaxation Data Derived from the LLNL Evaluated',font=('Times',10,'italic'))
+   citationLabel2.place(x=325,y=591)
+   
+   citationLabel3=tkinter.Label(root,text='Atomic Data Library (EADL), Z = 1--100,',font=('Times',10,'italic'))
+   citationLabel3.place(x=150,y=610)
+   
+   citationLabel4=tkinter.Label(root,text='Lawrence Livermore National Laboratory, UCRL-50400, Vol. 30,')
+   citationLabel4.place(x=377,y=610)
+   
+   linkLabel1 = tkinter.Label(root, text='https://www.osti.gov/biblio/10121422-tables-graphs-atomic-subshell-relaxation-data-derived-from-llnl-evaluated-atomic-data-library-eadl', fg='blue',font=('Arial', 10,'italic','underline'))
+   linkLabel1.place(x=150, y=630)
+ 
+
+   def open_url(event):
+       webbrowser.open("https://www.osti.gov/biblio/10121422-tables-graphs-atomic-subshell-relaxation-data-derived-from-llnl-evaluated-atomic-data-library-eadl", new=0)
+       
+   linkLabel1.bind("<Button-1>", open_url)
+ 
+
+   
+   
+
     
 
    root.mainloop()
