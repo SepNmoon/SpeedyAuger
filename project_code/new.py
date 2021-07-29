@@ -11,6 +11,14 @@ from decimal import Decimal
 import pandas as pd
 from tabulate import tabulate
 import webbrowser
+from matplotlib.figure import Figure
+import matplotlib
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg,NavigationToolbar2Tk
+from matplotlib.pyplot import MultipleLocator
+import matplotlib.pyplot as plt
+
+
+
 #-------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------
 #connect database
@@ -293,6 +301,71 @@ def calculateAuger(number):
         
     return transition_energies,norm_array
 
+def clickPlotForElement(v,selectPlotButton,inputEntry2,auger_window,transition_energies,norm_array):
+    if v.get()==0:
+        tkinter.messagebox.showinfo(title='ERROR',message='Please select binding energies or kinetic energies',parent=auger_window)
+    elif v.get()==2:       
+        showKineticPlot=True
+    elif v.get()==1:
+        if (selectPlotButton.get()=='No selection' and inputEntry2.get()=='') or (selectPlotButton.get()!='No selection' and inputEntry2.get()!=''):
+            tkinter.messagebox.showinfo(title='ERROR',message='Please input or select',parent=auger_window)
+        elif selectPlotButton.get()=='No selection' and inputEntry2.get()!='':
+            try:                  
+                selectPhoton=float(inputEntry2.get())            
+            except:
+                tkinter.messagebox.showinfo(title='ERROR',message='Please input valid value',parent=auger_window)
+            else:
+                showBindingPlot=True
+                
+    
+    if showKineticPlot==True:
+        if len(transition_energies)<=10:
+            fontSize=10
+        else:
+            fontSize=7
+
+
+
+            
+        plot_window=tkinter.Toplevel()
+        plot_window.geometry("680x680")
+        figure, ax = plt.subplots(1,1)
+        x_value=transition_energies.values()
+        y_height=norm_array
+        y_min=np.zeros(len(norm_array))
+        plt.vlines(x_value,y_min,y_height)
+        index=0
+        for key in transition_energies:
+            new_key=key.replace(',','')
+            plt.text(transition_energies[key],norm_array[index],new_key,size=fontSize)
+            index+=1
+  
+        plt.close()
+        #figure =Figure(figsize=(5,4), dpi=100)
+        #plot = figure.add_subplot(111)
+        #x_value=transition_energies.values()
+        #y_height=norm_array
+        #y_min=np.zeros(len(norm_array))
+        #plot.vlines(x_value,y_min,y_height)
+        
+        canvas =FigureCanvasTkAgg(figure, master=plot_window)
+        canvas.draw()
+        canvas.get_tk_widget().pack(side=tkinter.TOP, fill=tkinter.BOTH, expand=tkinter.YES)
+        
+        toolbar = NavigationToolbar2Tk(canvas, plot_window)
+        toolbar.update()
+        canvas._tkcanvas.pack(side=tkinter.TOP, fill=tkinter.BOTH,expand=tkinter.YES)
+
+        
+        plot_window.mainloop()
+
+            
+
+            
+        
+    
+
+
 def selectPlot(auger_window,v,selectPlotButton,orLabel2,inputEntry2):   
     if v.get()==1:
         selectPlotButton.place(x=140,y=10)
@@ -432,13 +505,13 @@ def augerTransitionGUI(index):
     selectPlotButton.current(5)
     orLabel2=tkinter.Label(auger_window,text='or')
     inputEntry2=tkinter.Entry(auger_window,width=10)
-    v=tkinter.IntVar()
     
+    v=tkinter.IntVar()    
     plotBindingButton=tkinter.Radiobutton(auger_window,text='Binding Energies',value=1,variable=v,command=lambda: selectPlot(auger_window,v,selectPlotButton,orLabel2,inputEntry2))
     plotBindingButton.place(x=5,y=10)
     plotKineticButton=tkinter.Radiobutton(auger_window,text='Kinetic Energies',value=2,variable=v,command=lambda: selectPlot(auger_window,v,selectPlotButton,orLabel2,inputEntry2))
     plotKineticButton.place(x=5,y=30)
-    plotButton=tkinter.Button(auger_window,text='Plot',bg='Pink')
+    plotButton=tkinter.Button(auger_window,text='Plot',bg='Pink',command=lambda: clickPlotForElement(v,selectPlotButton,inputEntry2,auger_window,transition_energies,norm_array))
     plotButton.place(x=360,y=10)
     
     
