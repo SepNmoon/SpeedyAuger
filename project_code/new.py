@@ -4,7 +4,7 @@ import numpy as np
 from tkinter import messagebox 
 from tkinter import ttk
 from tkinter import Scrollbar
-from tkinter.filedialog import askdirectory
+from tkinter.filedialog import askdirectory,askopenfilename
 import itertools
 import shlex
 from decimal import Decimal
@@ -514,7 +514,7 @@ def getCrossSection(number,photon_energy):
                 photon_shell_cross[float(curLine[0])]=temp
                   
                    
-    print(photon_shell_cross)
+    #print(photon_shell_cross)
     
 
     if photon_energy in photon_shell_cross:
@@ -651,12 +651,16 @@ def getCrossSection(number,photon_energy):
             shell_cross[shell]=((end_cross[shell]-start_cross[shell])/(1500-1000))*(photon_energy-1500)+end_cross[shell]
         
 
-    print(shell_cross)
+
+    norm_shell_cross=dict()
+    for shell in shell_cross:
+        norm_shell_cross[shell]=(shell_cross[shell]/max(shell_cross.values()))*100
             
-       
+    #print(norm_shell_cross)
+    return norm_shell_cross
             
 
-getCrossSection(93,1600)    
+  
 #----------------------------------------------------------------------------------------------
 #----------------------------------------------------------------------------------------------
 #All about AugerTransitionGUI
@@ -846,7 +850,7 @@ def calculateAuger(number):
         
     return transition_energies,norm_array
 
-def clickPlotForElement(v,selectPlotButton,inputEntry2,auger_window,transition_energies,norm_array):
+def clickPlotForElement(v,selectPlotButton,inputEntry2,auger_window,transition_energies,norm_array,atom_number,nonNone_value):
     showKineticPlot=False
     showBindingPlot=False
     if v.get()==0:
@@ -888,13 +892,15 @@ def clickPlotForElement(v,selectPlotButton,inputEntry2,auger_window,transition_e
         x_value=transition_energies.values()
         y_height=norm_array
         y_min=np.zeros(len(norm_array))
+        
         plt.vlines(x_value,y_min,y_height)
         index=0
         for key in transition_energies:
             new_key=key.replace(',','')
             plt.text(transition_energies[key],norm_array[index],new_key,size=fontSize)
             index+=1
-  
+        
+        #plt.gca().invert_xaxis() 
         plt.close()        
         canvas =FigureCanvasTkAgg(figure, master=plot_window)
         canvas.draw()
@@ -926,14 +932,26 @@ def clickPlotForElement(v,selectPlotButton,inputEntry2,auger_window,transition_e
             index+=1
         
         figure, ax = plt.subplots(1,1)
-        y_min=np.zeros(len(x_value))
+        y_min=np.zeros(len(x_value))        
         plt.vlines(x_value,y_min,y_height)
         index=0
         for transition in positive_transitions:
             new_transition=transition.replace(',','')
             plt.text(x_value[index],y_height[index],new_transition,size=fontSize)
             index+=1
-  
+        
+        norm_shell_cross=getCrossSection(atom_number,selectPhoton)
+        core_x_values=list(nonNone_value.values())
+        core_y_height=list(norm_shell_cross.values())
+        core_y_min=np.zeros(len(core_x_values))
+        plt.vlines(core_x_values,core_y_min,core_y_height,color='red')
+        index=0
+        for shell in norm_shell_cross:
+            plt.text(core_x_values[index],core_y_height[index],shell)
+            index+=1
+        
+        
+        plt.gca().invert_xaxis() 
         plt.close()        
         canvas =FigureCanvasTkAgg(figure, master=plot_window)
         canvas.draw()
@@ -943,19 +961,10 @@ def clickPlotForElement(v,selectPlotButton,inputEntry2,auger_window,transition_e
         toolbar.update()
         canvas._tkcanvas.pack(side=tkinter.TOP, fill=tkinter.BOTH,expand=tkinter.YES)
 
-        
-        
-        
-        
         plot_window.mainloop()
         
         
 
-            
-
-            
-        
-    
 
 
 def selectPlot(auger_window,v,selectPlotButton,orLabel2,inputEntry2):   
@@ -1103,7 +1112,7 @@ def augerTransitionGUI(index):
     plotBindingButton.place(x=5,y=10)
     plotKineticButton=tkinter.Radiobutton(auger_window,text='Kinetic Energies',value=2,variable=v,command=lambda: selectPlot(auger_window,v,selectPlotButton,orLabel2,inputEntry2))
     plotKineticButton.place(x=5,y=30)
-    plotButton=tkinter.Button(auger_window,text='Plot',bg='Pink',command=lambda: clickPlotForElement(v,selectPlotButton,inputEntry2,auger_window,transition_energies,norm_array))
+    plotButton=tkinter.Button(auger_window,text='Plot',bg='Pink',command=lambda: clickPlotForElement(v,selectPlotButton,inputEntry2,auger_window,transition_energies,norm_array,atom_number,nonNone_value))
     plotButton.place(x=360,y=10)
     
     
@@ -1787,7 +1796,26 @@ def clickCheckButtonSA(element,elementArray):
             new_array.append(unique_element[index])
         index+=1
     global unique_array
-    unique_array=new_array            
+    unique_array=new_array   
+     
+def clickCheckButtonSA2(element,elementArray2):
+    elementArray2.append(element)
+    elementArray2=sorted(elementArray2)
+    unique_element=np.unique(elementArray2)
+    resdata = []
+    for ii in unique_element:
+        resdata.append(elementArray2.count(ii))
+
+    new_array=[]
+    index=0
+    for d in resdata:
+        if d%2==0:
+            pass
+        else:
+            new_array.append(unique_element[index])
+        index+=1
+    global unique_array2
+    unique_array2=new_array    
             
 def clickClearButtonRT(root,fromEntry,toEntry,v2,selectButton,orLabel,inputEntry,v1,v3):
     fromEntry.delete(0,'end')
@@ -1838,7 +1866,14 @@ def clickClearButtonSA(elementArray,elementCheck):
     
     for element in unique_array:
         clickCheckButtonSA(element,elementArray)
+
+def clickClearButtonSA2(elementArray2,elementCheck):    
+
+    for number in elementCheck:
+        elementCheck[number].deselect()
     
+    for element in unique_array2:
+        clickCheckButtonSA2(element,elementArray2)    
     
 def clickSelectAtomButton(root):
     selectAtomGUI=tkinter.Tk()
@@ -1890,6 +1925,135 @@ def selectTranCoreButton(v1,keSelect,beSelect,v2):
         beSelect.place_forget()
         
     
+def clickImportButtonRT(root,showPathText):
+    global import_file_path
+    import_file_path=askopenfilename(parent=root)
+    showPathText.config(state='normal')
+    showPathText.insert(0,import_file_path)
+    showPathText.config(state='readonly')
+
+def clickClearPathButton(showPathText,selectPhotonButton):
+    showPathText.config(state='normal')
+    showPathText.delete(0, 'end')
+    showPathText.config(state='readonly')
+    selectPhotonButton.set('')
+    global unique_array2
+    
+    for element in unique_array2:
+        clickCheckButtonSA2(element,elementArray2)
+      
+    unique_array2=[]
+    
+    
+def clickPlotButtonRT(import_file_path,root,showPathText,selectPhotonButton):
+    
+    if showPathText.get()=='':
+        tkinter.messagebox.showinfo(title='ERROR',message='Please import file',parent=root)
+    elif selectPhotonButton.get()=='':
+        tkinter.messagebox.showinfo(title='ERROR',message='Please select photon energy',parent=root)
+    elif len(unique_array2)==0:
+        tkinter.messagebox.showinfo(title='ERROR',message='Please import file',parent=root)
+    else:
+        selectPhoton=float(selectPhotonButton.get())
+        bindingData=[]
+        intensityData=[]
+        normal_intensity_data=[]
+        with open(import_file_path,'r') as f:            
+            for line in f.readlines():
+                curLine=line.strip().split(" ")
+                bindingData.append(float(curLine[0]))
+                intensityData.append(float(curLine[1]))
+
+        
+        for intensity in intensityData:
+            normal_intensity_data.append((intensity/max(intensityData))*100)
+        plotGUI=tkinter.Toplevel()
+        plotGUI.geometry('680x680')
+        
+    
+        figure,ax=plt.subplots(1,1)
+        #print(selectPhoton.type)
+        for number in unique_array2:
+            norm_shell_cross=getCrossSection(number,selectPhoton)
+            print(norm_shell_cross)
+            
+        plt.plot(bindingData,normal_intensity_data)
+        plt.gca().invert_xaxis() 
+        plt.close()        
+        canvas =FigureCanvasTkAgg(figure, master=plotGUI)
+        canvas.draw()
+        canvas.get_tk_widget().pack(side=tkinter.TOP, fill=tkinter.BOTH, expand=tkinter.YES)
+        
+        toolbar = NavigationToolbar2Tk(canvas, plotGUI)
+        toolbar.update()
+        canvas._tkcanvas.pack(side=tkinter.TOP, fill=tkinter.BOTH,expand=tkinter.YES)
+        plotGUI.mainloop()
+        
+####        
+        #norm_shell_cross=getCrossSection(atom_number,selectPhoton)
+        #core_x_values=list(nonNone_value.values())
+        #core_y_height=list(norm_shell_cross.values())
+        #core_y_min=np.zeros(len(core_x_values))
+        #plt.vlines(core_x_values,core_y_min,core_y_height,color='red')
+        #index=0
+        #for shell in norm_shell_cross:
+            #plt.text(core_x_values[index],core_y_height[index],shell)
+            #index+=1
+        
+        
+        #plt.gca().invert_xaxis() 
+        #plt.close()        
+        #canvas =FigureCanvasTkAgg(figure, master=plot_window)
+        #canvas.draw()
+        #canvas.get_tk_widget().pack(side=tkinter.TOP, fill=tkinter.BOTH, expand=tkinter.YES)
+        
+        #toolbar = NavigationToolbar2Tk(canvas, plot_window)
+        #toolbar.update()
+        #canvas._tkcanvas.pack(side=tkinter.TOP, fill=tkinter.BOTH,expand=tkinter.YES)
+        
+        
+def clickSelectElementButton(root):
+    selectAtomGUI=tkinter.Tk()
+    selectAtomGUI.geometry("750x450")
+    number_name=getAtom()
+    
+    elementCheck={}
+    global unique_array2
+    global elementArray2
+    for number in number_name:
+        v=tkinter.IntVar()
+        atom_name=number_name[number]
+        elementCheck[number]=tkinter.Checkbutton(selectAtomGUI,text='%(number)d %(name)s'%{'number':number,'name':atom_name},variable=v,command=lambda element=number: clickCheckButtonSA2(element,elementArray2))
+        
+        if number in unique_array2:
+            elementCheck[number].select()
+        if number>=3 and number<10:   
+            elementCheck[number].place(x=20,y=20+(number-3)*40)
+        elif number>=10 and number<20:
+            elementCheck[number].place(x=80,y=20+(number-10)*40)
+        elif number>=20 and number<30:
+            elementCheck[number].place(x=150,y=20+(number-20)*40)
+        elif number>=30 and number<40:
+            elementCheck[number].place(x=220,y=20+(number-30)*40)
+        elif number>=40 and number<50:
+            elementCheck[number].place(x=290,y=20+(number-40)*40)
+        elif number>=50 and number<60:
+            elementCheck[number].place(x=360,y=20+(number-50)*40)
+        elif number>=60 and number<70:
+            elementCheck[number].place(x=430,y=20+(number-60)*40)
+        elif number>=70 and number<80:
+            elementCheck[number].place(x=500,y=20+(number-70)*40)
+        elif number>=80 and number<90:
+            elementCheck[number].place(x=570,y=20+(number-80)*40)
+        elif number>=90:
+            elementCheck[number].place(x=640,y=20+(number-90)*40)
+            
+    clearButton=tkinter.Button(selectAtomGUI,text='Clear',command=lambda:clickClearButtonSA2(elementArray2,elementCheck))
+    clearButton.place(x=660,y=250)
+    
+        
+     
+        
  
 #rootGUI
 def rootGUI():    
@@ -1957,10 +2121,7 @@ def rootGUI():
    unitLabel=tkinter.Label(root,text='(eV)')
    unitLabel.place(x=500,y=10)
    
-   
-   
-   
-   
+
    v1=tkinter.IntVar()
    v2=tkinter.IntVar()
    selectButton=ttk.Combobox(root,width=12)
@@ -2012,6 +2173,29 @@ def rootGUI():
        webbrowser.open("https://www.osti.gov/biblio/10121422-tables-graphs-atomic-subshell-relaxation-data-derived-from-llnl-evaluated-atomic-data-library-eadl", new=0)
        
    linkLabel1.bind("<Button-1>", open_url)
+   
+   
+   showPathText=tkinter.Entry(root,state='readonly')
+   showPathText.place(x=180,y=160)
+   
+   importButton=tkinter.Button(root,text='Import File (.txt or .csv)',bg='Pink',command=lambda: clickImportButtonRT(root,showPathText))
+   importButton.place(x=180,y=120)
+   
+   selectPhotonButton=ttk.Combobox(root,width=10)
+   selectPhotonButton['value']=[1,1.5,2,3,4,5,6,8,10,15]
+   selectPhotonButton.place(x=350,y=125)
+   
+   selectElementButton=tkinter.Button(root,text='Select Elements',command=lambda: clickSelectElementButton(root))
+   selectElementButton.place(x=350,y=155)
+   
+
+   plotButton=tkinter.Button(root,text='Plot',bg='Gold',command=lambda: clickPlotButtonRT(import_file_path,root,showPathText,selectPhotonButton))
+   plotButton.place(x=500,y=120)
+
+   clearPathButton=tkinter.Button(root,text='Clear',command=lambda: clickClearPathButton(showPathText,selectPhotonButton))
+   clearPathButton.place(x=550,y=120)
+
+   
  
 
    
@@ -2029,8 +2213,12 @@ if __name__ == "__main__":
 
     elementArray=[]
     unique_array=[]
+    elementArray2=[]
+    unique_array2=[]
+    
+    import_file_path=''
 
 
 
-    #rootGUI()
+    rootGUI()
 
