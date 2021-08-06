@@ -942,22 +942,8 @@ def clickPlotForElement(v,selectPlotButton,inputEntry2,auger_window,transition_e
             index+=1
         
         
-        
-                
-            
-        
-        
-
-        
-        
-        
-    
-            
-        
-        
-        
-        
-        
+        plt.xlabel('Kinetic Energy')
+        plt.ylabel('Normalized Intensity')
         plt.close()        
         canvas =FigureCanvasTkAgg(figure, master=plot_window)
         canvas.draw()
@@ -1009,6 +995,8 @@ def clickPlotForElement(v,selectPlotButton,inputEntry2,auger_window,transition_e
         
         
         plt.gca().invert_xaxis() 
+        plt.xlabel('Binding Energy')
+        plt.ylabel('Normalized Intensity')
         plt.close()        
         canvas =FigureCanvasTkAgg(figure, master=plot_window)
         canvas.draw()
@@ -2062,6 +2050,8 @@ def clickPlotButtonRT(import_file_path,root,showPathText,selectPhotonButton):
             
         plt.plot(bindingData,normal_intensity_data)
         plt.gca().invert_xaxis() 
+        plt.xlabel('Binding Energy')
+        plt.ylabel('Normalized Intensity')
         plt.close()        
         canvas =FigureCanvasTkAgg(figure, master=plotGUI)
         canvas.draw()
