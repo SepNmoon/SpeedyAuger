@@ -850,13 +850,20 @@ def calculateAuger(number):
         
     return transition_energies,norm_array
 
-def clickPlotForElement(v,selectPlotButton,inputEntry2,auger_window,transition_energies,norm_array,atom_number,nonNone_value):
+def clickPlotForElement(v,selectPlotButton,inputEntry2,auger_window,transition_energies,norm_array,atom_number,nonNone_value,excitationEntry):
     showKineticPlot=False
     showBindingPlot=False
     if v.get()==0:
         tkinter.messagebox.showinfo(title='ERROR',message='Please select binding energies or kinetic energies',parent=auger_window)
-    elif v.get()==2:       
-        showKineticPlot=True
+    elif v.get()==2:    
+        try:
+            selectExcitation=float(excitationEntry.get())
+        except:
+            tkinter.messagebox.showinfo(title='ERROR',message='Please input valid excitation energy',parent=auger_window)
+        else:
+            showKineticPlot=True
+                
+        
     elif v.get()==1:
         if (selectPlotButton.get()=='No selection' and inputEntry2.get()=='') or (selectPlotButton.get()!='No selection' and inputEntry2.get()!=''):
             tkinter.messagebox.showinfo(title='ERROR',message='Please input or select',parent=auger_window)
@@ -900,7 +907,57 @@ def clickPlotForElement(v,selectPlotButton,inputEntry2,auger_window,transition_e
             plt.text(transition_energies[key],norm_array[index],new_key,size=fontSize)
             index+=1
         
-        #plt.gca().invert_xaxis() 
+        norm_shell_cross=getCrossSection(atom_number,selectExcitation)        
+        kinetic_core=[]
+        
+        for shell in nonNone_value:
+            kinetic_core.append(selectExcitation-nonNone_value[shell])
+        
+        shell_list=list(norm_shell_cross.keys())
+        norm_cross_list=list(norm_shell_cross.values())
+        #print(norm_shell_cross)
+        #print(nonNone_value)
+        #print(kinetic_core)
+        
+        #barkla_orbital=getNotation()
+        core_x_values=[]
+        core_y_height=[]
+        text=[]
+        
+        index=0
+        for y in kinetic_core:
+            if y>0:
+                core_x_values.append(y)
+                core_y_height.append(norm_cross_list[index])
+                text.append(shell_list[index])
+            index+=1
+        #print(core_x_values)
+        #print(core_y_height)
+        #print(text)
+        core_y_min=np.zeros(len(core_x_values))
+        plt.vlines(core_x_values,core_y_min,core_y_height,color='red')
+        index=0
+        for t in text:
+            plt.text(core_x_values[index],core_y_height[index],t)
+            index+=1
+        
+        
+        
+                
+            
+        
+        
+
+        
+        
+        
+    
+            
+        
+        
+        
+        
+        
         plt.close()        
         canvas =FigureCanvasTkAgg(figure, master=plot_window)
         canvas.draw()
@@ -967,15 +1024,19 @@ def clickPlotForElement(v,selectPlotButton,inputEntry2,auger_window,transition_e
 
 
 
-def selectPlot(auger_window,v,selectPlotButton,orLabel2,inputEntry2):   
+def selectPlot(auger_window,v,selectPlotButton,orLabel2,inputEntry2,excitationEntry,excitationLabel):   
     if v.get()==1:
         selectPlotButton.place(x=140,y=10)
         orLabel2.place(x=250,y=10)
-        inputEntry2.place(x=275,y=10)       
+        inputEntry2.place(x=275,y=10)  
+        excitationEntry.place_forget()
+        excitationLabel.place_forget()
     else:
         selectPlotButton.place_forget()
         orLabel2.place_forget()
         inputEntry2.place_forget()
+        excitationEntry.place(x=150,y=35)
+        excitationLabel.place(x=230,y=35)
         
     
 #AugerGUI
@@ -1107,12 +1168,16 @@ def augerTransitionGUI(index):
     orLabel2=tkinter.Label(auger_window,text='or')
     inputEntry2=tkinter.Entry(auger_window,width=10)
     
+    excitationEntry=tkinter.Entry(auger_window,width=10)
+    excitationLabel=tkinter.Label(auger_window,text='hv')
+
+    
     v=tkinter.IntVar()    
-    plotBindingButton=tkinter.Radiobutton(auger_window,text='Binding Energies',value=1,variable=v,command=lambda: selectPlot(auger_window,v,selectPlotButton,orLabel2,inputEntry2))
+    plotBindingButton=tkinter.Radiobutton(auger_window,text='Binding Energies',value=1,variable=v,command=lambda: selectPlot(auger_window,v,selectPlotButton,orLabel2,inputEntry2,excitationEntry,excitationLabel))
     plotBindingButton.place(x=5,y=10)
-    plotKineticButton=tkinter.Radiobutton(auger_window,text='Kinetic Energies',value=2,variable=v,command=lambda: selectPlot(auger_window,v,selectPlotButton,orLabel2,inputEntry2))
+    plotKineticButton=tkinter.Radiobutton(auger_window,text='Kinetic Energies',value=2,variable=v,command=lambda: selectPlot(auger_window,v,selectPlotButton,orLabel2,inputEntry2,excitationEntry,excitationLabel))
     plotKineticButton.place(x=5,y=30)
-    plotButton=tkinter.Button(auger_window,text='Plot',bg='Pink',command=lambda: clickPlotForElement(v,selectPlotButton,inputEntry2,auger_window,transition_energies,norm_array,atom_number,nonNone_value))
+    plotButton=tkinter.Button(auger_window,text='Plot',bg='Pink',command=lambda: clickPlotForElement(v,selectPlotButton,inputEntry2,auger_window,transition_energies,norm_array,atom_number,nonNone_value,excitationEntry))
     plotButton.place(x=360,y=10)
     
     
@@ -1954,6 +2019,8 @@ def clickPlotButtonRT(import_file_path,root,showPathText,selectPhotonButton):
     elif len(unique_array2)==0:
         tkinter.messagebox.showinfo(title='ERROR',message='Please import file',parent=root)
     else:
+        number_energies=getEnergies()
+        number_name=getAtom()
         selectPhoton=float(selectPhotonButton.get())
         bindingData=[]
         intensityData=[]
@@ -1972,10 +2039,26 @@ def clickPlotButtonRT(import_file_path,root,showPathText,selectPhotonButton):
         
     
         figure,ax=plt.subplots(1,1)
-        #print(selectPhoton.type)
+
+        
         for number in unique_array2:
             norm_shell_cross=getCrossSection(number,selectPhoton)
-            print(norm_shell_cross)
+            #print(norm_shell_cross)
+            current_energies=number_energies[number]
+            nonNone_value=dict()
+            for shell in current_energies:
+                if current_energies[shell]!=None:
+                    nonNone_value[shell]=current_energies[shell]
+            core_x_values=list(nonNone_value.values())
+            core_y_height=list(norm_shell_cross.values())
+            core_y_min=np.zeros(len(core_x_values))
+            plt.vlines(core_x_values,core_y_min,core_y_height,color='red')
+            index=0
+            for shell in norm_shell_cross:
+                plt.text(core_x_values[index],core_y_height[index],number_name[number]+''+shell)
+                index+=1
+
+                
             
         plt.plot(bindingData,normal_intensity_data)
         plt.gca().invert_xaxis() 
@@ -1989,27 +2072,7 @@ def clickPlotButtonRT(import_file_path,root,showPathText,selectPhotonButton):
         canvas._tkcanvas.pack(side=tkinter.TOP, fill=tkinter.BOTH,expand=tkinter.YES)
         plotGUI.mainloop()
         
-####        
-        #norm_shell_cross=getCrossSection(atom_number,selectPhoton)
-        #core_x_values=list(nonNone_value.values())
-        #core_y_height=list(norm_shell_cross.values())
-        #core_y_min=np.zeros(len(core_x_values))
-        #plt.vlines(core_x_values,core_y_min,core_y_height,color='red')
-        #index=0
-        #for shell in norm_shell_cross:
-            #plt.text(core_x_values[index],core_y_height[index],shell)
-            #index+=1
-        
-        
-        #plt.gca().invert_xaxis() 
-        #plt.close()        
-        #canvas =FigureCanvasTkAgg(figure, master=plot_window)
-        #canvas.draw()
-        #canvas.get_tk_widget().pack(side=tkinter.TOP, fill=tkinter.BOTH, expand=tkinter.YES)
-        
-        #toolbar = NavigationToolbar2Tk(canvas, plot_window)
-        #toolbar.update()
-        #canvas._tkcanvas.pack(side=tkinter.TOP, fill=tkinter.BOTH,expand=tkinter.YES)
+
         
         
 def clickSelectElementButton(root):
