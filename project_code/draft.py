@@ -1719,24 +1719,24 @@ def bothSearchGUI(selectBE,selectKE,fromEntry,toEntry,selectValue,fromAll,fromSo
     
     
     descendingButton=tkinter.Button(range_window,text='Descending order (energies)',bg='LightPink',command=lambda: clickSortButtonRG(table,position,descending=True,auger_range=True,core_state=True))
-    descendingButton.place(x=900,y=50)
+    descendingButton.place(relx=900/1200,rely=50/680)
     ascendingButton=tkinter.Button(range_window,text='Ascending order (energies)',bg='LightBlue',command=lambda: clickSortButtonRG(table,position,descending=False,auger_range=True,core_state=True))
-    ascendingButton.place(x=900,y=100)
+    ascendingButton.place(relx=900/1200,rely=100/680)
     numberButton=tkinter.Button(range_window,text='Sort by atomic number',bg='LightGreen',command=lambda: clickNumberButtonRG(two_tables,table,position,auger_range=True,core_state=True))
-    numberButton.place(x=900,y=150)
+    numberButton.place(relx=900/1200,rely=150/680)
     
     exportButton=tkinter.Button(range_window,text='Export',bg='Yellow',command=lambda: clickExportButtonRG(range_window,table,position,rangeMin,rangeMax,selectKE,selectBE,selectValue,fromAll,fromSome,correctAtom,auger_range=True,core_state=True))
-    exportButton.place(x=900,y=300)
+    exportButton.place(relx=900/1200,rely=300/680)
     
     
     citationLabel1=tkinter.Label(range_window,text='*S.T.Perkins, D.E.Cullen, et al.,')
-    citationLabel1.place(x=150,y=610)   
+    citationLabel1.place(relx=150/1200,rely=610/680)   
     citationLabel2=tkinter.Label(range_window,text='Tables and Graphs of Atomic Subshell and Relaxation Data Derived from the LLNL Evaluated Atomic Data Library (EADL), Z = 1--100, ',font=('Times',10,'italic'))
-    citationLabel2.place(x=325,y=611)
+    citationLabel2.place(relx=325/1200,rely=611/680)
     citationLabel3=tkinter.Label(range_window,text='Lawrence Livermore National Laboratory, UCRL-50400, Vol. 30,')
-    citationLabel3.place(x=150,y=630)   
+    citationLabel3.place(relx=150/1200,rely=630/680)   
     linkLabel1 = tkinter.Label(range_window, text='https://www.osti.gov/biblio/10121422-tables-graphs-atomic-subshell-relaxation-data-derived-from-llnl-evaluated-atomic-data-library-eadl', fg='blue',font=('Arial', 10,'italic','underline'))
-    linkLabel1.place(x=150, y=650)
+    linkLabel1.place(relx=150/1200, rely=650/680)
     def open_url(event):
         webbrowser.open("https://www.osti.gov/biblio/10121422-tables-graphs-atomic-subshell-relaxation-data-derived-from-llnl-evaluated-atomic-data-library-eadl", new=0)
        
@@ -1865,7 +1865,10 @@ def clickCheckButtonSA2(element,elementArray2):
     global unique_array2
     unique_array2=new_array    
             
-def clickClearButtonRT(root,fromEntry,toEntry,v2,selectButton,orLabel,inputEntry,v1,v3):
+def clickClearButtonRT(root,fromEntry,toEntry,v2,selectButton,orLabel,inputEntry,v1,v3,selectAtomButton,keSelect,beSelect):
+    selectAtomButton.place_forget()
+    keSelect.place_forget()
+    beSelect.place_forget()
     fromEntry.delete(0,'end')
     toEntry.delete(0,'end')
     v1.set(0)
@@ -1902,7 +1905,7 @@ def selectRadioButton(v2,root,selectButton,orLabel,inputEntry):
 
 def selectElements(selectAtomButton,v3):
     if v3.get()==2:
-        selectAtomButton.place(relx=380/1000,rely=90/680)
+        selectAtomButton.place(relx=500/1000,rely=50/680)
     else:      
         selectAtomButton.place_forget()
 
@@ -2282,7 +2285,7 @@ def rootGUI():
 
    searchButton=tkinter.Button(root,text='Search',bg='Orange',command=lambda: clickSearchButtonRT(root,fromEntry,toEntry,v2,selectButton,inputEntry,v1,v3))
    searchButton.place(relx=685/1000,rely=10/680)
-   clearButton=tkinter.Button(root,text='Clear',command=lambda: clickClearButtonRT(root,fromEntry,toEntry,v2,selectButton,orLabel,inputEntry,v1,v3))
+   clearButton=tkinter.Button(root,text='Clear',command=lambda: clickClearButtonRT(root,fromEntry,toEntry,v2,selectButton,orLabel,inputEntry,v1,v3,selectAtomButton,keSelect,beSelect))
    clearButton.place(relx=750/1000,rely=10/680)
    
    citationLabel1=tkinter.Label(root,text='*S.T.Perkins, D.E.Cullen, et al.,')
