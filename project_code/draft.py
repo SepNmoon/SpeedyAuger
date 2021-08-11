@@ -2007,6 +2007,8 @@ def clickPlotButtonRT(import_file_path,root,showPathText,selectPhotonButton,v_pl
     elif v_plot.get()==0:
         tkinter.messagebox.showinfo(title='ERROR',message='Please select range of x axis',parent=root)
     else:
+        
+
         number_energies=getEnergies()
         number_name=getAtom()
         selectPhoton=float(selectPhotonButton.get())
@@ -2078,7 +2080,41 @@ def clickPlotButtonRT(import_file_path,root,showPathText,selectPhotonButton,v_pl
             for shell in norm_shell_cross:
                 plt.text(core_x_values[index],core_y_height[index],number_name[number]+''+shell)
                 index+=1
+            
+            
+            transition_energies,norm_array=calculateAuger(number)
+            
+            auger_values=[]
+            norm_mults=[]
+            shell_text=[]
+            index=0
+            for shell in transition_energies:
+                auger_values.append(selectPhoton-float(transition_energies[shell]))
+                norm_mults.append(norm_array[index])
+                shell=shell.replace(',','')
+                shell_text.append(shell)
+                index+=1
+            
+            
+            auger_x_values=[]
+            auger_y_height=[]
+            auger_shell_text=[]
+            index=0
+            for value in auger_values:
+                if value>0:
+                    auger_x_values.append(value)
+                    auger_y_height.append(norm_mults[index])
+                    auger_shell_text.append(shell_text[index])
+                index+=1
+            auger_y_min=np.zeros(len(auger_y_height))
+            plt.vlines(auger_x_values,auger_y_min,auger_y_height,color=plt_color[color_index])
+
+            index=0
+            for t in auger_shell_text:
+                plt.text(auger_x_values[index],auger_y_height[index],number_name[number]+t)
+                index+=1
             color_index+=1
+            
 
 
         plt.plot(bindingData,normal_intensity_data)
