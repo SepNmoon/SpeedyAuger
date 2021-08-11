@@ -657,7 +657,7 @@ def getCrossSection(number,photon_energy):
         norm_shell_cross[shell]=(shell_cross[shell]/max(shell_cross.values()))*100
             
     #print(norm_shell_cross)
-    return norm_shell_cross
+    return norm_shell_cross,shell_cross
             
 
   
@@ -907,7 +907,7 @@ def clickPlotForElement(v,selectPlotButton,inputEntry2,auger_window,transition_e
             plt.text(transition_energies[key],norm_array[index],new_key,size=fontSize)
             index+=1
         
-        norm_shell_cross=getCrossSection(atom_number,selectExcitation)        
+        norm_shell_cross,shell_cross=getCrossSection(atom_number,selectExcitation)        
         kinetic_core=[]
         
         for shell in nonNone_value:
@@ -983,7 +983,7 @@ def clickPlotForElement(v,selectPlotButton,inputEntry2,auger_window,transition_e
             plt.text(x_value[index],y_height[index],new_transition,size=fontSize)
             index+=1
         
-        norm_shell_cross=getCrossSection(atom_number,selectPhoton)
+        norm_shell_cross,shell_cross=getCrossSection(atom_number,selectPhoton)
         core_x_values=list(nonNone_value.values())
         core_y_height=list(norm_shell_cross.values())
         core_y_min=np.zeros(len(core_x_values))
@@ -1168,11 +1168,6 @@ def augerTransitionGUI(index):
     plotButton=tkinter.Button(auger_window,text='Plot',bg='Pink',command=lambda: clickPlotForElement(v,selectPlotButton,inputEntry2,auger_window,transition_energies,norm_array,atom_number,nonNone_value,excitationEntry))
     plotButton.place(x=360,y=10)
     
-    
-    
-
-
-
 
     auger_window.mainloop()
 
@@ -1893,12 +1888,12 @@ def clickClearButtonRT(root,fromEntry,toEntry,v2,selectButton,orLabel,inputEntry
 
 def selectRadioButton(v2,root,selectButton,orLabel,inputEntry):
     if v2.get()==2:
-        selectButton.place(x=490,y=48.5)
+        selectButton.place(relx=490/1000,rely=48.5/680)
         selectButton['value']=('Mg 1253.6(eV)','Al 1486.7(eV)','Ag 2984.3(eV)','Cr 5414.9(eV)','Ga 9251.74(eV)','No selection')
         selectButton.current(5)
-        orLabel.place(x=600,y=48)
+        orLabel.place(relx=600/1000,rely=48/680)
         inputEntry.delete(0,'end')
-        inputEntry.place(x=620,y=48.5)
+        inputEntry.place(relx=620/1000,rely=48.5/680)
     else:
         selectButton.place_forget()
         orLabel.place_forget()
@@ -1907,7 +1902,7 @@ def selectRadioButton(v2,root,selectButton,orLabel,inputEntry):
 
 def selectElements(selectAtomButton,v3):
     if v3.get()==2:
-        selectAtomButton.place(x=380,y=90)
+        selectAtomButton.place(relx=380/1000,rely=90/680)
     else:      
         selectAtomButton.place_forget()
 
@@ -1971,8 +1966,8 @@ def clickSelectAtomButton(root):
 def selectTranCoreButton(v1,keSelect,beSelect,v2):
     v2.set(0)
     if v1.get()==1 or v1.get()==3:
-        keSelect.place(x=530,y=1)
-        beSelect.place(x=530,y=21.5)
+        keSelect.place(relx=530/1000,rely=1/680)
+        beSelect.place(relx=530/1000,rely=21.5/680)
     else:
         keSelect.place_forget()
         beSelect.place_forget()
@@ -1985,7 +1980,7 @@ def clickImportButtonRT(root,showPathText):
     showPathText.insert(0,import_file_path)
     showPathText.config(state='readonly')
 
-def clickClearPathButton(showPathText,selectPhotonButton):
+def clickClearPathButton(showPathText,selectPhotonButton,v_plot):
     showPathText.config(state='normal')
     showPathText.delete(0, 'end')
     showPathText.config(state='readonly')
@@ -1996,16 +1991,21 @@ def clickClearPathButton(showPathText,selectPhotonButton):
         clickCheckButtonSA2(element,elementArray2)
       
     unique_array2=[]
+    v_plot.set(0)
+    
+
     
     
-def clickPlotButtonRT(import_file_path,root,showPathText,selectPhotonButton):
+def clickPlotButtonRT(import_file_path,root,showPathText,selectPhotonButton,v_plot):
     
     if showPathText.get()=='':
         tkinter.messagebox.showinfo(title='ERROR',message='Please import file',parent=root)
     elif selectPhotonButton.get()=='':
         tkinter.messagebox.showinfo(title='ERROR',message='Please select photon energy',parent=root)
     elif len(unique_array2)==0:
-        tkinter.messagebox.showinfo(title='ERROR',message='Please import file',parent=root)
+        tkinter.messagebox.showinfo(title='ERROR',message='Please select element',parent=root)
+    elif v_plot.get()==0:
+        tkinter.messagebox.showinfo(title='ERROR',message='Please select range of x axis',parent=root)
     else:
         number_energies=getEnergies()
         number_name=getAtom()
@@ -2027,29 +2027,66 @@ def clickPlotButtonRT(import_file_path,root,showPathText,selectPhotonButton):
         
     
         figure,ax=plt.subplots(1,1)
+        
+        max_cross_sections=[]
+        for number in unique_array2:
+            norm_shell_cross,shell_cross=getCrossSection(number,selectPhoton)
+            max_cross_sections.append(max(shell_cross.values()))
+
+        max_value=max(max_cross_sections)
 
         
+          
+        plt_color=['red','green','yellow','purple','c',
+                   'lightcoral','olivedrab','darkorange','mediumorchid','aquamarine',
+                   'indianred','greenyellow','orange','thistle','turquoise',
+                   'brown','chartreuse','antiquewhite','plum','lightseagreen',
+                   'firebrick','lawngreen','tan','violet','mediumturquoise',
+                   'maroon','b','navajowhite','darkmagenta','lightcyan',
+                   'darkred','indigo','blanchedalmond','m','paleturquoise',
+                   'r','lavender','moccasin','fuchsia','darkslategray',
+                   'salmon','honeydew','burlywood','orchid','teal',
+                   'tomato','darkseagreen','wheat','mediumvioletred','cyan',
+                   'coral','palegreen','darkgoldenrod','deeppink','cadetblue',
+                   'orangered','lightgreen','goldenrod','hotpink','powderblue',
+                   'lightsalmon','forestgreen','gold','palevioletred','lightblue',
+                   'sienna','limegreen','khaki','crimson','deepskyblue',
+                   'chocolate','darkgreen','darkkhaki','pink','skyblue',
+                   'sandybrown','g','olive','lightpink','steelblue',
+                   'peru','lime','y','darkviolet','aliceblue',
+                   'black','seagreen','springgreen','mediumspringgreen','royalblue',
+                   'grey']
+        color_index=0
         for number in unique_array2:
-            norm_shell_cross=getCrossSection(number,selectPhoton)
-            #print(norm_shell_cross)
+            norm_shell_cross,shell_cross=getCrossSection(number,selectPhoton)
             current_energies=number_energies[number]
             nonNone_value=dict()
             for shell in current_energies:
                 if current_energies[shell]!=None:
                     nonNone_value[shell]=current_energies[shell]
+                    
+            norm_cross_section=dict()
+            for shell in shell_cross:
+                norm_cross_section[shell]=(shell_cross[shell]/max_value)*100
+ 
+                                  
             core_x_values=list(nonNone_value.values())
-            core_y_height=list(norm_shell_cross.values())
+            core_y_height=list(norm_cross_section.values())
             core_y_min=np.zeros(len(core_x_values))
-            plt.vlines(core_x_values,core_y_min,core_y_height,color='red')
+            plt.vlines(core_x_values,core_y_min,core_y_height,color=plt_color[color_index])
             index=0
             for shell in norm_shell_cross:
                 plt.text(core_x_values[index],core_y_height[index],number_name[number]+''+shell)
                 index+=1
+            color_index+=1
 
-                
-            
+
         plt.plot(bindingData,normal_intensity_data)
+        
         plt.gca().invert_xaxis() 
+        if v_plot.get()==2:
+            plt.xlim([1000,0])
+        
         plt.xlabel('Binding Energy')
         plt.ylabel('Normalized Intensity')
         plt.close()        
@@ -2061,6 +2098,8 @@ def clickPlotButtonRT(import_file_path,root,showPathText,selectPhotonButton):
         toolbar.update()
         canvas._tkcanvas.pack(side=tkinter.TOP, fill=tkinter.BOTH,expand=tkinter.YES)
         plotGUI.mainloop()
+
+
         
 
         
@@ -2068,6 +2107,7 @@ def clickPlotButtonRT(import_file_path,root,showPathText,selectPhotonButton):
 def clickSelectElementButton(root):
     selectAtomGUI=tkinter.Tk()
     selectAtomGUI.geometry("750x450")
+    
     number_name=getAtom()
     
     elementCheck={}
@@ -2112,11 +2152,14 @@ def clickSelectElementButton(root):
 def rootGUI():    
    number_name=getAtom() #dict
    root=tkinter.Tk() 
+   #screen_width=root.winfo_screenwidth()
+   #screen_height=root.winfo_screenheight()
    root.geometry("1000x680")
+   #root.geometry("%dx%d" % (screen_width, screen_height))
    #root.resizable(0,0)
    root.title('All Atom')
-   tkinter.Button(root,text='1 H',width=5,height=2,bg='Gray').place(x=30,y=10) #1
-   tkinter.Button(root,text='2 He',width=5,height=2,bg='Gray').place(x=880,y=10) #18
+   tkinter.Button(root,text='1 H',width=5,height=2,bg='Gray').place(relx=30/1000,rely=10/680) #1
+   tkinter.Button(root,text='2 He',width=5,height=2,bg='Gray').place(relx=880/1000,rely=10/680) #18
    uncover_atom=dict()
    uncover_atom[94],uncover_atom[95],uncover_atom[96],uncover_atom[97],uncover_atom[98],uncover_atom[99],uncover_atom[100],uncover_atom[101],uncover_atom[102]='Pu','Am','Cm','Bk','Cf','Es','Fm','Md','No'
    uncover_atom[103],uncover_atom[104],uncover_atom[105],uncover_atom[106],uncover_atom[107]='Lr','Rf','Db','Sg','Bh'
@@ -2124,55 +2167,55 @@ def rootGUI():
    uncover_atom[113],uncover_atom[114],uncover_atom[115],uncover_atom[116],uncover_atom[117],uncover_atom[118]='Nh','Fl','Mc','Lv','Ts','Og'
    for i in range(25):
        if i<=8:
-           tkinter.Button(root,text='%(number)d %(name)s'%{'number':i+94,'name':uncover_atom[i+94]},width=5,height=2,bg='Gray').place(x=380+i*50, y=520)
+           tkinter.Button(root,text='%(number)d %(name)s'%{'number':i+94,'name':uncover_atom[i+94]},width=5,height=2,bg='Gray').place(relx=(380+i*50)/1000, rely=520/680)
        else:
-           tkinter.Button(root,text='%(number)d %(name)s'%{'number':i+94,'name':uncover_atom[i+94]},width=5,height=2,bg='Gray').place(x=130+(i-9)*50, y=370)  
+           tkinter.Button(root,text='%(number)d %(name)s'%{'number':i+94,'name':uncover_atom[i+94]},width=5,height=2,bg='Gray').place(relx=(130+(i-9)*50)/1000, rely=370/680)  
          
    for i in range(91):
        atom_name=number_name[i+3]
        if i==0 or i==1:     
-           tkinter.Button(root,text='%(number)d %(name)s'%{'number':i+3,'name':atom_name},command = lambda text=i: augerTransitionGUI(text),width=5,height=2,bg='Salmon').place(x=30+i*50, y=70)
+           tkinter.Button(root,text='%(number)d %(name)s'%{'number':i+3,'name':atom_name},command = lambda text=i: augerTransitionGUI(text),width=5,height=2,bg='Salmon').place(relx=(30+i*50)/1000, rely=70/680)
        elif i<=7:
-           tkinter.Button(root,text='%(number)d %(name)s'%{'number':i+3,'name':atom_name},command = lambda text=i: augerTransitionGUI(text),width=5,height=2,bg='Yellow').place(x=630+(i-2)*50, y=70)
+           tkinter.Button(root,text='%(number)d %(name)s'%{'number':i+3,'name':atom_name},command = lambda text=i: augerTransitionGUI(text),width=5,height=2,bg='Yellow').place(relx=(630+(i-2)*50)/1000, rely=70/680)
        elif i==8 or i==9:
-           tkinter.Button(root,text='%(number)d %(name)s'%{'number':i+3,'name':atom_name},command = lambda text=i: augerTransitionGUI(text),width=5,height=2,bg='Salmon').place(x=30+(i-8)*50, y=130)
+           tkinter.Button(root,text='%(number)d %(name)s'%{'number':i+3,'name':atom_name},command = lambda text=i: augerTransitionGUI(text),width=5,height=2,bg='Salmon').place(relx=(30+(i-8)*50)/1000, rely=130/680)
        elif i<=15:
-           tkinter.Button(root,text='%(number)d %(name)s'%{'number':i+3,'name':atom_name},command = lambda text=i: augerTransitionGUI(text),width=5,height=2,bg='Yellow').place(x=630+(i-10)*50, y=130)
+           tkinter.Button(root,text='%(number)d %(name)s'%{'number':i+3,'name':atom_name},command = lambda text=i: augerTransitionGUI(text),width=5,height=2,bg='Yellow').place(relx=(630+(i-10)*50)/1000, rely=130/680)
        elif i==16 or i==17:
-           tkinter.Button(root,text='%(number)d %(name)s'%{'number':i+3,'name':atom_name},command = lambda text=i: augerTransitionGUI(text),width=5,height=2,bg='Salmon').place(x=30+(i-16)*50, y=190)
+           tkinter.Button(root,text='%(number)d %(name)s'%{'number':i+3,'name':atom_name},command = lambda text=i: augerTransitionGUI(text),width=5,height=2,bg='Salmon').place(relx=(30+(i-16)*50)/1000, rely=190/680)
        elif i<=27:
-           tkinter.Button(root,text='%(number)d %(name)s'%{'number':i+3,'name':atom_name},command = lambda text=i: augerTransitionGUI(text),width=5,height=2,bg='PowderBlue').place(x=30+(i-16)*50, y=190)
+           tkinter.Button(root,text='%(number)d %(name)s'%{'number':i+3,'name':atom_name},command = lambda text=i: augerTransitionGUI(text),width=5,height=2,bg='PowderBlue').place(relx=(30+(i-16)*50)/1000, rely=190/680)
        elif i<=33:
-           tkinter.Button(root,text='%(number)d %(name)s'%{'number':i+3,'name':atom_name},command = lambda text=i: augerTransitionGUI(text),width=5,height=2,bg='Yellow').place(x=30+(i-16)*50, y=190)
+           tkinter.Button(root,text='%(number)d %(name)s'%{'number':i+3,'name':atom_name},command = lambda text=i: augerTransitionGUI(text),width=5,height=2,bg='Yellow').place(relx=(30+(i-16)*50)/1000, rely=190/680)
        elif i==34 or i==35:
-           tkinter.Button(root,text='%(number)d %(name)s'%{'number':i+3,'name':atom_name},command = lambda text=i: augerTransitionGUI(text),width=5,height=2,bg='Salmon').place(x=30+(i-34)*50, y=250)
+           tkinter.Button(root,text='%(number)d %(name)s'%{'number':i+3,'name':atom_name},command = lambda text=i: augerTransitionGUI(text),width=5,height=2,bg='Salmon').place(relx=(30+(i-34)*50)/1000, rely=250/680)
        elif i<=45:
-           tkinter.Button(root,text='%(number)d %(name)s'%{'number':i+3,'name':atom_name},command = lambda text=i: augerTransitionGUI(text),width=5,height=2,bg='PowderBlue').place(x=30+(i-34)*50, y=250)
+           tkinter.Button(root,text='%(number)d %(name)s'%{'number':i+3,'name':atom_name},command = lambda text=i: augerTransitionGUI(text),width=5,height=2,bg='PowderBlue').place(relx=(30+(i-34)*50)/1000, rely=250/680)
        elif i<=51:
-           tkinter.Button(root,text='%(number)d %(name)s'%{'number':i+3,'name':atom_name},command = lambda text=i: augerTransitionGUI(text),width=5,height=2,bg='Yellow').place(x=30+(i-34)*50, y=250)
+           tkinter.Button(root,text='%(number)d %(name)s'%{'number':i+3,'name':atom_name},command = lambda text=i: augerTransitionGUI(text),width=5,height=2,bg='Yellow').place(relx=(30+(i-34)*50)/1000, rely=250/680)
        elif i==52 or i==53:
-           tkinter.Button(root,text='%(number)d %(name)s'%{'number':i+3,'name':atom_name},command = lambda text=i: augerTransitionGUI(text),width=5,height=2,bg='Salmon').place(x=30+(i-52)*50, y=310)
+           tkinter.Button(root,text='%(number)d %(name)s'%{'number':i+3,'name':atom_name},command = lambda text=i: augerTransitionGUI(text),width=5,height=2,bg='Salmon').place(relx=(30+(i-52)*50)/1000, rely=310/680)
        elif i>=54 and i<=67:
-          tkinter.Button(root,text='%(number)d %(name)s'%{'number':i+3,'name':atom_name},command = lambda text=i: augerTransitionGUI(text),width=5,height=2,bg='LightGreen').place(x=30+(i-52)*50, y=460)
+          tkinter.Button(root,text='%(number)d %(name)s'%{'number':i+3,'name':atom_name},command = lambda text=i: augerTransitionGUI(text),width=5,height=2,bg='LightGreen').place(relx=(30+(i-52)*50)/1000, rely=460/680)
        elif i<=77:
-          tkinter.Button(root,text='%(number)d %(name)s'%{'number':i+3,'name':atom_name},command = lambda text=i: augerTransitionGUI(text),width=5,height=2,bg='PowderBlue').place(x=130+(i-68)*50, y=310)
+          tkinter.Button(root,text='%(number)d %(name)s'%{'number':i+3,'name':atom_name},command = lambda text=i: augerTransitionGUI(text),width=5,height=2,bg='PowderBlue').place(relx=(130+(i-68)*50)/1000, rely=310/680)
        elif i<=83:
-          tkinter.Button(root,text='%(number)d %(name)s'%{'number':i+3,'name':atom_name},command = lambda text=i: augerTransitionGUI(text),width=5,height=2,bg='Yellow').place(x=130+(i-68)*50, y=310)
+          tkinter.Button(root,text='%(number)d %(name)s'%{'number':i+3,'name':atom_name},command = lambda text=i: augerTransitionGUI(text),width=5,height=2,bg='Yellow').place(relx=(130+(i-68)*50)/1000, rely=310/680)
        elif i==84 or i==85:
-          tkinter.Button(root,text='%(number)d %(name)s'%{'number':i+3,'name':atom_name},command = lambda text=i: augerTransitionGUI(text),width=5,height=2,bg='Salmon').place(x=30+(i-84)*50, y=370)
+          tkinter.Button(root,text='%(number)d %(name)s'%{'number':i+3,'name':atom_name},command = lambda text=i: augerTransitionGUI(text),width=5,height=2,bg='Salmon').place(relx=(30+(i-84)*50)/1000, rely=370/680)
        else:
-          tkinter.Button(root,text='%(number)d %(name)s'%{'number':i+3,'name':atom_name},command = lambda text=i: augerTransitionGUI(text),width=5,height=2,bg='LightGreen').place(x=30+(i-84)*50, y=520)
+          tkinter.Button(root,text='%(number)d %(name)s'%{'number':i+3,'name':atom_name},command = lambda text=i: augerTransitionGUI(text),width=5,height=2,bg='LightGreen').place(relx=(30+(i-84)*50)/1000, rely=520/680)
 
    fromLabel=tkinter.Label(root,text='from')
-   fromLabel.place(x=200,y=10)
+   fromLabel.place(relx=200/1000,rely=10/680)
    fromEntry=tkinter.Entry(root,width=13)
-   fromEntry.place(x=240,y=10)
+   fromEntry.place(relx=240/1000,rely=10/680)
    toLabel=tkinter.Label(root,text='(eV)  to')
-   toLabel.place(x=340,y=10)
+   toLabel.place(relx=340/1000,rely=10/680)
    toEntry=tkinter.Entry(root,width=13)
-   toEntry.place(x=400,y=10)
+   toEntry.place(relx=400/1000,rely=10/680)
    unitLabel=tkinter.Label(root,text='(eV)')
-   unitLabel.place(x=500,y=10)
+   unitLabel.place(relx=500/1000,rely=10/680)
    
 
    v1=tkinter.IntVar()
@@ -2183,11 +2226,11 @@ def rootGUI():
    keSelect=tkinter.Radiobutton(root,text='by kinetic energies',value=1,variable=v2,command=lambda: selectRadioButton(v2,root,selectButton,orLabel,inputEntry))
    beSelect=tkinter.Radiobutton(root,text='by binding energies',value=2,variable=v2,command=lambda: selectRadioButton(v2,root,selectButton,orLabel,inputEntry))
    transitionSelect=tkinter.Radiobutton(root, text='Auger Transitions',value=1,variable=v1,command=lambda: selectTranCoreButton(v1,keSelect,beSelect,v2))
-   transitionSelect.place(x=150,y=40)
+   transitionSelect.place(relx=150/1000,rely=40/680)
    coreStateSelect=tkinter.Radiobutton(root,text='Core State Energies',value=2,variable=v1,command=lambda: selectTranCoreButton(v1,keSelect,beSelect,v2))
-   coreStateSelect.place(x=150,y=60.5)
+   coreStateSelect.place(relx=150/1000,rely=60.5/680)
    bothSelect=tkinter.Radiobutton(root,text='Both',value=3,variable=v1,command=lambda: selectTranCoreButton(v1,keSelect,beSelect,v2))
-   bothSelect.place(x=150,y=81)
+   bothSelect.place(relx=150/1000,rely=81/680)
    
    
    sep1 = ttk.Separator(root, orient='vertical')
@@ -2195,31 +2238,31 @@ def rootGUI():
    
    v3=tkinter.IntVar()
    allAtomSelect=tkinter.Radiobutton(root, text='From All Elements',value=1,variable=v3,command=lambda: selectElements(selectAtomButton,v3))
-   allAtomSelect.place(x=320,y=40)
+   allAtomSelect.place(relx=320/1000,rely=40/680)
    selectAtomButton=tkinter.Button(root,text='Select Elements',command=lambda: clickSelectAtomButton(root))
    someAtomSelect=tkinter.Radiobutton(root,text='From Selected Elements',value=2,variable=v3,command=lambda: selectElements(selectAtomButton,v3))
-   someAtomSelect.place(x=320,y=60.5)
+   someAtomSelect.place(relx=320/1000,rely=60.5/680)
    
 
    searchButton=tkinter.Button(root,text='Search',bg='Orange',command=lambda: clickSearchButtonRT(root,fromEntry,toEntry,v2,selectButton,inputEntry,v1,v3))
-   searchButton.place(x=685,y=10)
+   searchButton.place(relx=685/1000,rely=10/680)
    clearButton=tkinter.Button(root,text='Clear',command=lambda: clickClearButtonRT(root,fromEntry,toEntry,v2,selectButton,orLabel,inputEntry,v1,v3))
-   clearButton.place(x=750,y=10)
+   clearButton.place(relx=750/1000,rely=10/680)
    
    citationLabel1=tkinter.Label(root,text='*S.T.Perkins, D.E.Cullen, et al.,')
-   citationLabel1.place(x=150,y=590)
+   citationLabel1.place(relx=150/1000,rely=590/680)
    
    citationLabel2=tkinter.Label(root,text='Tables and Graphs of Atomic Subshell and Relaxation Data Derived from the LLNL Evaluated',font=('Times',10,'italic'))
-   citationLabel2.place(x=325,y=591)
+   citationLabel2.place(relx=325/1000,rely=591/680)
    
    citationLabel3=tkinter.Label(root,text='Atomic Data Library (EADL), Z = 1--100,',font=('Times',10,'italic'))
-   citationLabel3.place(x=150,y=610)
+   citationLabel3.place(relx=150/1000,rely=610/680)
    
    citationLabel4=tkinter.Label(root,text='Lawrence Livermore National Laboratory, UCRL-50400, Vol. 30,')
-   citationLabel4.place(x=377,y=610)
+   citationLabel4.place(relx=377/1000,rely=610/680)
    
    linkLabel1 = tkinter.Label(root, text='https://www.osti.gov/biblio/10121422-tables-graphs-atomic-subshell-relaxation-data-derived-from-llnl-evaluated-atomic-data-library-eadl', fg='blue',font=('Arial', 10,'italic','underline'))
-   linkLabel1.place(x=150, y=630)
+   linkLabel1.place(relx=150/1000, rely=630/680)
  
 
    def open_url(event):
@@ -2229,24 +2272,34 @@ def rootGUI():
    
    
    showPathText=tkinter.Entry(root,state='readonly')
-   showPathText.place(x=180,y=160)
+   showPathText.place(relx=140/1000,rely=160/680)
    
    importButton=tkinter.Button(root,text='Import File (.txt or .csv)',bg='Pink',command=lambda: clickImportButtonRT(root,showPathText))
-   importButton.place(x=180,y=120)
+   importButton.place(relx=140/1000,rely=120/680)
    
    selectPhotonButton=ttk.Combobox(root,width=10)
    selectPhotonButton['value']=[1,1.5,2,3,4,5,6,8,10,15]
-   selectPhotonButton.place(x=350,y=125)
+   selectPhotonButton.place(relx=295/1000,rely=125/680)
    
    selectElementButton=tkinter.Button(root,text='Select Elements',command=lambda: clickSelectElementButton(root))
-   selectElementButton.place(x=350,y=155)
+   selectElementButton.place(relx=295/1000,rely=155/680)
+   
+   rangeLabel=tkinter.Label(root,text='Please select range of x axis:')
+   rangeLabel.place(relx=380/1000,rely=100/680)
+   
+   v_plot=tkinter.IntVar()
+   selectReferenceButton=tkinter.Radiobutton(root,text='Range of Reference Lines',variable=v_plot,value=1)
+   selectReferenceButton.place(relx=400/1000,rely=125/680)
+   
+   selectDataButton=tkinter.Radiobutton(root,text='Range of Dataset',variable=v_plot,value=2)
+   selectDataButton.place(relx=400/1000,rely=155/680)
    
 
-   plotButton=tkinter.Button(root,text='Plot',bg='Gold',command=lambda: clickPlotButtonRT(import_file_path,root,showPathText,selectPhotonButton))
-   plotButton.place(x=500,y=120)
+   plotButton=tkinter.Button(root,text='Plot',bg='Gold',width=5,command=lambda: clickPlotButtonRT(import_file_path,root,showPathText,selectPhotonButton,v_plot))
+   plotButton.place(relx=565/1000,rely=100/680)
 
-   clearPathButton=tkinter.Button(root,text='Clear',command=lambda: clickClearPathButton(showPathText,selectPhotonButton))
-   clearPathButton.place(x=550,y=120)
+   clearPathButton=tkinter.Button(root,text='Clear',width=5,command=lambda: clickClearPathButton(showPathText,selectPhotonButton,v_plot))
+   clearPathButton.place(relx=565/1000,rely=155/680)
 
    
  

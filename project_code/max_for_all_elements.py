@@ -1992,48 +1992,38 @@ def clickClearPathButton(showPathText,selectPhotonButton):
       
     unique_array2=[]
     
-    
-def clickPlotButtonRT(import_file_path,root,showPathText,selectPhotonButton):
-    
-    if showPathText.get()=='':
-        tkinter.messagebox.showinfo(title='ERROR',message='Please import file',parent=root)
-    elif selectPhotonButton.get()=='':
-        tkinter.messagebox.showinfo(title='ERROR',message='Please select photon energy',parent=root)
-    elif len(unique_array2)==0:
-        tkinter.messagebox.showinfo(title='ERROR',message='Please import file',parent=root)
-    else:
-        number_energies=getEnergies()
-        number_name=getAtom()
-        selectPhoton=float(selectPhotonButton.get())
-        bindingData=[]
-        intensityData=[]
-        normal_intensity_data=[]
-        with open(import_file_path,'r') as f:            
-            for line in f.readlines():
-                curLine=line.strip().split(" ")
-                bindingData.append(float(curLine[0]))
-                intensityData.append(float(curLine[1]))
+def selectPlotRange(selectReference,selectKinetic,selectBinding,selectPhotonButton,import_file_path):
+    number_energies=getEnergies()
+    number_name=getAtom()
+    selectPhoton=float(selectPhotonButton.get())
+        #bindingData=[]
+        #intensityData=[]
+        #normal_intensity_data=[]
+        #with open(import_file_path,'r') as f:            
+            #for line in f.readlines():
+                #curLine=line.strip().split(" ")
+                #bindingData.append(float(curLine[0]))
+                #intensityData.append(float(curLine[1]))
 
         
-        for intensity in intensityData:
-            normal_intensity_data.append((intensity/max(intensityData))*100)
-        plotGUI=tkinter.Toplevel()
-        plotGUI.geometry('680x680')
+        #for intensity in intensityData:
+            #normal_intensity_data.append((intensity/max(intensityData))*100)
+        #plotGUI=tkinter.Toplevel()
+        #plotGUI.geometry('680x680')
         
     
-        figure,ax=plt.subplots(1,1)
+        #figure,ax=plt.subplots(1,1)
         
-        max_cross_sections=[]
-        for number in unique_array2:
-            norm_shell_cross,shell_cross=getCrossSection(number,selectPhoton)
-            #print(shell_cross)
-            max_cross_sections.append(max(shell_cross.values()))
+        #max_cross_sections=[]
+        #for number in unique_array2:
+            #norm_shell_cross,shell_cross=getCrossSection(number,selectPhoton)
+            #max_cross_sections.append(max(shell_cross.values()))
 
-        max_value=max(max_cross_sections)
-        #print(max_value)
+        #max_value=max(max_cross_sections)
+
         
           
-        plt_color=['red','green','yellow','purple','c',
+    plt_color=['red','green','yellow','purple','c',
                    'lightcoral','olivedrab','darkorange','mediumorchid','aquamarine',
                    'indianred','greenyellow','orange','thistle','turquoise',
                    'brown','chartreuse','antiquewhite','plum','lightseagreen',
@@ -2052,44 +2042,74 @@ def clickPlotButtonRT(import_file_path,root,showPathText,selectPhotonButton):
                    'peru','lime','y','darkviolet','aliceblue',
                    'black','seagreen','springgreen','mediumspringgreen','royalblue',
                    'grey']
-        color_index=0
-        for number in unique_array2:
-            norm_shell_cross,shell_cross=getCrossSection(number,selectPhoton)
-            current_energies=number_energies[number]
-            nonNone_value=dict()
-            for shell in current_energies:
-                if current_energies[shell]!=None:
-                    nonNone_value[shell]=current_energies[shell]
+        #color_index=0
+        #for number in unique_array2:
+            #norm_shell_cross,shell_cross=getCrossSection(number,selectPhoton)
+            #current_energies=number_energies[number]
+            #nonNone_value=dict()
+            #for shell in current_energies:
+                #if current_energies[shell]!=None:
+                    #nonNone_value[shell]=current_energies[shell]
                     
-            norm_cross_section=dict()
-            for shell in shell_cross:
-                norm_cross_section[shell]=(shell_cross[shell]/max_value)*100
+            #norm_cross_section=dict()
+            #for shell in shell_cross:
+                #norm_cross_section[shell]=(shell_cross[shell]/max_value)*100
  
                                   
-            core_x_values=list(nonNone_value.values())
-            core_y_height=list(norm_cross_section.values())
-            core_y_min=np.zeros(len(core_x_values))
-            plt.vlines(core_x_values,core_y_min,core_y_height,color=plt_color[color_index])
-            index=0
-            for shell in norm_shell_cross:
-                plt.text(core_x_values[index],core_y_height[index],number_name[number]+''+shell)
-                index+=1
-            color_index+=1
+            #core_x_values=list(nonNone_value.values())
+            #core_y_height=list(norm_cross_section.values())
+            #core_y_min=np.zeros(len(core_x_values))
+            #plt.vlines(core_x_values,core_y_min,core_y_height,color=plt_color[color_index])
+            #index=0
+            #for shell in norm_shell_cross:
+                #plt.text(core_x_values[index],core_y_height[index],number_name[number]+''+shell)
+                #index+=1
+            #color_index+=1
 
 
-        plt.plot(bindingData,normal_intensity_data)
-        plt.gca().invert_xaxis() 
-        plt.xlabel('Binding Energy')
-        plt.ylabel('Normalized Intensity')
-        plt.close()        
-        canvas =FigureCanvasTkAgg(figure, master=plotGUI)
-        canvas.draw()
-        canvas.get_tk_widget().pack(side=tkinter.TOP, fill=tkinter.BOTH, expand=tkinter.YES)
+        #plt.plot(bindingData,normal_intensity_data)
+        #plt.gca().invert_xaxis() 
+        #plt.xlabel('Binding Energy')
+        #plt.ylabel('Normalized Intensity')
+        #plt.close()        
+        #canvas =FigureCanvasTkAgg(figure, master=plotGUI)
+        #canvas.draw()
+        #canvas.get_tk_widget().pack(side=tkinter.TOP, fill=tkinter.BOTH, expand=tkinter.YES)
         
-        toolbar = NavigationToolbar2Tk(canvas, plotGUI)
-        toolbar.update()
-        canvas._tkcanvas.pack(side=tkinter.TOP, fill=tkinter.BOTH,expand=tkinter.YES)
-        plotGUI.mainloop()
+        #toolbar = NavigationToolbar2Tk(canvas, plotGUI)
+        #toolbar.update()
+        #canvas._tkcanvas.pack(side=tkinter.TOP, fill=tkinter.BOTH,expand=tkinter.YES)
+        #plotGUI.mainloop()
+    
+def clickPlotButtonRT(import_file_path,root,showPathText,selectPhotonButton,v_plot):
+    
+    if showPathText.get()=='':
+        tkinter.messagebox.showinfo(title='ERROR',message='Please import file',parent=root)
+    elif selectPhotonButton.get()=='':
+        tkinter.messagebox.showinfo(title='ERROR',message='Please select photon energy',parent=root)
+    elif len(unique_array2)==0:
+        tkinter.messagebox.showinfo(title='ERROR',message='Please select element',parent=root)
+    elif v_plot.get()==0:
+        tkinter.messagebox.showinfo(title='ERROR',message='Please select kinetic or binding energies',parent=root)
+    else:
+        selectKinetic=False
+        selectBinding=False
+        if v_plot==1:
+            selectKinetic=True
+        elif v_plot==2:
+            selectBinding==True
+        x_range_GUI=tkinter.Toplevel()
+        x_range_GUI.geometry('300x200')
+        x_range_GUI.resizable(0,0)
+        confirm_label=tkinter.Label(x_range_GUI,text='Please select the range of x axis',font=20)
+        confirm_label.pack()
+        selectReferenceButton=tkinter.Button(x_range_GUI,text='Range of Reference Lines',bg='white',command=lambda: selectPlotRange())
+        selectReferenceButton.place(x=70,y=50)
+        selectDataButton=tkinter.Button(x_range_GUI,text='Range of Dataset',bg='white')
+        selectDataButton.place(x=85,y=90)
+        
+        x_range_GUI.mainloop()
+
         
 
         
@@ -2274,14 +2294,16 @@ def rootGUI():
    selectElementButton=tkinter.Button(root,text='Select Elements',command=lambda: clickSelectElementButton(root))
    selectElementButton.place(relx=310/1000,rely=155/680)
    
-   selectKineticButton=tkinter.Radiobutton(root,text='by kinetic energies')
+   
+   v_plot=tkinter.IntVar()
+   selectKineticButton=tkinter.Radiobutton(root,text='by kinetic energies',variable=v_plot,value=1)
    selectKineticButton.place(relx=415/1000,rely=125/680)
    
-   selectBindingButton=tkinter.Radiobutton(root,text='by binding energies')
+   selectBindingButton=tkinter.Radiobutton(root,text='by binding energies',variable=v_plot,value=2)
    selectBindingButton.place(relx=415/1000,rely=155/680)
    
 
-   plotButton=tkinter.Button(root,text='Plot',bg='Gold',width=5,command=lambda: clickPlotButtonRT(import_file_path,root,showPathText,selectPhotonButton))
+   plotButton=tkinter.Button(root,text='Plot',bg='Gold',width=5,command=lambda: clickPlotButtonRT(import_file_path,root,showPathText,selectPhotonButton,v_plot))
    plotButton.place(relx=565/1000,rely=110/680)
 
    clearPathButton=tkinter.Button(root,text='Clear',width=5,command=lambda: clickClearPathButton(showPathText,selectPhotonButton))
