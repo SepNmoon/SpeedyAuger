@@ -285,6 +285,84 @@ def element_transition_window(index):
         webbrowser.open("https://doi.org/10.1016/S0092-640X(73)80005-1", new=0)       
     linkLabel1.bind("<Button-1>", _open_url)
     
+    #Add convert function
+    selectConvertPhotonButton=ttk.Combobox(augerWindow)    
+    selectConvertPhotonButton.place(relx=550/1200,rely=70/680)
+    selectConvertPhotonButton['value']=('Mg 1253.6(eV)','Al 1486.7(eV)','Ag 2984.3(eV)','Cr 5414.9(eV)','Ga 9251.74(eV)','No selection')
+    selectConvertPhotonButton.current(5)
+    orConvertLabel=tkinter.Label(augerWindow,text='or')
+    orConvertLabel.place(relx=750/1200,rely=70/680)
+    inputConvertEntry=tkinter.Entry(augerWindow)
+    inputConvertEntry.place(relx=800/1200,rely=70/680)    
+    unitConvertLabel=tkinter.Label(augerWindow,text='(eV)')
+    unitConvertLabel.place(relx=950/1200,rely=70/680)
+    
+
+    lastConvertLabel=tkinter.Label(augerWindow,text='Values in table calculated for: %s'%lastChoice)
+    lastConvertLabel.place(relx=930/1200,rely=97/680)
+    
+    
+    def _click_convert_button(selectConvertPhotonButton,transitionTable,position,inputConvertEntry,augerWindow,lastConvertLabel):
+        def _update_table(transitionTable,inputValue,position):
+            for index in range(position):
+                index+=1
+                ke_result=transitionTable.set(index,'#2')
+                ke_result=float(ke_result)
+                result=Decimal(inputValue-ke_result).quantize(Decimal('0.00'))
+                if result<0:
+                    transitionTable.set(index,'#3','Not Accessible')
+                else:
+                    transitionTable.set(index,'#3',result)
+            
+        global lastChoice
+        lastConvertLabel['text']='Values in table calculated for: %s'%lastChoice
+        inputValue=inputConvertEntry.get()  
+        selectChoice=selectConvertPhotonButton.get()
+        if (selectChoice=='No selection' and inputValue=='') or (selectChoice!='No selection' and inputValue!=''):
+            tkinter.messagebox.showinfo(title='ERROR',message='Please input or select',parent=augerWindow)
+        elif selectChoice=='No selection' and inputValue!='':
+            try:           
+                inputValue=float(inputValue)            
+            except:
+                tkinter.messagebox.showinfo(title='ERROR',message='Please input valid value',parent=augerWindow)
+            else:
+                _update_table(transitionTable,inputValue,position)
+                lastChoice=inputValue
+        elif selectChoice!='No selection' and inputValue=='':
+            if selectChoice=='Mg 1253.6(eV)':           
+                selectValue=1253.6
+                lastChoice='Mg 1253.6(eV)'
+            elif selectChoice=='Al 1486.7(eV)':
+                selectValue=1486.7
+                lastChoice='Al 1486.7(eV)'
+            elif selectChoice=='Ag 2984.3(eV)':
+                selectValue=2984.3
+                lastChoice='Ag 2984.3(eV)'
+            elif selectChoice=='Cr 5414.9(eV)':
+                selectValue=5414.9
+                lastChoice='Cr 5414.9(eV)'
+            elif selectChoice=='Ga 9251.74(eV)':
+                selectValue=9251.74   
+                lastChoice='Ga 9251.74(eV)'
+            _update_table(transitionTable,selectValue,position)
+        
+    convertButton=tkinter.Button(augerWindow,text='Convert',bg='Orange',command=lambda: _click_convert_button(selectConvertPhotonButton,transitionTable,position,inputConvertEntry,augerWindow,lastConvertLabel))
+    convertButton.place(relx=1000/1200,rely=70/680)    
+    
+    
+    def _click_clear_convert_button(inputConvertEntry,selectConvertPhotonButton,transitionTable,position):
+        inputConvertEntry.delete(0,'end')
+        selectConvertPhotonButton.current(5)
+        for index in range(position):
+            index+=1
+            transitionTable.set(index,'#3','') 
+    clearButton=tkinter.Button(augerWindow,text='Clear',command=lambda: _click_clear_convert_button(inputConvertEntry,selectConvertPhotonButton,transitionTable,position))
+    clearButton.place(relx=1065/1200,rely=70/680)
+    
+    exportConvertButton=tkinter.Button(augerWindow,text='Export',bg='LightBlue')
+    exportConvertButton.place(relx=1140/1200,rely=70/680)
+    
+    
     
     
     
