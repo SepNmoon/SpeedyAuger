@@ -111,6 +111,100 @@ def get_range():
 #-------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------
 #All about Auger Transition window
+
+#Calculate Auger energies for transitions
+def calculate_auger(number):
+    #read from database
+    number_shell=get_shell()
+    shell_electrons=number_shell[number]
+    number_energies=get_energies()
+    currentEnergies=number_energies[number]
+    nextEnergies=number_energies[number+1]
+    
+    nonNoneEnergies=dict()
+    for energy in currentEnergies:
+        if currentEnergies[energy]!=None:
+            nonNoneEnergies[energy]=currentEnergies[energy]
+    
+    #get Auger transition and Auger energies
+    transitionArray=[]
+    for i in itertools.combinations_with_replacement(nonNoneEnergies.keys(), 3): 
+        temp=','.join(i)
+        transitionArray.append(temp)
+    transitionArrayCopy=transitionArray.copy()
+    for transition in transitionArrayCopy:
+        temp=shlex.shlex(transition,posix=True)
+        temp.whitespace += ','
+        temp.whitespace_split = True
+        temp=list(temp)
+        if temp[0]==temp[1]:
+            transitionArray.remove(transition)
+        elif number<=10:
+            if temp[0]=='L1' or temp[0]=='L2' or temp[0]=='L3':
+                transitionArray.remove(transition)
+        elif number<=18:
+            if temp[0]=='M1' or temp[0]=='M2' or temp[0]=='M3':
+                transitionArray.remove(transition)
+        elif number<=36:
+            if temp[0]=='N1' or temp[0]=='N2' or temp[0]=='N3':
+                transitionArray.remove(transition)
+        elif number<=54:
+            if number==45 and (temp[0]=='O1' or temp[1]=='O1' or temp[2]=='O1'):
+                transitionArray.remove(transition)                
+            if temp[0]=='O1' or temp[0]=='O2' or temp[0]=='O3':
+                transitionArray.remove(transition)
+        elif number<=86:
+            if number==76 and (temp[0]=='P1' or temp[1]=='P1' or temp[2]=='P1'):
+                transitionArray.remove(transition)
+            if number==57 and (temp[0]=='O4' or temp[1]=='O4' or temp[2]=='O4' or temp[0]=='O5' or temp[1]=='O5' or temp[2]=='O5'):
+                transitionArray.remove(transition)
+            if number==64 and (temp[0]=='O4' or temp[1]=='O4' or temp[2]=='O4' or temp[0]=='O5' or temp[1]=='O5' or temp[2]=='O5'):
+                transitionArray.remove(transition)
+            if temp[0]=='P1' or temp[0]=='P2' or temp[0]=='P3':
+                transitionArray.remove(transition)
+        elif number==93 and (temp[0]=='P4' or temp[1]=='P4' or temp[2]=='P4' or temp[0]=='P5' or temp[1]=='P5' or temp[2]=='P5'):
+            transitionArray.remove(transition)
+    
+    transition_energies=dict()
+    for transition in transitionArray:
+        temp=shlex.shlex(transition,posix=True)
+        temp.whitespace += ','
+        temp.whitespace_split = True
+        temp=list(temp)
+        vacancy=temp[0]
+        inter1=temp[1]
+        inter2=temp[2]
+        energies=currentEnergies[vacancy]-0.5*(currentEnergies[inter1]+nextEnergies[inter1])-0.5*(currentEnergies[inter2]+nextEnergies[inter2])
+        energies=Decimal(energies).quantize(Decimal('0.00'))
+        if energies>0:
+           transition_energies[transition]=energies
+    
+    #get Auger Intensity
+    multArray=[]
+    for transition in transition_energies:
+        temp=shlex.shlex(transition,posix=True)
+        temp.whitespace += ','
+        temp.whitespace_split = True
+        temp=list(temp)
+        mult=shell_electrons[temp[0]]*shell_electrons[temp[1]]*shell_electrons[temp[2]]      
+        mult=Decimal(mult).quantize(Decimal('0.0000'))
+        multArray.append(mult)
+    maxMult=max(multArray)
+    
+    normArray=[]
+    for mult in multArray:
+        norm=(100*mult)/maxMult
+        norm=Decimal(norm).quantize(Decimal('0.0'))
+        normArray.append(norm)
+        
+    return transition_energies,normArray
+        
+                              
+    
+    
+    
+
+
 def element_transition_window(index):
     global lastChoice
     lastChoice=''
@@ -149,6 +243,49 @@ def element_transition_window(index):
         coreTable.insert('',index,values=(item,nonNoneOrbital[index],nonNoneValue[item]))
         index+=1
     coreTable.place(relx=10/1200,rely=60/680)
+    
+    #calculate energies and norm mult for transitions
+    transition_energies,normArray=calculate_auger(atomNumber)
+    
+    #transition table
+    if len(transition_energies)<=26:
+        tableRow=len(transition_energies)
+    else:
+        tableRow=26
+    
+    transitionTable=ttk.Treeview(augerWindow,height=tableRow,columns=['1','2','3','4'],show='headings')
+    transitionTable.column('1', width=150) 
+    transitionTable.column('2', width=150) 
+    transitionTable.column('3', width=150) 
+    transitionTable.column('4', width=150) 
+    transitionTable.heading('1', text='Auger Transition')
+    transitionTable.heading('2', text='Auger Energies (KE)')
+    transitionTable.heading('3', text='Auger Energies (BE)')
+    transitionTable.heading('4', text='Norm Mult')
+    
+    position=0
+    for t in transition_energies:
+        transitionTable.insert('',position,iid=position+1,values=(t,transition_energies[t],'',normArray[position]))
+        position+=1
+    transitionTable.place(relx=550/1200,rely=120/680)
+    ybar=Scrollbar(transitionTable,orient='vertical', command=transitionTable.yview,bg='Gray')
+    transitionTable.configure(yscrollcommand=ybar.set)
+    ybar.place(relx=0.95, rely=0.02, relwidth=0.035, relheight=0.958)
+    
+    #citation
+    citationLabel1=tkinter.Label(augerWindow,text="*W.A.Coghlan, R.E.Clausing, ")
+    citationLabel1.place(relx=550/1200,rely=5/680)
+    citationLabel2=tkinter.Label(augerWindow,text="Auger catalog calculated transition energies listed by energy and element,",font=('Times',10,'italic'))
+    citationLabel2.place(relx=713/1200,rely=6/680)
+    citationLabel3=tkinter.Label(augerWindow,text="Atomic Data and Nuclear Data Tables, Volume 5, Issue 4, 1973, Pages 317-469, ISSN 0092-640X,")
+    citationLabel3.place(relx=550/1200,rely=25/680)   
+    linkLabel1 = tkinter.Label(augerWindow, text='https://doi.org/10.1016/S0092-640X(73)80005-1', fg='blue',font=('Arial', 10,'italic','underline'))
+    linkLabel1.place(relx=550/1200, rely=46/680)
+    def _open_url(event):
+        webbrowser.open("https://doi.org/10.1016/S0092-640X(73)80005-1", new=0)       
+    linkLabel1.bind("<Button-1>", _open_url)
+    
+    
     
     
     
