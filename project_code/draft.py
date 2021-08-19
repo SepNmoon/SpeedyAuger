@@ -935,9 +935,6 @@ def clickPlotForElement(v,selectPlotButton,inputEntry2,auger_window,transition_e
                 core_y_height.append(norm_cross_list[index])
                 text.append(shell_list[index])
             index+=1
-        #print(core_x_values)
-        #print(core_y_height)
-        #print(text)
         core_y_min=np.zeros(len(core_x_values))
         plt.vlines(core_x_values,core_y_min,core_y_height,color='red')
         index=0

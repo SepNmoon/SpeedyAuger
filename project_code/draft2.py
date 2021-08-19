@@ -108,6 +108,558 @@ def get_range():
     return number_range
 
 
+
+
+#----------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------
+#get cross section data
+def getCrossSection(number,photon_energy):
+    photon_shell_cross=dict()
+    shell_cross=dict()
+    with open('Scofield_csv_database/%d.csv'%number,'r') as f:
+        f.readline()
+        for line in f.readlines():
+            if number<=4:
+                curLine=line.strip().split(",")
+                temp=dict()
+                temp['1s1/2']=float(curLine[1])
+                temp['2s1/2']=float(curLine[2])
+                photon_shell_cross[float(curLine[0])]=temp  
+            elif number<=10:
+                curLine=line.strip().split(",")
+                temp=dict()
+                temp['1s1/2']=float(curLine[1])
+                temp['2s1/2']=float(curLine[2])
+                temp['2p1/2']=float(curLine[3])
+                temp['2p3/2']=float(curLine[4])
+                photon_shell_cross[float(curLine[0])]=temp  
+            elif number<=12:
+                curLine=line.strip().split(",")
+                temp=dict()
+                temp['1s1/2']=float(curLine[1])
+                temp['2s1/2']=float(curLine[2])
+                temp['2p1/2']=float(curLine[3])
+                temp['2p3/2']=float(curLine[4])
+                temp['3s1/2']=float(curLine[5])
+                photon_shell_cross[float(curLine[0])]=temp
+            elif number<=18:
+                curLine=line.strip().split(",")
+                temp=dict()
+                temp['1s1/2']=float(curLine[1])
+                temp['2s1/2']=float(curLine[2])
+                temp['2p1/2']=float(curLine[3])
+                temp['2p3/2']=float(curLine[4])
+                temp['3s1/2']=float(curLine[5])
+                temp['3p1/2']=float(curLine[6])
+                temp['3p3/2']=float(curLine[7])
+                photon_shell_cross[float(curLine[0])]=temp
+            elif number<=20:
+                curLine=line.strip().split(",")
+                temp=dict()
+                temp['1s1/2']=float(curLine[1])
+                temp['2s1/2']=float(curLine[2])
+                temp['2p1/2']=float(curLine[3])
+                temp['2p3/2']=float(curLine[4])
+                temp['3s1/2']=float(curLine[5])
+                temp['3p1/2']=float(curLine[6])
+                temp['3p3/2']=float(curLine[7])
+                temp['4s1/2']=float(curLine[8])
+                photon_shell_cross[float(curLine[0])]=temp
+            elif number<=30:
+                curLine=line.strip().split(",")
+                temp=dict()
+                temp['1s1/2']=float(curLine[1])
+                temp['2s1/2']=float(curLine[2])
+                temp['2p1/2']=float(curLine[3])
+                temp['2p3/2']=float(curLine[4])
+                temp['3s1/2']=float(curLine[5])
+                temp['3p1/2']=float(curLine[6])
+                temp['3p3/2']=float(curLine[7])
+                temp['3d3/2']=float(curLine[8])
+                temp['3d5/2']=float(curLine[9])
+                temp['4s1/2']=float(curLine[10])
+                photon_shell_cross[float(curLine[0])]=temp
+            elif number<=36:
+                curLine=line.strip().split(",")
+                temp=dict()
+                temp['1s1/2']=float(curLine[1])
+                temp['2s1/2']=float(curLine[2])
+                temp['2p1/2']=float(curLine[3])
+                temp['2p3/2']=float(curLine[4])
+                temp['3s1/2']=float(curLine[5])
+                temp['3p1/2']=float(curLine[6])
+                temp['3p3/2']=float(curLine[7])
+                temp['3d3/2']=float(curLine[8])
+                temp['3d5/2']=float(curLine[9])
+                temp['4s1/2']=float(curLine[10])
+                temp['4p1/2']=float(curLine[11])
+                temp['4p3/2']=float(curLine[12])
+                photon_shell_cross[float(curLine[0])]=temp
+            elif number<=38:
+                curLine=line.strip().split(",")
+                temp=dict()
+                temp['1s1/2']=float(curLine[1])
+                temp['2s1/2']=float(curLine[2])
+                temp['2p1/2']=float(curLine[3])
+                temp['2p3/2']=float(curLine[4])
+                temp['3s1/2']=float(curLine[5])
+                temp['3p1/2']=float(curLine[6])
+                temp['3p3/2']=float(curLine[7])
+                temp['3d3/2']=float(curLine[8])
+                temp['3d5/2']=float(curLine[9])
+                temp['4s1/2']=float(curLine[10])
+                temp['4p1/2']=float(curLine[11])
+                temp['4p3/2']=float(curLine[12])
+                temp['5s1/2']=float(curLine[13])
+                photon_shell_cross[float(curLine[0])]=temp
+            elif number==46:
+                curLine=line.strip().split(",")
+                temp=dict()
+                temp['1s1/2']=float(curLine[1])
+                temp['2s1/2']=float(curLine[2])
+                temp['2p1/2']=float(curLine[3])
+                temp['2p3/2']=float(curLine[4])
+                temp['3s1/2']=float(curLine[5])
+                temp['3p1/2']=float(curLine[6])
+                temp['3p3/2']=float(curLine[7])
+                temp['3d3/2']=float(curLine[8])
+                temp['3d5/2']=float(curLine[9])
+                temp['4s1/2']=float(curLine[10])
+                temp['4p1/2']=float(curLine[11])
+                temp['4p3/2']=float(curLine[12])
+                temp['4d3/2']=float(curLine[13])
+                temp['4d5/2']=float(curLine[14])
+                photon_shell_cross[float(curLine[0])]=temp
+            elif number<=48:
+                curLine=line.strip().split(",")
+                temp=dict()
+                temp['1s1/2']=float(curLine[1])
+                temp['2s1/2']=float(curLine[2])
+                temp['2p1/2']=float(curLine[3])
+                temp['2p3/2']=float(curLine[4])
+                temp['3s1/2']=float(curLine[5])
+                temp['3p1/2']=float(curLine[6])
+                temp['3p3/2']=float(curLine[7])
+                temp['3d3/2']=float(curLine[8])
+                temp['3d5/2']=float(curLine[9])
+                temp['4s1/2']=float(curLine[10])
+                temp['4p1/2']=float(curLine[11])
+                temp['4p3/2']=float(curLine[12])
+                temp['4d3/2']=float(curLine[13])
+                temp['4d5/2']=float(curLine[14])
+                temp['5s1/2']=float(curLine[15])
+                photon_shell_cross[float(curLine[0])]=temp
+            elif number<=54:
+                curLine=line.strip().split(",")
+                temp=dict()
+                temp['1s1/2']=float(curLine[1])
+                temp['2s1/2']=float(curLine[2])
+                temp['2p1/2']=float(curLine[3])
+                temp['2p3/2']=float(curLine[4])
+                temp['3s1/2']=float(curLine[5])
+                temp['3p1/2']=float(curLine[6])
+                temp['3p3/2']=float(curLine[7])
+                temp['3d3/2']=float(curLine[8])
+                temp['3d5/2']=float(curLine[9])
+                temp['4s1/2']=float(curLine[10])
+                temp['4p1/2']=float(curLine[11])
+                temp['4p3/2']=float(curLine[12])
+                temp['4d3/2']=float(curLine[13])
+                temp['4d5/2']=float(curLine[14])
+                temp['5s1/2']=float(curLine[15])
+                temp['5p1/2']=float(curLine[16])
+                temp['5p3/2']=float(curLine[17])
+                photon_shell_cross[float(curLine[0])]=temp
+            elif number<=56:
+                curLine=line.strip().split(",")
+                temp=dict()
+                temp['1s1/2']=float(curLine[1])
+                temp['2s1/2']=float(curLine[2])
+                temp['2p1/2']=float(curLine[3])
+                temp['2p3/2']=float(curLine[4])
+                temp['3s1/2']=float(curLine[5])
+                temp['3p1/2']=float(curLine[6])
+                temp['3p3/2']=float(curLine[7])
+                temp['3d3/2']=float(curLine[8])
+                temp['3d5/2']=float(curLine[9])
+                temp['4s1/2']=float(curLine[10])
+                temp['4p1/2']=float(curLine[11])
+                temp['4p3/2']=float(curLine[12])
+                temp['4d3/2']=float(curLine[13])
+                temp['4d5/2']=float(curLine[14])
+                temp['5s1/2']=float(curLine[15])
+                temp['5p1/2']=float(curLine[16])
+                temp['5p3/2']=float(curLine[17])
+                temp['6s1/2']=float(curLine[18])
+                photon_shell_cross[float(curLine[0])]=temp
+            elif number==57:
+                curLine=line.strip().split(",")
+                temp=dict()
+                temp['1s1/2']=float(curLine[1])
+                temp['2s1/2']=float(curLine[2])
+                temp['2p1/2']=float(curLine[3])
+                temp['2p3/2']=float(curLine[4])
+                temp['3s1/2']=float(curLine[5])
+                temp['3p1/2']=float(curLine[6])
+                temp['3p3/2']=float(curLine[7])
+                temp['3d3/2']=float(curLine[8])
+                temp['3d5/2']=float(curLine[9])
+                temp['4s1/2']=float(curLine[10])
+                temp['4p1/2']=float(curLine[11])
+                temp['4p3/2']=float(curLine[12])
+                temp['4d3/2']=float(curLine[13])
+                temp['4d5/2']=float(curLine[14])
+                temp['5s1/2']=float(curLine[15])
+                temp['5p1/2']=float(curLine[16])
+                temp['5p3/2']=float(curLine[17])
+                temp['5d3/2']=float(curLine[18])
+                temp['5d5/2']=float(curLine[19])
+                temp['6s1/2']=float(curLine[20])
+                photon_shell_cross[float(curLine[0])]=temp
+            elif number<=70 and number!=64:
+                curLine=line.strip().split(",")
+                temp=dict()
+                temp['1s1/2']=float(curLine[1])
+                temp['2s1/2']=float(curLine[2])
+                temp['2p1/2']=float(curLine[3])
+                temp['2p3/2']=float(curLine[4])
+                temp['3s1/2']=float(curLine[5])
+                temp['3p1/2']=float(curLine[6])
+                temp['3p3/2']=float(curLine[7])
+                temp['3d3/2']=float(curLine[8])
+                temp['3d5/2']=float(curLine[9])
+                temp['4s1/2']=float(curLine[10])
+                temp['4p1/2']=float(curLine[11])
+                temp['4p3/2']=float(curLine[12])
+                temp['4d3/2']=float(curLine[13])
+                temp['4d5/2']=float(curLine[14])
+                temp['4f5/2']=float(curLine[15])
+                temp['4f7/2']=float(curLine[16])
+                temp['5s1/2']=float(curLine[17])
+                temp['5p1/2']=float(curLine[18])
+                temp['5p3/2']=float(curLine[19])
+                temp['6s1/2']=float(curLine[20])   
+                photon_shell_cross[float(curLine[0])]=temp
+            elif number==64 or (number<=80 and number!=77):
+                curLine=line.strip().split(",")
+                temp=dict()
+                temp['1s1/2']=float(curLine[1])
+                temp['2s1/2']=float(curLine[2])
+                temp['2p1/2']=float(curLine[3])
+                temp['2p3/2']=float(curLine[4])
+                temp['3s1/2']=float(curLine[5])
+                temp['3p1/2']=float(curLine[6])
+                temp['3p3/2']=float(curLine[7])
+                temp['3d3/2']=float(curLine[8])
+                temp['3d5/2']=float(curLine[9])
+                temp['4s1/2']=float(curLine[10])
+                temp['4p1/2']=float(curLine[11])
+                temp['4p3/2']=float(curLine[12])
+                temp['4d3/2']=float(curLine[13])
+                temp['4d5/2']=float(curLine[14])
+                temp['4f5/2']=float(curLine[15])
+                temp['4f7/2']=float(curLine[16])
+                temp['5s1/2']=float(curLine[17])
+                temp['5p1/2']=float(curLine[18])
+                temp['5p3/2']=float(curLine[19])
+                temp['5d3/2']=float(curLine[20])
+                temp['5d5/2']=float(curLine[21])
+                temp['6s1/2']=float(curLine[22])
+                photon_shell_cross[float(curLine[0])]=temp
+            elif number==77:
+                curLine=line.strip().split(",")
+                temp=dict()
+                temp['1s1/2']=float(curLine[1])
+                temp['2s1/2']=float(curLine[2])
+                temp['2p1/2']=float(curLine[3])
+                temp['2p3/2']=float(curLine[4])
+                temp['3s1/2']=float(curLine[5])
+                temp['3p1/2']=float(curLine[6])
+                temp['3p3/2']=float(curLine[7])
+                temp['3d3/2']=float(curLine[8])
+                temp['3d5/2']=float(curLine[9])
+                temp['4s1/2']=float(curLine[10])
+                temp['4p1/2']=float(curLine[11])
+                temp['4p3/2']=float(curLine[12])
+                temp['4d3/2']=float(curLine[13])
+                temp['4d5/2']=float(curLine[14])
+                temp['4f5/2']=float(curLine[15])
+                temp['4f7/2']=float(curLine[16])
+                temp['5s1/2']=float(curLine[17])
+                temp['5p1/2']=float(curLine[18])
+                temp['5p3/2']=float(curLine[19])
+                temp['5d3/2']=float(curLine[20])
+                temp['5d5/2']=float(curLine[21])
+                photon_shell_cross[float(curLine[0])]=temp
+            elif number<=86:
+                curLine=line.strip().split(",")
+                temp=dict()
+                temp['1s1/2']=float(curLine[1])
+                temp['2s1/2']=float(curLine[2])
+                temp['2p1/2']=float(curLine[3])
+                temp['2p3/2']=float(curLine[4])
+                temp['3s1/2']=float(curLine[5])
+                temp['3p1/2']=float(curLine[6])
+                temp['3p3/2']=float(curLine[7])
+                temp['3d3/2']=float(curLine[8])
+                temp['3d5/2']=float(curLine[9])
+                temp['4s1/2']=float(curLine[10])
+                temp['4p1/2']=float(curLine[11])
+                temp['4p3/2']=float(curLine[12])
+                temp['4d3/2']=float(curLine[13])
+                temp['4d5/2']=float(curLine[14])
+                temp['4f5/2']=float(curLine[15])
+                temp['4f7/2']=float(curLine[16])
+                temp['5s1/2']=float(curLine[17])
+                temp['5p1/2']=float(curLine[18])
+                temp['5p3/2']=float(curLine[19])
+                temp['5d3/2']=float(curLine[20])
+                temp['5d5/2']=float(curLine[21])
+                temp['6s1/2']=float(curLine[22])
+                temp['6p1/2']=float(curLine[23])
+                temp['6p3/2']=float(curLine[24])
+                photon_shell_cross[float(curLine[0])]=temp
+            elif number==87 or number==88:
+                curLine=line.strip().split(",")
+                temp=dict()
+                temp['1s1/2']=float(curLine[1])
+                temp['2s1/2']=float(curLine[2])
+                temp['2p1/2']=float(curLine[3])
+                temp['2p3/2']=float(curLine[4])
+                temp['3s1/2']=float(curLine[5])
+                temp['3p1/2']=float(curLine[6])
+                temp['3p3/2']=float(curLine[7])
+                temp['3d3/2']=float(curLine[8])
+                temp['3d5/2']=float(curLine[9])
+                temp['4s1/2']=float(curLine[10])
+                temp['4p1/2']=float(curLine[11])
+                temp['4p3/2']=float(curLine[12])
+                temp['4d3/2']=float(curLine[13])
+                temp['4d5/2']=float(curLine[14])
+                temp['4f5/2']=float(curLine[15])
+                temp['4f7/2']=float(curLine[16])
+                temp['5s1/2']=float(curLine[17])
+                temp['5p1/2']=float(curLine[18])
+                temp['5p3/2']=float(curLine[19])
+                temp['5d3/2']=float(curLine[20])
+                temp['5d5/2']=float(curLine[21])
+                temp['6s1/2']=float(curLine[22])
+                temp['6p1/2']=float(curLine[23])
+                temp['6p3/2']=float(curLine[24])
+                temp['7s1/2']=float(curLine[25])
+                photon_shell_cross[float(curLine[0])]=temp
+            elif number==89 or number==90:
+                curLine=line.strip().split(",")
+                temp=dict()
+                temp['1s1/2']=float(curLine[1])
+                temp['2s1/2']=float(curLine[2])
+                temp['2p1/2']=float(curLine[3])
+                temp['2p3/2']=float(curLine[4])
+                temp['3s1/2']=float(curLine[5])
+                temp['3p1/2']=float(curLine[6])
+                temp['3p3/2']=float(curLine[7])
+                temp['3d3/2']=float(curLine[8])
+                temp['3d5/2']=float(curLine[9])
+                temp['4s1/2']=float(curLine[10])
+                temp['4p1/2']=float(curLine[11])
+                temp['4p3/2']=float(curLine[12])
+                temp['4d3/2']=float(curLine[13])
+                temp['4d5/2']=float(curLine[14])
+                temp['4f5/2']=float(curLine[15])
+                temp['4f7/2']=float(curLine[16])
+                temp['5s1/2']=float(curLine[17])
+                temp['5p1/2']=float(curLine[18])
+                temp['5p3/2']=float(curLine[19])
+                temp['5d3/2']=float(curLine[20])
+                temp['5d5/2']=float(curLine[21])
+                temp['6s1/2']=float(curLine[22])
+                temp['6p1/2']=float(curLine[23])
+                temp['6p3/2']=float(curLine[24])
+                temp['6d3/2']=float(curLine[25]) 
+                temp['6d5/2']=float(curLine[26])
+                temp['7s1/2']=float(curLine[27]) 
+                photon_shell_cross[float(curLine[0])]=temp
+            elif number<=93:
+                curLine=line.strip().split(",")
+                temp=dict()
+                temp['1s1/2']=float(curLine[1])
+                temp['2s1/2']=float(curLine[2])
+                temp['2p1/2']=float(curLine[3])
+                temp['2p3/2']=float(curLine[4])
+                temp['3s1/2']=float(curLine[5])
+                temp['3p1/2']=float(curLine[6])
+                temp['3p3/2']=float(curLine[7])
+                temp['3d3/2']=float(curLine[8])
+                temp['3d5/2']=float(curLine[9])
+                temp['4s1/2']=float(curLine[10])
+                temp['4p1/2']=float(curLine[11])
+                temp['4p3/2']=float(curLine[12])
+                temp['4d3/2']=float(curLine[13])
+                temp['4d5/2']=float(curLine[14])
+                temp['4f5/2']=float(curLine[15])
+                temp['4f7/2']=float(curLine[16])
+                temp['5s1/2']=float(curLine[17])
+                temp['5p1/2']=float(curLine[18])
+                temp['5p3/2']=float(curLine[19])
+                temp['5d3/2']=float(curLine[20])
+                temp['5d5/2']=float(curLine[21])
+                temp['5f5/2']=float(curLine[22])
+                temp['5f7/2']=float(curLine[23])  
+                temp['6s1/2']=float(curLine[24])
+                temp['6p1/2']=float(curLine[25])
+                temp['6p3/2']=float(curLine[26])
+                temp['6d3/2']=float(curLine[27]) 
+                temp['6d5/2']=float(curLine[28])
+                temp['7s1/2']=float(curLine[29])
+                photon_shell_cross[float(curLine[0])]=temp
+                  
+                   
+    #print(photon_shell_cross)
+    
+
+    if photon_energy in photon_shell_cross:
+        shell_cross=photon_shell_cross[photon_energy]
+    elif photon_energy>1 and photon_energy<1.5:
+        start_cross=photon_shell_cross[1]
+        end_cross=photon_shell_cross[1.5]
+        for shell in start_cross:
+            shell_cross[shell]=((photon_energy-1)/(1.5-1))*(end_cross[shell]-start_cross[shell])+start_cross[shell]
+    elif photon_energy>1.5 and photon_energy<2:
+        start_cross=photon_shell_cross[1.5]
+        end_cross=photon_shell_cross[2]
+        for shell in start_cross:
+            shell_cross[shell]=((photon_energy-1.5)/(2-1.5))*(end_cross[shell]-start_cross[shell])+start_cross[shell]
+    elif photon_energy>2 and photon_energy<3:
+        start_cross=photon_shell_cross[2]
+        end_cross=photon_shell_cross[3]
+        for shell in start_cross:
+            shell_cross[shell]=((photon_energy-2)/(3-2))*(end_cross[shell]-start_cross[shell])+start_cross[shell]
+    elif photon_energy>3 and photon_energy<4:
+        start_cross=photon_shell_cross[3]
+        end_cross=photon_shell_cross[4]
+        for shell in start_cross:
+            shell_cross[shell]=((photon_energy-3)/(4-3))*(end_cross[shell]-start_cross[shell])+start_cross[shell]
+    elif photon_energy>4 and photon_energy<5:
+        start_cross=photon_shell_cross[4]
+        end_cross=photon_shell_cross[5]
+        for shell in start_cross:
+            shell_cross[shell]=((photon_energy-4)/(5-4))*(end_cross[shell]-start_cross[shell])+start_cross[shell]
+    elif photon_energy>5 and photon_energy<6:
+        start_cross=photon_shell_cross[5]
+        end_cross=photon_shell_cross[6]
+        for shell in start_cross:
+            shell_cross[shell]=((photon_energy-5)/(6-5))*(end_cross[shell]-start_cross[shell])+start_cross[shell]
+    elif photon_energy>6 and photon_energy<8:
+        start_cross=photon_shell_cross[6]
+        end_cross=photon_shell_cross[8]
+        for shell in start_cross:
+            shell_cross[shell]=((photon_energy-6)/(8-6))*(end_cross[shell]-start_cross[shell])+start_cross[shell]
+    elif photon_energy>8 and photon_energy<10:
+        start_cross=photon_shell_cross[8]
+        end_cross=photon_shell_cross[10]
+        for shell in start_cross:
+            shell_cross[shell]=((photon_energy-8)/(10-8))*(end_cross[shell]-start_cross[shell])+start_cross[shell]
+    elif photon_energy>10 and photon_energy<15:
+        start_cross=photon_shell_cross[10]
+        end_cross=photon_shell_cross[15]
+        for shell in start_cross:
+            shell_cross[shell]=((photon_energy-10)/(15-10))*(end_cross[shell]-start_cross[shell])+start_cross[shell]
+    elif photon_energy>15 and photon_energy<20:
+        start_cross=photon_shell_cross[15]
+        end_cross=photon_shell_cross[20]
+        for shell in start_cross:
+            shell_cross[shell]=((photon_energy-15)/(20-15))*(end_cross[shell]-start_cross[shell])+start_cross[shell]
+    elif photon_energy>20 and photon_energy<30:
+        start_cross=photon_shell_cross[20]
+        end_cross=photon_shell_cross[30]
+        for shell in start_cross:
+            shell_cross[shell]=((photon_energy-20)/(30-20))*(end_cross[shell]-start_cross[shell])+start_cross[shell]
+    elif photon_energy>30 and photon_energy<40:
+        start_cross=photon_shell_cross[30]
+        end_cross=photon_shell_cross[40]
+        for shell in start_cross:
+            shell_cross[shell]=((photon_energy-30)/(40-30))*(end_cross[shell]-start_cross[shell])+start_cross[shell]
+    elif photon_energy>40 and photon_energy<50:
+        start_cross=photon_shell_cross[40]
+        end_cross=photon_shell_cross[50]
+        for shell in start_cross:
+            shell_cross[shell]=((photon_energy-40)/(50-40))*(end_cross[shell]-start_cross[shell])+start_cross[shell]
+    elif photon_energy>50 and photon_energy<60:
+        start_cross=photon_shell_cross[50]
+        end_cross=photon_shell_cross[60]
+        for shell in start_cross:
+            shell_cross[shell]=((photon_energy-50)/(60-50))*(end_cross[shell]-start_cross[shell])+start_cross[shell]
+    elif photon_energy>60 and photon_energy<80:
+        start_cross=photon_shell_cross[60]
+        end_cross=photon_shell_cross[80]
+        for shell in start_cross:
+            shell_cross[shell]=((photon_energy-60)/(80-60))*(end_cross[shell]-start_cross[shell])+start_cross[shell]
+    elif photon_energy>80 and photon_energy<100:
+        start_cross=photon_shell_cross[80]
+        end_cross=photon_shell_cross[100]
+        for shell in start_cross:
+            shell_cross[shell]=((photon_energy-80)/(100-80))*(end_cross[shell]-start_cross[shell])+start_cross[shell]
+    elif photon_energy>100 and photon_energy<150:
+        start_cross=photon_shell_cross[100]
+        end_cross=photon_shell_cross[150]
+        for shell in start_cross:
+            shell_cross[shell]=((photon_energy-100)/(150-100))*(end_cross[shell]-start_cross[shell])+start_cross[shell]
+    elif photon_energy>150 and photon_energy<200:
+        start_cross=photon_shell_cross[150]
+        end_cross=photon_shell_cross[200]
+        for shell in start_cross:
+            shell_cross[shell]=((photon_energy-150)/(200-150))*(end_cross[shell]-start_cross[shell])+start_cross[shell]
+    elif photon_energy>200 and photon_energy<300:
+        start_cross=photon_shell_cross[200]
+        end_cross=photon_shell_cross[300]
+        for shell in start_cross:
+            shell_cross[shell]=((photon_energy-200)/(300-200))*(end_cross[shell]-start_cross[shell])+start_cross[shell]
+    elif photon_energy>300 and photon_energy<400:
+        start_cross=photon_shell_cross[300]
+        end_cross=photon_shell_cross[400]
+        for shell in start_cross:
+            shell_cross[shell]=((photon_energy-300)/(400-300))*(end_cross[shell]-start_cross[shell])+start_cross[shell]
+    elif photon_energy>400 and photon_energy<500:
+        start_cross=photon_shell_cross[400]
+        end_cross=photon_shell_cross[500]
+        for shell in start_cross:
+            shell_cross[shell]=((photon_energy-400)/(500-400))*(end_cross[shell]-start_cross[shell])+start_cross[shell]
+    elif photon_energy>500 and photon_energy<600:
+        start_cross=photon_shell_cross[500]
+        end_cross=photon_shell_cross[600]
+        for shell in start_cross:
+            shell_cross[shell]=((photon_energy-500)/(600-500))*(end_cross[shell]-start_cross[shell])+start_cross[shell]
+    elif photon_energy>600 and photon_energy<800:
+        start_cross=photon_shell_cross[600]
+        end_cross=photon_shell_cross[800]
+        for shell in start_cross:
+            shell_cross[shell]=((photon_energy-600)/(800-600))*(end_cross[shell]-start_cross[shell])+start_cross[shell]
+    elif photon_energy>800 and photon_energy<1000:
+        start_cross=photon_shell_cross[800]
+        end_cross=photon_shell_cross[1000]
+        for shell in start_cross:
+            shell_cross[shell]=((photon_energy-800)/(1000-800))*(end_cross[shell]-start_cross[shell])+start_cross[shell]
+    elif photon_energy>1000 and photon_energy<1500:
+        start_cross=photon_shell_cross[1000]
+        end_cross=photon_shell_cross[1500]
+        for shell in start_cross:
+            shell_cross[shell]=((photon_energy-1000)/(1500-1000))*(end_cross[shell]-start_cross[shell])+start_cross[shell]
+    elif photon_energy>1500:
+        start_cross=photon_shell_cross[1000]
+        end_cross=photon_shell_cross[1500]
+        for shell in start_cross:
+            shell_cross[shell]=((end_cross[shell]-start_cross[shell])/(1500-1000))*(photon_energy-1500)+end_cross[shell]
+        
+
+
+    norm_shell_cross=dict()
+    for shell in shell_cross:
+        norm_shell_cross[shell]=(shell_cross[shell]/max(shell_cross.values()))*100
+            
+    #print(norm_shell_cross)
+    return norm_shell_cross,shell_cross
+
+
 #-------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------
 #All about Auger Transition window
@@ -202,7 +754,137 @@ def calculate_auger(number):
                               
     
     
+def click_plot_for_elment_button(selectPlotV,selectPlotPhotonButton,inputPlotEntry,augerWindow,transition_energies,normArray,atomNumber,nonNoneValue):
+    continuePlot=False
+    if (selectPlotPhotonButton.get()=='No selection' and  inputPlotEntry.get()=='') or (selectPlotPhotonButton.get()!='No selection' and  inputPlotEntry.get()!=''):
+        tkinter.messagebox.showinfo(title='ERROR',message='Please input or select',parent=augerWindow)
+    elif selectPlotPhotonButton.get()=='No selection' and inputPlotEntry.get()!='':
+        try:                  
+            selectPhoton=float(inputPlotEntry.get())            
+        except:
+            tkinter.messagebox.showinfo(title='ERROR',message='Please input valid value',parent=augerWindow)
+        else:
+            continuePlot=True
+    elif selectPlotPhotonButton.get()!='No selection' and inputPlotEntry.get()=='':
+        continuePlot=True
+        if selectPlotPhotonButton.get()=='Mg 1253.6(eV)':           
+            selectPhoton=1253.6
+        elif selectPlotPhotonButton.get()=='Al 1486.7(eV)':
+            selectPhoton=1486.7
+        elif selectPlotPhotonButton.get()=='Ag 2984.3(eV)':
+            selectPhoton=2984.3
+        elif selectPlotPhotonButton.get()=='Cr 5414.9(eV)':
+            selectPhoton=5414.9
+        elif selectPlotPhotonButton.get()=='Ga 9251.74(eV)':
+            selectPhoton=9251.74
     
+    if continuePlot==True:
+        if selectPlotV.get()==1: #binding
+            if len(transition_energies)<=10:
+                fontSize=10
+            else:
+                fontSize=7
+            plotWindow=tkinter.Toplevel()
+            plotWindow.geometry("680x680")
+            plotWindow.title('Plot for each element')
+            transitionXValue=[]
+            transitionYHeight=[]
+            positiveTransitions=[]
+            
+            index=0
+            for transition in transition_energies:
+                if (selectPhoton-float(transition_energies[transition]))>=0:                
+                    transitionXValue.append(Decimal(selectPhoton-float(transition_energies[transition])).quantize(Decimal('0.00')))
+                    transitionYHeight.append(normArray[index])
+                    positiveTransitions.append(transition)
+                index+=1
+            figure, ax = plt.subplots(1,1)
+            transitionYMin=np.zeros(len(transitionXValue))
+            plt.vlines(transitionXValue,transitionYMin,transitionYHeight)
+            index=0
+            for transition in positiveTransitions:
+                transitionText=transition.replace(',','')
+                plt.text(transitionXValue[index],transitionYHeight[index],transitionText,size=fontSize,rotation=90)
+                index+=1
+            
+            norm_shell_cross,shell_cross=getCrossSection(atomNumber,selectPhoton)
+            coreXValues=list(nonNoneValue.values())
+            coreYHeight=list(norm_shell_cross.values())
+            coreYMin=np.zeros(len(coreXValues))
+            plt.vlines(coreXValues,coreYMin,coreYHeight,color='red')
+            index=0
+            for shell in norm_shell_cross:
+                plt.text(coreXValues[index],coreYHeight[index],shell,rotation=90)
+                index+=1
+            plt.gca().invert_xaxis() 
+            plt.xlabel('Binding Energy')
+            plt.ylabel('Normalized Intensity')
+            plt.close()      
+            canvas =FigureCanvasTkAgg(figure, master=plotWindow)
+            canvas.draw()
+            canvas.get_tk_widget().pack(side=tkinter.TOP, fill=tkinter.BOTH, expand=tkinter.YES)        
+            toolbar = NavigationToolbar2Tk(canvas, plotWindow)
+            toolbar.update()
+            canvas._tkcanvas.pack(side=tkinter.TOP, fill=tkinter.BOTH,expand=tkinter.YES)
+            plotWindow.mainloop()
+        elif selectPlotV.get()==2: #kinetic
+            if len(transition_energies)<=10:
+                fontSize=10
+            else:
+                fontSize=7
+            plotWindow=tkinter.Toplevel()
+            plotWindow.geometry("680x680")
+            plotWindow.title('Plot for each element')
+            figure, ax = plt.subplots(1,1)
+            transitionXValue=transition_energies.values()
+            transitionYHeight=normArray
+            transitionYMin=np.zeros(len(transitionXValue))
+            plt.vlines(transitionXValue,transitionYMin,transitionYHeight)
+            index=0
+            for transition in transition_energies:
+                newTransition=transition.replace(',','')
+                plt.text(transition_energies[transition],normArray[index],newTransition,size=fontSize,rotation=90)
+                index+=1
+                
+            norm_shell_cross,shell_cross=getCrossSection(atomNumber,selectPhoton)
+            coreKineticEnergy=[]
+            for shell in nonNoneValue:
+                coreKineticEnergy.append(selectPhoton-nonNoneValue[shell])
+                
+            shell_list=list(norm_shell_cross.keys())
+            norm_cross_list=list(norm_shell_cross.values())
+            
+            coreXValues=[]
+            coreYHeight=[]            
+            coreText=[]
+            
+            index=0
+            for value in coreKineticEnergy:
+                if value>0:
+                    coreXValues.append(value)
+                    coreYHeight.append(norm_cross_list[index])
+                    coreText.append(shell_list[index])
+                index+=1
+            
+            coreYMin=np.zeros(len(coreXValues))
+            plt.vlines(coreXValues,coreYMin,coreYHeight,color='red')
+            index=0
+            for text in coreText:
+                plt.text(coreXValues[index],coreYHeight[index],text,rotation=90)
+                index+=1
+            plt.xlabel('Kinetic Energy')
+            plt.ylabel('Normalized Intensity')
+            plt.close()        
+            canvas =FigureCanvasTkAgg(figure, master=plotWindow)
+            canvas.draw()
+            canvas.get_tk_widget().pack(side=tkinter.TOP, fill=tkinter.BOTH, expand=tkinter.YES)       
+            toolbar = NavigationToolbar2Tk(canvas, plotWindow)
+            toolbar.update()
+            canvas._tkcanvas.pack(side=tkinter.TOP, fill=tkinter.BOTH,expand=tkinter.YES)
+            plotWindow.mainloop()
+        else:
+            tkinter.messagebox.showinfo(title='ERROR',message='Please select BE or KE',parent=augerWindow)
+            
 
 
 def element_transition_window(index):
@@ -394,6 +1076,34 @@ def element_transition_window(index):
         
     exportConvertButton=tkinter.Button(augerWindow,text='Export',bg='LightBlue',command=lambda: _click_export_convert_button(augerWindow,transitionTable,position,atomName))
     exportConvertButton.place(relx=1140/1200,rely=70/680)
+    
+    
+    
+    selectPlotPhotonButton=ttk.Combobox(augerWindow,width=11)
+    selectPlotPhotonButton['value']=('Mg 1253.6(eV)','Al 1486.7(eV)','Ag 2984.3(eV)','Cr 5414.9(eV)','Ga 9251.74(eV)','No selection')
+    selectPlotPhotonButton.current(5)
+    selectPlotPhotonButton.place(relx=20/1200,rely=20/680)
+    orPlotLabel=tkinter.Label(augerWindow,text='or')
+    orPlotLabel.place(relx=125/1200,rely=20/680)
+    inputPlotEntry=tkinter.Entry(augerWindow,width=10)
+    inputPlotEntry.place(relx=145/1200,rely=20/680)
+    
+    selectPlotV=tkinter.IntVar()
+    selectBePlotButton=tkinter.Radiobutton(augerWindow,text='Binding Energies',value=1,variable=selectPlotV)
+    selectBePlotButton.place(relx=230/1200,rely=5/680)
+    selectKePlotButton=tkinter.Radiobutton(augerWindow,text='Kinetic Energies',value=2,variable=selectPlotV)
+    selectKePlotButton.place(relx=230/1200,rely=30/680)
+    
+    plotButton=tkinter.Button(augerWindow,text='Plot',bg='Pink',command=lambda: click_plot_for_elment_button(selectPlotV,selectPlotPhotonButton,inputPlotEntry,augerWindow,transition_energies,normArray,atomNumber,nonNoneValue))
+    plotButton.place(relx=380/1200,rely=15/680)
+    
+    def _click_clear_plot_button(selectPlotPhotonButton,inputPlotEntry,selectPlotV):
+        selectPlotPhotonButton.current(5)
+        inputPlotEntry.delete(0,'end')
+        selectPlotV.set(0)
+    clearPlotButton=tkinter.Button(augerWindow,text='Clear',command=lambda: _click_clear_plot_button(selectPlotPhotonButton,inputPlotEntry,selectPlotV))
+    clearPlotButton.place(relx=430/1200,rely=15/680)
+    
     
     
     
