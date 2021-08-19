@@ -112,6 +112,8 @@ def get_range():
 #-------------------------------------------------------------------------------------------
 #All about Auger Transition window
 def element_transition_window(index):
+    global lastChoice
+    lastChoice=''
     atomNumber=index+3
     augerWindow=tkinter.Toplevel()
     augerWindow.geometry("1200x680")
@@ -119,6 +121,35 @@ def element_transition_window(index):
     atomName=number_name[atomNumber]
     augerWindow.title('Auger Transitions for %s'%atomName)
     augerWindow.focus_force()
+    
+    #read from database
+    number_energies=get_energies()
+    barkla_orbital=get_notation()
+    
+    #nonNone energies for this atom
+    currentEnergies=number_energies[atomNumber]
+    nonNoneValue=dict()
+    nonNoneOrbital=[]
+    for shell in currentEnergies:
+        if currentEnergies[shell]!=None:
+            nonNoneValue[shell]=currentEnergies[shell]
+            nonNoneOrbital.append(barkla_orbital[shell])
+    length=len(nonNoneValue)
+    
+    #binding energies table
+    coreTable = ttk.Treeview(augerWindow,height=length,columns=['1','2','3'],show='headings')
+    coreTable.column('1', width=150) 
+    coreTable.column('2', width=150) 
+    coreTable.column('3', width=150) 
+    coreTable.heading('1', text='Barkla Notation')
+    coreTable.heading('2', text='Orbital Notation')
+    coreTable.heading('3', text='Binding Energies')
+    index=0
+    for item in nonNoneValue:
+        coreTable.insert('',index,values=(item,nonNoneOrbital[index],nonNoneValue[item]))
+        index+=1
+    coreTable.place(relx=10/1200,rely=60/680)
+    
     
     
     augerWindow.mainloop()
@@ -463,14 +494,15 @@ def root_window():
 
 
 
-if __name__ == "__main__":
-    root_window()
+if __name__ == "__main__":   
+    lastChoice=''
     elementArray=[]
     uniqueArray=[]
     elementArray2=[]
     uniqueArray2=[]
     importFilePath=''
-
+    
+    root_window()
 
 
 
