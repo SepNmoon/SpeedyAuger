@@ -27,7 +27,7 @@ import xlrd
 #get atomic number and atomic name  
 def getAtom():
     number_name=dict()
-    with open('original data/atom.txt','r') as f: 
+    with open('EADL_Values/atom.txt','r') as f: 
         for line in f.readlines():
             curLine=line.strip().split(" ")
             number_name[int(curLine[0])]=curLine[1]
@@ -37,7 +37,7 @@ def getAtom():
 #get electron configuration
 def getShell():
     number_shell=dict()
-    with open('original data/shell.txt','r') as f:
+    with open('EADL_Values/shell.txt','r') as f:
         for line in f.readlines():        
             curLine=line.strip().split(" ")
             curLine=['0' if i=='' else i for i in curLine]         
@@ -64,7 +64,7 @@ def getShell():
 #get electrons energies
 def getEnergies():  
     number_energies=dict()
-    with open('original data/energies.txt','r') as f:      
+    with open('EADL_Values/energies.txt','r') as f:      
         for line in f.readlines():        
             curLine=line.strip().split(" ")
             curLine=['0' if i=='' else i for i in curLine]         
@@ -91,7 +91,7 @@ def getEnergies():
 #get barkla and orbital notation
 def getNotation():
     barkla_orbital=dict()
-    with open('original data/notation.txt','r') as f:
+    with open('EADL_Values/notation.txt','r') as f:
         for line in f.readlines():
             curLine=line.strip().split(" ")
             barkla_orbital[curLine[0]]=curLine[1]+' '+curLine[2]
@@ -100,7 +100,7 @@ def getNotation():
 
 def getRange():
     number_range=dict()
-    with open('original data/energies_range.txt','r') as f:
+    with open('EADL_Values/energies_range.txt','r') as f:
         for line in f.readlines():
             curLine=line.strip().split(" ")
             temp=dict()
@@ -912,7 +912,7 @@ def clickPlotForElement(v,selectPlotButton,inputEntry2,auger_window,transition_e
         index=0
         for key in transition_energies:
             new_key=key.replace(',','')
-            plt.text(transition_energies[key],norm_array[index],new_key,size=fontSize)
+            plt.text(transition_energies[key],norm_array[index],new_key,size=fontSize,rotation=90)
             index+=1
         
         norm_shell_cross,shell_cross=getCrossSection(atom_number,selectExcitation)        
@@ -923,11 +923,7 @@ def clickPlotForElement(v,selectPlotButton,inputEntry2,auger_window,transition_e
         
         shell_list=list(norm_shell_cross.keys())
         norm_cross_list=list(norm_shell_cross.values())
-        #print(norm_shell_cross)
-        #print(nonNone_value)
-        #print(kinetic_core)
-        
-        #barkla_orbital=getNotation()
+
         core_x_values=[]
         core_y_height=[]
         text=[]
@@ -946,7 +942,7 @@ def clickPlotForElement(v,selectPlotButton,inputEntry2,auger_window,transition_e
         plt.vlines(core_x_values,core_y_min,core_y_height,color='red')
         index=0
         for t in text:
-            plt.text(core_x_values[index],core_y_height[index],t)
+            plt.text(core_x_values[index],core_y_height[index],t,rotation=90)
             index+=1
         
         
@@ -988,7 +984,7 @@ def clickPlotForElement(v,selectPlotButton,inputEntry2,auger_window,transition_e
         index=0
         for transition in positive_transitions:
             new_transition=transition.replace(',','')
-            plt.text(x_value[index],y_height[index],new_transition,size=fontSize)
+            plt.text(x_value[index],y_height[index],new_transition,size=fontSize,rotation=90)
             index+=1
         
         norm_shell_cross,shell_cross=getCrossSection(atom_number,selectPhoton)
@@ -998,7 +994,7 @@ def clickPlotForElement(v,selectPlotButton,inputEntry2,auger_window,transition_e
         plt.vlines(core_x_values,core_y_min,core_y_height,color='red')
         index=0
         for shell in norm_shell_cross:
-            plt.text(core_x_values[index],core_y_height[index],shell)
+            plt.text(core_x_values[index],core_y_height[index],shell,rotation=90)
             index+=1
         
         
@@ -1913,7 +1909,7 @@ def selectRadioButton(v2,root,selectButton,orLabel,inputEntry):
 
 def selectElements(selectAtomButton,v3):
     if v3.get()==2:
-        selectAtomButton.place(relx=500/1000,rely=50/680)
+        selectAtomButton.place(relx=350/1000,rely=72/680)
     else:      
         selectAtomButton.place_forget()
 
@@ -2199,11 +2195,7 @@ def clickSelectElementButton(root):
 def rootGUI():    
    number_name=getAtom() #dict
    root=tkinter.Tk() 
-   #screen_width=root.winfo_screenwidth()
-   #screen_height=root.winfo_screenheight()
    root.geometry("1000x680")
-   #root.geometry("%dx%d" % (screen_width, screen_height))
-   #root.resizable(0,0)
    root.title('All Atom')
    tkinter.Button(root,text='1 H',width=5,height=2,bg='Gray').place(relx=30/1000,rely=10/680) #1
    tkinter.Button(root,text='2 He',width=5,height=2,bg='Gray').place(relx=880/1000,rely=10/680) #18
@@ -2273,11 +2265,11 @@ def rootGUI():
    keSelect=tkinter.Radiobutton(root,text='by kinetic energies',value=1,variable=v2,command=lambda: selectRadioButton(v2,root,selectButton,orLabel,inputEntry))
    beSelect=tkinter.Radiobutton(root,text='by binding energies',value=2,variable=v2,command=lambda: selectRadioButton(v2,root,selectButton,orLabel,inputEntry))
    transitionSelect=tkinter.Radiobutton(root, text='Auger Transitions',value=1,variable=v1,command=lambda: selectTranCoreButton(v1,keSelect,beSelect,v2))
-   transitionSelect.place(relx=150/1000,rely=40/680)
+   transitionSelect.place(relx=150/1000,rely=30/680)
    coreStateSelect=tkinter.Radiobutton(root,text='Core State Energies',value=2,variable=v1,command=lambda: selectTranCoreButton(v1,keSelect,beSelect,v2))
-   coreStateSelect.place(relx=150/1000,rely=60.5/680)
+   coreStateSelect.place(relx=150/1000,rely=50/680)
    bothSelect=tkinter.Radiobutton(root,text='Both',value=3,variable=v1,command=lambda: selectTranCoreButton(v1,keSelect,beSelect,v2))
-   bothSelect.place(relx=150/1000,rely=81/680)
+   bothSelect.place(relx=150/1000,rely=70/680)
    
    
    sep1 = ttk.Separator(root, orient='vertical')
@@ -2285,10 +2277,10 @@ def rootGUI():
    
    v3=tkinter.IntVar()
    allAtomSelect=tkinter.Radiobutton(root, text='From All Elements',value=1,variable=v3,command=lambda: selectElements(selectAtomButton,v3))
-   allAtomSelect.place(relx=320/1000,rely=40/680)
+   allAtomSelect.place(relx=320/1000,rely=30/680)
    selectAtomButton=tkinter.Button(root,text='Select Elements',command=lambda: clickSelectAtomButton(root))
    someAtomSelect=tkinter.Radiobutton(root,text='From Selected Elements',value=2,variable=v3,command=lambda: selectElements(selectAtomButton,v3))
-   someAtomSelect.place(relx=320/1000,rely=60.5/680)
+   someAtomSelect.place(relx=320/1000,rely=50/680)
    
 
    searchButton=tkinter.Button(root,text='Search',bg='Orange',command=lambda: clickSearchButtonRT(root,fromEntry,toEntry,v2,selectButton,inputEntry,v1,v3))
@@ -2332,7 +2324,7 @@ def rootGUI():
    selectElementButton.place(relx=295/1000,rely=155/680)
    
    rangeLabel=tkinter.Label(root,text='Please select range of x axis:')
-   rangeLabel.place(relx=380/1000,rely=100/680)
+   rangeLabel.place(relx=380/1000,rely=102/680)
    
    v_plot=tkinter.IntVar()
    selectReferenceButton=tkinter.Radiobutton(root,text='Range of Reference Lines',variable=v_plot,value=1)
