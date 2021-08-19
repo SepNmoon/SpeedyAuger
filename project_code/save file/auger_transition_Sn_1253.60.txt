@@ -1,0 +1,742 @@
+Auger Transition      Auger Energies (KE)  Auger Energies (BE)      Norm Mult
+------------------  ---------------------  ---------------------  -----------
+K,L1,L1                          20070     Not Accessible                 3.7
+K,L1,L2                          20353.6   Not Accessible                 3.7
+K,L1,L3                          20598.3   Not Accessible                 7.4
+K,L1,M1                          23728     Not Accessible                 3.7
+K,L1,M2                          23845.7   Not Accessible                 3.7
+K,L1,M3                          23891     Not Accessible                 7.4
+K,L1,M4                          24101.3   Not Accessible                 7.4
+K,L1,M5                          24110.8   Not Accessible                11.1
+K,L1,N1                          24476.5   Not Accessible                 3.7
+K,L1,N2                          24516.7   Not Accessible                 3.7
+K,L1,N3                          24525     Not Accessible                 7.4
+K,L1,N4                          24589.3   Not Accessible                 7.4
+K,L1,N5                          24590.5   Not Accessible                11.1
+K,L1,O1                          24612.3   Not Accessible                 3.7
+K,L1,O2                          24620     Not Accessible                 1.2
+K,L1,O3                          24620.6   Not Accessible                 2.5
+K,L2,L2                          20637.2   Not Accessible                 3.7
+K,L2,L3                          20882     Not Accessible                 7.4
+K,L2,M1                          24011.6   Not Accessible                 3.7
+K,L2,M2                          24129.3   Not Accessible                 3.7
+K,L2,M3                          24174.6   Not Accessible                 7.4
+K,L2,M4                          24384.9   Not Accessible                 7.4
+K,L2,M5                          24394.4   Not Accessible                11.1
+K,L2,N1                          24760.1   Not Accessible                 3.7
+K,L2,N2                          24800.3   Not Accessible                 3.7
+K,L2,N3                          24808.6   Not Accessible                 7.4
+K,L2,N4                          24872.9   Not Accessible                 7.4
+K,L2,N5                          24874.1   Not Accessible                11.1
+K,L2,O1                          24895.9   Not Accessible                 3.7
+K,L2,O2                          24903.6   Not Accessible                 1.2
+K,L2,O3                          24904.2   Not Accessible                 2.5
+K,L3,L3                          21126.7   Not Accessible                14.8
+K,L3,M1                          24256.3   Not Accessible                 7.4
+K,L3,M2                          24374.1   Not Accessible                 7.4
+K,L3,M3                          24419.3   Not Accessible                14.8
+K,L3,M4                          24629.7   Not Accessible                14.8
+K,L3,M5                          24639.1   Not Accessible                22.2
+K,L3,N1                          25004.8   Not Accessible                 7.4
+K,L3,N2                          25045     Not Accessible                 7.4
+K,L3,N3                          25053.4   Not Accessible                14.8
+K,L3,N4                          25117.7   Not Accessible                14.8
+K,L3,N5                          25118.9   Not Accessible                22.2
+K,L3,O1                          25140.7   Not Accessible                 7.4
+K,L3,O2                          25148.3   Not Accessible                 2.5
+K,L3,O3                          25149     Not Accessible                 4.9
+K,M1,M1                          27386     Not Accessible                 3.7
+K,M1,M2                          27503.7   Not Accessible                 3.7
+K,M1,M3                          27549     Not Accessible                 7.4
+K,M1,M4                          27759.3   Not Accessible                 7.4
+K,M1,M5                          27768.8   Not Accessible                11.1
+K,M1,N1                          28134.4   Not Accessible                 3.7
+K,M1,N2                          28174.7   Not Accessible                 3.7
+K,M1,N3                          28183     Not Accessible                 7.4
+K,M1,N4                          28247.3   Not Accessible                 7.4
+K,M1,N5                          28248.5   Not Accessible                11.1
+K,M1,O1                          28270.3   Not Accessible                 3.7
+K,M1,O2                          28278     Not Accessible                 1.2
+K,M1,O3                          28278.6   Not Accessible                 2.5
+K,M2,M2                          27621.5   Not Accessible                 3.7
+K,M2,M3                          27666.7   Not Accessible                 7.4
+K,M2,M4                          27877.1   Not Accessible                 7.4
+K,M2,M5                          27886.5   Not Accessible                11.1
+K,M2,N1                          28252.2   Not Accessible                 3.7
+K,M2,N2                          28292.4   Not Accessible                 3.7
+K,M2,N3                          28300.8   Not Accessible                 7.4
+K,M2,N4                          28365.1   Not Accessible                 7.4
+K,M2,N5                          28366.3   Not Accessible                11.1
+K,M2,O1                          28388.1   Not Accessible                 3.7
+K,M2,O2                          28395.7   Not Accessible                 1.2
+K,M2,O3                          28396.3   Not Accessible                 2.5
+K,M3,M3                          27712     Not Accessible                14.8
+K,M3,M4                          27922.3   Not Accessible                14.8
+K,M3,M5                          27931.8   Not Accessible                22.2
+K,M3,N1                          28297.5   Not Accessible                 7.4
+K,M3,N2                          28337.7   Not Accessible                 7.4
+K,M3,N3                          28346     Not Accessible                14.8
+K,M3,N4                          28410.3   Not Accessible                14.8
+K,M3,N5                          28411.5   Not Accessible                22.2
+K,M3,O1                          28433.3   Not Accessible                 7.4
+K,M3,O2                          28441     Not Accessible                 2.5
+K,M3,O3                          28441.6   Not Accessible                 4.9
+K,M4,M4                          28132.6   Not Accessible                14.8
+K,M4,M5                          28142.1   Not Accessible                22.2
+K,M4,N1                          28507.8   Not Accessible                 7.4
+K,M4,N2                          28548     Not Accessible                 7.4
+K,M4,N3                          28556.4   Not Accessible                14.8
+K,M4,N4                          28620.6   Not Accessible                14.8
+K,M4,N5                          28621.8   Not Accessible                22.2
+K,M4,O1                          28643.7   Not Accessible                 7.4
+K,M4,O2                          28651.3   Not Accessible                 2.5
+K,M4,O3                          28651.9   Not Accessible                 4.9
+K,M5,M5                          28151.5   Not Accessible                33.3
+K,M5,N1                          28517.2   Not Accessible                11.1
+K,M5,N2                          28557.4   Not Accessible                11.1
+K,M5,N3                          28565.8   Not Accessible                22.2
+K,M5,N4                          28630.1   Not Accessible                22.2
+K,M5,N5                          28631.3   Not Accessible                33.3
+K,M5,O1                          28653.1   Not Accessible                11.1
+K,M5,O2                          28660.8   Not Accessible                 3.7
+K,M5,O3                          28661.4   Not Accessible                 7.4
+K,N1,N1                          28882.9   Not Accessible                 3.7
+K,N1,N2                          28923.1   Not Accessible                 3.7
+K,N1,N3                          28931.5   Not Accessible                 7.4
+K,N1,N4                          28995.8   Not Accessible                 7.4
+K,N1,N5                          28997     Not Accessible                11.1
+K,N1,O1                          29018.8   Not Accessible                 3.7
+K,N1,O2                          29026.5   Not Accessible                 1.2
+K,N1,O3                          29027.1   Not Accessible                 2.5
+K,N2,N2                          28963.3   Not Accessible                 3.7
+K,N2,N3                          28971.7   Not Accessible                 7.4
+K,N2,N4                          29036     Not Accessible                 7.4
+K,N2,N5                          29037.2   Not Accessible                11.1
+K,N2,O1                          29059     Not Accessible                 3.7
+K,N2,O2                          29066.7   Not Accessible                 1.2
+K,N2,O3                          29067.3   Not Accessible                 2.5
+K,N3,N3                          28980.1   Not Accessible                14.8
+K,N3,N4                          29044.4   Not Accessible                14.8
+K,N3,N5                          29045.6   Not Accessible                22.2
+K,N3,O1                          29067.4   Not Accessible                 7.4
+K,N3,O2                          29075     Not Accessible                 2.5
+K,N3,O3                          29075.7   Not Accessible                 4.9
+K,N4,N4                          29108.6   Not Accessible                14.8
+K,N4,N5                          29109.8   Not Accessible                22.2
+K,N4,O1                          29131.7   Not Accessible                 7.4
+K,N4,O2                          29139.3   Not Accessible                 2.5
+K,N4,O3                          29139.9   Not Accessible                 4.9
+K,N5,N5                          29111     Not Accessible                33.3
+K,N5,O1                          29132.9   Not Accessible                11.1
+K,N5,O2                          29140.5   Not Accessible                 3.7
+K,N5,O3                          29141.1   Not Accessible                 7.4
+K,O1,O1                          29154.7   Not Accessible                 3.7
+K,O1,O2                          29162.3   Not Accessible                 1.2
+K,O1,O3                          29163     Not Accessible                 2.5
+K,O2,O2                          29170     Not Accessible                 0.4
+K,O2,O3                          29170.6   Not Accessible                 0.8
+K,O3,O3                          29171.2   Not Accessible                 1.6
+L1,L2,N1                            16.36  1237.24                        3.7
+L1,L2,N2                            56.57  1197.03                        3.7
+L1,L2,N3                            64.94  1188.66                        7.4
+L1,L2,N4                           129.22  1124.38                        7.4
+L1,L2,N5                           130.43  1123.17                       11.1
+L1,L2,O1                           152.25  1101.35                        3.7
+L1,L2,O2                           159.9   1093.70                        1.2
+L1,L2,O3                           160.51  1093.09                        2.5
+L1,L3,N1                           261.11  992.49                         7.4
+L1,L3,N2                           301.32  952.28                         7.4
+L1,L3,N3                           309.69  943.91                        14.8
+L1,L3,N4                           373.97  879.63                        14.8
+L1,L3,N5                           375.18  878.42                        22.2
+L1,L3,O1                           397     856.60                         7.4
+L1,L3,O2                           404.65  848.95                         2.5
+L1,L3,O3                           405.26  848.34                         4.9
+L1,M1,M1                          2642.27  Not Accessible                 3.7
+L1,M1,M2                          2760.03  Not Accessible                 3.7
+L1,M1,M3                          2805.28  Not Accessible                 7.4
+L1,M1,M4                          3015.61  Not Accessible                 7.4
+L1,M1,M5                          3025.05  Not Accessible                11.1
+L1,M1,N1                          3390.75  Not Accessible                 3.7
+L1,M1,N2                          3430.96  Not Accessible                 3.7
+L1,M1,N3                          3439.33  Not Accessible                 7.4
+L1,M1,N4                          3503.61  Not Accessible                 7.4
+L1,M1,N5                          3504.81  Not Accessible                11.1
+L1,M1,O1                          3526.63  Not Accessible                 3.7
+L1,M1,O2                          3534.28  Not Accessible                 1.2
+L1,M1,O3                          3534.89  Not Accessible                 2.5
+L1,M2,M2                          2877.78  Not Accessible                 3.7
+L1,M2,M3                          2923.03  Not Accessible                 7.4
+L1,M2,M4                          3133.36  Not Accessible                 7.4
+L1,M2,M5                          3142.8   Not Accessible                11.1
+L1,M2,N1                          3508.5   Not Accessible                 3.7
+L1,M2,N2                          3548.71  Not Accessible                 3.7
+L1,M2,N3                          3557.08  Not Accessible                 7.4
+L1,M2,N4                          3621.36  Not Accessible                 7.4
+L1,M2,N5                          3622.57  Not Accessible                11.1
+L1,M2,O1                          3644.38  Not Accessible                 3.7
+L1,M2,O2                          3652.03  Not Accessible                 1.2
+L1,M2,O3                          3652.64  Not Accessible                 2.5
+L1,M3,M3                          2968.29  Not Accessible                14.8
+L1,M3,M4                          3178.62  Not Accessible                14.8
+L1,M3,M5                          3188.06  Not Accessible                22.2
+L1,M3,N1                          3553.76  Not Accessible                 7.4
+L1,M3,N2                          3593.97  Not Accessible                 7.4
+L1,M3,N3                          3602.34  Not Accessible                14.8
+L1,M3,N4                          3666.62  Not Accessible                14.8
+L1,M3,N5                          3667.82  Not Accessible                22.2
+L1,M3,O1                          3689.64  Not Accessible                 7.4
+L1,M3,O2                          3697.29  Not Accessible                 2.5
+L1,M3,O3                          3697.9   Not Accessible                 4.9
+L1,M4,M4                          3388.94  Not Accessible                14.8
+L1,M4,M5                          3398.39  Not Accessible                22.2
+L1,M4,N1                          3764.08  Not Accessible                 7.4
+L1,M4,N2                          3804.29  Not Accessible                 7.4
+L1,M4,N3                          3812.66  Not Accessible                14.8
+L1,M4,N4                          3876.94  Not Accessible                14.8
+L1,M4,N5                          3878.15  Not Accessible                22.2
+L1,M4,O1                          3899.97  Not Accessible                 7.4
+L1,M4,O2                          3907.62  Not Accessible                 2.5
+L1,M4,O3                          3908.23  Not Accessible                 4.9
+L1,M5,M5                          3407.83  Not Accessible                33.3
+L1,M5,N1                          3773.53  Not Accessible                11.1
+L1,M5,N2                          3813.74  Not Accessible                11.1
+L1,M5,N3                          3822.11  Not Accessible                22.2
+L1,M5,N4                          3886.39  Not Accessible                22.2
+L1,M5,N5                          3887.59  Not Accessible                33.3
+L1,M5,O1                          3909.41  Not Accessible                11.1
+L1,M5,O2                          3917.06  Not Accessible                 3.7
+L1,M5,O3                          3917.67  Not Accessible                 7.4
+L1,N1,N1                          4139.22  Not Accessible                 3.7
+L1,N1,N2                          4179.43  Not Accessible                 3.7
+L1,N1,N3                          4187.8   Not Accessible                 7.4
+L1,N1,N4                          4252.08  Not Accessible                 7.4
+L1,N1,N5                          4253.28  Not Accessible                11.1
+L1,N1,O1                          4275.11  Not Accessible                 3.7
+L1,N1,O2                          4282.76  Not Accessible                 1.2
+L1,N1,O3                          4283.36  Not Accessible                 2.5
+L1,N2,N2                          4219.64  Not Accessible                 3.7
+L1,N2,N3                          4228.01  Not Accessible                 7.4
+L1,N2,N4                          4292.29  Not Accessible                 7.4
+L1,N2,N5                          4293.49  Not Accessible                11.1
+L1,N2,O1                          4315.32  Not Accessible                 3.7
+L1,N2,O2                          4322.97  Not Accessible                 1.2
+L1,N2,O3                          4323.57  Not Accessible                 2.5
+L1,N3,N3                          4236.38  Not Accessible                14.8
+L1,N3,N4                          4300.66  Not Accessible                14.8
+L1,N3,N5                          4301.86  Not Accessible                22.2
+L1,N3,O1                          4323.69  Not Accessible                 7.4
+L1,N3,O2                          4331.34  Not Accessible                 2.5
+L1,N3,O3                          4331.94  Not Accessible                 4.9
+L1,N4,N4                          4364.94  Not Accessible                14.8
+L1,N4,N5                          4366.14  Not Accessible                22.2
+L1,N4,O1                          4387.97  Not Accessible                 7.4
+L1,N4,O2                          4395.61  Not Accessible                 2.5
+L1,N4,O3                          4396.22  Not Accessible                 4.9
+L1,N5,N5                          4367.35  Not Accessible                33.3
+L1,N5,O1                          4389.17  Not Accessible                11.1
+L1,N5,O2                          4396.82  Not Accessible                 3.7
+L1,N5,O3                          4397.43  Not Accessible                 7.4
+L1,O1,O1                          4410.99  Not Accessible                 3.7
+L1,O1,O2                          4418.64  Not Accessible                 1.2
+L1,O1,O3                          4419.25  Not Accessible                 2.5
+L1,O2,O2                          4426.29  Not Accessible                 0.4
+L1,O2,O3                          4426.9   Not Accessible                 0.8
+L1,O3,O3                          4427.51  Not Accessible                 1.6
+L2,L3,N2                            21.82  1231.78                        7.4
+L2,L3,N3                            30.19  1223.41                       14.8
+L2,L3,N4                            94.47  1159.13                       14.8
+L2,L3,N5                            95.68  1157.92                       22.2
+L2,L3,O1                           117.5   1136.10                        7.4
+L2,L3,O2                           125.15  1128.45                        2.5
+L2,L3,O3                           125.76  1127.84                        4.9
+L2,M1,M1                          2362.77  Not Accessible                 3.7
+L2,M1,M2                          2480.53  Not Accessible                 3.7
+L2,M1,M3                          2525.78  Not Accessible                 7.4
+L2,M1,M4                          2736.11  Not Accessible                 7.4
+L2,M1,M5                          2745.55  Not Accessible                11.1
+L2,M1,N1                          3111.25  Not Accessible                 3.7
+L2,M1,N2                          3151.46  Not Accessible                 3.7
+L2,M1,N3                          3159.83  Not Accessible                 7.4
+L2,M1,N4                          3224.11  Not Accessible                 7.4
+L2,M1,N5                          3225.31  Not Accessible                11.1
+L2,M1,O1                          3247.13  Not Accessible                 3.7
+L2,M1,O2                          3254.78  Not Accessible                 1.2
+L2,M1,O3                          3255.39  Not Accessible                 2.5
+L2,M2,M2                          2598.28  Not Accessible                 3.7
+L2,M2,M3                          2643.53  Not Accessible                 7.4
+L2,M2,M4                          2853.86  Not Accessible                 7.4
+L2,M2,M5                          2863.3   Not Accessible                11.1
+L2,M2,N1                          3229     Not Accessible                 3.7
+L2,M2,N2                          3269.21  Not Accessible                 3.7
+L2,M2,N3                          3277.58  Not Accessible                 7.4
+L2,M2,N4                          3341.86  Not Accessible                 7.4
+L2,M2,N5                          3343.07  Not Accessible                11.1
+L2,M2,O1                          3364.88  Not Accessible                 3.7
+L2,M2,O2                          3372.53  Not Accessible                 1.2
+L2,M2,O3                          3373.14  Not Accessible                 2.5
+L2,M3,M3                          2688.79  Not Accessible                14.8
+L2,M3,M4                          2899.12  Not Accessible                14.8
+L2,M3,M5                          2908.56  Not Accessible                22.2
+L2,M3,N1                          3274.26  Not Accessible                 7.4
+L2,M3,N2                          3314.47  Not Accessible                 7.4
+L2,M3,N3                          3322.84  Not Accessible                14.8
+L2,M3,N4                          3387.12  Not Accessible                14.8
+L2,M3,N5                          3388.32  Not Accessible                22.2
+L2,M3,O1                          3410.14  Not Accessible                 7.4
+L2,M3,O2                          3417.79  Not Accessible                 2.5
+L2,M3,O3                          3418.4   Not Accessible                 4.9
+L2,M4,M4                          3109.44  Not Accessible                14.8
+L2,M4,M5                          3118.89  Not Accessible                22.2
+L2,M4,N1                          3484.58  Not Accessible                 7.4
+L2,M4,N2                          3524.79  Not Accessible                 7.4
+L2,M4,N3                          3533.16  Not Accessible                14.8
+L2,M4,N4                          3597.44  Not Accessible                14.8
+L2,M4,N5                          3598.65  Not Accessible                22.2
+L2,M4,O1                          3620.47  Not Accessible                 7.4
+L2,M4,O2                          3628.12  Not Accessible                 2.5
+L2,M4,O3                          3628.73  Not Accessible                 4.9
+L2,M5,M5                          3128.33  Not Accessible                33.3
+L2,M5,N1                          3494.03  Not Accessible                11.1
+L2,M5,N2                          3534.24  Not Accessible                11.1
+L2,M5,N3                          3542.61  Not Accessible                22.2
+L2,M5,N4                          3606.89  Not Accessible                22.2
+L2,M5,N5                          3608.09  Not Accessible                33.3
+L2,M5,O1                          3629.91  Not Accessible                11.1
+L2,M5,O2                          3637.56  Not Accessible                 3.7
+L2,M5,O3                          3638.17  Not Accessible                 7.4
+L2,N1,N1                          3859.72  Not Accessible                 3.7
+L2,N1,N2                          3899.93  Not Accessible                 3.7
+L2,N1,N3                          3908.3   Not Accessible                 7.4
+L2,N1,N4                          3972.58  Not Accessible                 7.4
+L2,N1,N5                          3973.79  Not Accessible                11.1
+L2,N1,O1                          3995.61  Not Accessible                 3.7
+L2,N1,O2                          4003.26  Not Accessible                 1.2
+L2,N1,O3                          4003.87  Not Accessible                 2.5
+L2,N2,N2                          3940.14  Not Accessible                 3.7
+L2,N2,N3                          3948.51  Not Accessible                 7.4
+L2,N2,N4                          4012.79  Not Accessible                 7.4
+L2,N2,N5                          4014     Not Accessible                11.1
+L2,N2,O1                          4035.82  Not Accessible                 3.7
+L2,N2,O2                          4043.47  Not Accessible                 1.2
+L2,N2,O3                          4044.08  Not Accessible                 2.5
+L2,N3,N3                          3956.88  Not Accessible                14.8
+L2,N3,N4                          4021.16  Not Accessible                14.8
+L2,N3,N5                          4022.37  Not Accessible                22.2
+L2,N3,O1                          4044.18  Not Accessible                 7.4
+L2,N3,O2                          4051.84  Not Accessible                 2.5
+L2,N3,O3                          4052.45  Not Accessible                 4.9
+L2,N4,N4                          4085.44  Not Accessible                14.8
+L2,N4,N5                          4086.64  Not Accessible                22.2
+L2,N4,O1                          4108.47  Not Accessible                 7.4
+L2,N4,O2                          4116.11  Not Accessible                 2.5
+L2,N4,O3                          4116.72  Not Accessible                 4.9
+L2,N5,N5                          4087.85  Not Accessible                33.3
+L2,N5,O1                          4109.67  Not Accessible                11.1
+L2,N5,O2                          4117.32  Not Accessible                 3.7
+L2,N5,O3                          4117.93  Not Accessible                 7.4
+L2,O1,O1                          4131.49  Not Accessible                 3.7
+L2,O1,O2                          4139.14  Not Accessible                 1.2
+L2,O1,O3                          4139.75  Not Accessible                 2.5
+L2,O2,O2                          4146.79  Not Accessible                 0.4
+L2,O2,O3                          4147.4   Not Accessible                 0.8
+L2,O3,O3                          4148.01  Not Accessible                 1.6
+L3,M1,M1                          2128.77  Not Accessible                 7.4
+L3,M1,M2                          2246.53  Not Accessible                 7.4
+L3,M1,M3                          2291.78  Not Accessible                14.8
+L3,M1,M4                          2502.11  Not Accessible                14.8
+L3,M1,M5                          2511.55  Not Accessible                22.2
+L3,M1,N1                          2877.25  Not Accessible                 7.4
+L3,M1,N2                          2917.46  Not Accessible                 7.4
+L3,M1,N3                          2925.83  Not Accessible                14.8
+L3,M1,N4                          2990.11  Not Accessible                14.8
+L3,M1,N5                          2991.31  Not Accessible                22.2
+L3,M1,O1                          3013.13  Not Accessible                 7.4
+L3,M1,O2                          3020.78  Not Accessible                 2.5
+L3,M1,O3                          3021.39  Not Accessible                 4.9
+L3,M2,M2                          2364.28  Not Accessible                 7.4
+L3,M2,M3                          2409.53  Not Accessible                14.8
+L3,M2,M4                          2619.86  Not Accessible                14.8
+L3,M2,M5                          2629.3   Not Accessible                22.2
+L3,M2,N1                          2995     Not Accessible                 7.4
+L3,M2,N2                          3035.21  Not Accessible                 7.4
+L3,M2,N3                          3043.58  Not Accessible                14.8
+L3,M2,N4                          3107.86  Not Accessible                14.8
+L3,M2,N5                          3109.07  Not Accessible                22.2
+L3,M2,O1                          3130.88  Not Accessible                 7.4
+L3,M2,O2                          3138.53  Not Accessible                 2.5
+L3,M2,O3                          3139.14  Not Accessible                 4.9
+L3,M3,M3                          2454.79  Not Accessible                29.6
+L3,M3,M4                          2665.12  Not Accessible                29.6
+L3,M3,M5                          2674.56  Not Accessible                44.4
+L3,M3,N1                          3040.26  Not Accessible                14.8
+L3,M3,N2                          3080.47  Not Accessible                14.8
+L3,M3,N3                          3088.84  Not Accessible                29.6
+L3,M3,N4                          3153.12  Not Accessible                29.6
+L3,M3,N5                          3154.32  Not Accessible                44.4
+L3,M3,O1                          3176.14  Not Accessible                14.8
+L3,M3,O2                          3183.79  Not Accessible                 5
+L3,M3,O3                          3184.4   Not Accessible                 9.9
+L3,M4,M4                          2875.44  Not Accessible                29.6
+L3,M4,M5                          2884.89  Not Accessible                44.4
+L3,M4,N1                          3250.58  Not Accessible                14.8
+L3,M4,N2                          3290.79  Not Accessible                14.8
+L3,M4,N3                          3299.16  Not Accessible                29.6
+L3,M4,N4                          3363.44  Not Accessible                29.6
+L3,M4,N5                          3364.65  Not Accessible                44.4
+L3,M4,O1                          3386.47  Not Accessible                14.8
+L3,M4,O2                          3394.12  Not Accessible                 5
+L3,M4,O3                          3394.73  Not Accessible                 9.9
+L3,M5,M5                          2894.33  Not Accessible                66.7
+L3,M5,N1                          3260.03  Not Accessible                22.2
+L3,M5,N2                          3300.24  Not Accessible                22.2
+L3,M5,N3                          3308.61  Not Accessible                44.4
+L3,M5,N4                          3372.89  Not Accessible                44.4
+L3,M5,N5                          3374.09  Not Accessible                66.7
+L3,M5,O1                          3395.91  Not Accessible                22.2
+L3,M5,O2                          3403.56  Not Accessible                 7.4
+L3,M5,O3                          3404.17  Not Accessible                14.8
+L3,N1,N1                          3625.72  Not Accessible                 7.4
+L3,N1,N2                          3665.93  Not Accessible                 7.4
+L3,N1,N3                          3674.3   Not Accessible                14.8
+L3,N1,N4                          3738.58  Not Accessible                14.8
+L3,N1,N5                          3739.79  Not Accessible                22.2
+L3,N1,O1                          3761.61  Not Accessible                 7.4
+L3,N1,O2                          3769.26  Not Accessible                 2.5
+L3,N1,O3                          3769.87  Not Accessible                 4.9
+L3,N2,N2                          3706.14  Not Accessible                 7.4
+L3,N2,N3                          3714.51  Not Accessible                14.8
+L3,N2,N4                          3778.79  Not Accessible                14.8
+L3,N2,N5                          3780     Not Accessible                22.2
+L3,N2,O1                          3801.82  Not Accessible                 7.4
+L3,N2,O2                          3809.47  Not Accessible                 2.5
+L3,N2,O3                          3810.08  Not Accessible                 4.9
+L3,N3,N3                          3722.88  Not Accessible                29.6
+L3,N3,N4                          3787.16  Not Accessible                29.6
+L3,N3,N5                          3788.37  Not Accessible                44.4
+L3,N3,O1                          3810.18  Not Accessible                14.8
+L3,N3,O2                          3817.84  Not Accessible                 5
+L3,N3,O3                          3818.45  Not Accessible                 9.9
+L3,N4,N4                          3851.44  Not Accessible                29.6
+L3,N4,N5                          3852.65  Not Accessible                44.4
+L3,N4,O1                          3874.47  Not Accessible                14.8
+L3,N4,O2                          3882.12  Not Accessible                 5
+L3,N4,O3                          3882.73  Not Accessible                 9.9
+L3,N5,N5                          3853.85  Not Accessible                66.7
+L3,N5,O1                          3875.67  Not Accessible                22.2
+L3,N5,O2                          3883.32  Not Accessible                 7.4
+L3,N5,O3                          3883.93  Not Accessible                14.8
+L3,O1,O1                          3897.49  Not Accessible                 7.4
+L3,O1,O2                          3905.14  Not Accessible                 2.5
+L3,O1,O3                          3905.75  Not Accessible                 4.9
+L3,O2,O2                          3912.79  Not Accessible                 0.8
+L3,O2,O3                          3913.4   Not Accessible                 1.7
+L3,O3,O3                          3914.01  Not Accessible                 3.3
+M1,M2,N4                            50.11  1203.49                        7.4
+M1,M2,N5                            51.31  1202.29                       11.1
+M1,M2,O1                            73.13  1180.47                        3.7
+M1,M2,O2                            80.78  1172.82                        1.2
+M1,M2,O3                            81.39  1172.21                        2.5
+M1,M3,N2                            22.71  1230.89                        7.4
+M1,M3,N3                            31.08  1222.52                       14.8
+M1,M3,N4                            95.36  1158.24                       14.8
+M1,M3,N5                            96.57  1157.03                       22.2
+M1,M3,O1                           118.39  1135.21                        7.4
+M1,M3,O2                           126.04  1127.56                        2.5
+M1,M3,O3                           126.65  1126.95                        4.9
+M1,M4,N1                           192.83  1060.77                        7.4
+M1,M4,N2                           233.04  1020.56                        7.4
+M1,M4,N3                           241.41  1012.19                       14.8
+M1,M4,N4                           305.69  947.91                        14.8
+M1,M4,N5                           306.89  946.71                        22.2
+M1,M4,O1                           328.72  924.88                         7.4
+M1,M4,O2                           336.37  917.23                         2.5
+M1,M4,O3                           336.98  916.62                         4.9
+M1,M5,N1                           202.27  1051.33                       11.1
+M1,M5,N2                           242.48  1011.12                       11.1
+M1,M5,N3                           250.85  1002.75                       22.2
+M1,M5,N4                           315.13  938.47                        22.2
+M1,M5,N5                           316.34  937.26                        33.3
+M1,M5,O1                           338.16  915.44                        11.1
+M1,M5,O2                           345.81  907.79                         3.7
+M1,M5,O3                           346.42  907.18                         7.4
+M1,N1,N1                           567.97  685.63                         3.7
+M1,N1,N2                           608.18  645.42                         3.7
+M1,N1,N3                           616.55  637.05                         7.4
+M1,N1,N4                           680.83  572.77                         7.4
+M1,N1,N5                           682.03  571.57                        11.1
+M1,N1,O1                           703.86  549.74                         3.7
+M1,N1,O2                           711.5   542.10                         1.2
+M1,N1,O3                           712.12  541.48                         2.5
+M1,N2,N2                           648.39  605.21                         3.7
+M1,N2,N3                           656.76  596.84                         7.4
+M1,N2,N4                           721.04  532.56                         7.4
+M1,N2,N5                           722.24  531.36                        11.1
+M1,N2,O1                           744.06  509.54                         3.7
+M1,N2,O2                           751.71  501.89                         1.2
+M1,N2,O3                           752.32  501.28                         2.5
+M1,N3,N3                           665.13  588.47                        14.8
+M1,N3,N4                           729.41  524.19                        14.8
+M1,N3,N5                           730.61  522.99                        22.2
+M1,N3,O1                           752.43  501.17                         7.4
+M1,N3,O2                           760.08  493.52                         2.5
+M1,N3,O3                           760.69  492.91                         4.9
+M1,N4,N4                           793.69  459.91                        14.8
+M1,N4,N5                           794.89  458.71                        22.2
+M1,N4,O1                           816.72  436.88                         7.4
+M1,N4,O2                           824.37  429.23                         2.5
+M1,N4,O3                           824.98  428.62                         4.9
+M1,N5,N5                           796.1   457.50                        33.3
+M1,N5,O1                           817.92  435.68                        11.1
+M1,N5,O2                           825.57  428.03                         3.7
+M1,N5,O3                           826.18  427.42                         7.4
+M1,O1,O1                           839.74  413.86                         3.7
+M1,O1,O2                           847.39  406.21                         1.2
+M1,O1,O3                           848     405.60                         2.5
+M1,O2,O2                           855.04  398.56                         0.4
+M1,O2,O3                           855.65  397.95                         0.8
+M1,O3,O3                           856.26  397.34                         1.6
+M2,M3,O1                             2.7   1250.90                        7.4
+M2,M3,O2                            10.35  1243.25                        2.5
+M2,M3,O3                            10.96  1242.64                        4.9
+M2,M4,N1                            77.14  1176.46                        7.4
+M2,M4,N2                           117.35  1136.25                        7.4
+M2,M4,N3                           125.72  1127.88                       14.8
+M2,M4,N4                           190     1063.60                       14.8
+M2,M4,N5                           191.21  1062.39                       22.2
+M2,M4,O1                           213.03  1040.57                        7.4
+M2,M4,O2                           220.68  1032.92                        2.5
+M2,M4,O3                           221.29  1032.31                        4.9
+M2,M5,N1                            86.58  1167.02                       11.1
+M2,M5,N2                           126.8   1126.80                       11.1
+M2,M5,N3                           135.16  1118.44                       22.2
+M2,M5,N4                           199.44  1054.16                       22.2
+M2,M5,N5                           200.65  1052.95                       33.3
+M2,M5,O1                           222.47  1031.13                       11.1
+M2,M5,O2                           230.12  1023.48                        3.7
+M2,M5,O3                           230.73  1022.87                        7.4
+M2,N1,N1                           452.28  801.32                         3.7
+M2,N1,N2                           492.49  761.11                         3.7
+M2,N1,N3                           500.86  752.74                         7.4
+M2,N1,N4                           565.14  688.46                         7.4
+M2,N1,N5                           566.34  687.26                        11.1
+M2,N1,O1                           588.16  665.44                         3.7
+M2,N1,O2                           595.81  657.79                         1.2
+M2,N1,O3                           596.42  657.18                         2.5
+M2,N2,N2                           532.7   720.90                         3.7
+M2,N2,N3                           541.07  712.53                         7.4
+M2,N2,N4                           605.35  648.25                         7.4
+M2,N2,N5                           606.55  647.05                        11.1
+M2,N2,O1                           628.38  625.22                         3.7
+M2,N2,O2                           636.02  617.58                         1.2
+M2,N2,O3                           636.63  616.97                         2.5
+M2,N3,N3                           549.44  704.16                        14.8
+M2,N3,N4                           613.72  639.88                        14.8
+M2,N3,N5                           614.92  638.68                        22.2
+M2,N3,O1                           636.75  616.85                         7.4
+M2,N3,O2                           644.39  609.21                         2.5
+M2,N3,O3                           645     608.60                         4.9
+M2,N4,N4                           678     575.60                        14.8
+M2,N4,N5                           679.21  574.39                        22.2
+M2,N4,O1                           701.03  552.57                         7.4
+M2,N4,O2                           708.68  544.92                         2.5
+M2,N4,O3                           709.29  544.31                         4.9
+M2,N5,N5                           680.41  573.19                        33.3
+M2,N5,O1                           702.23  551.37                        11.1
+M2,N5,O2                           709.88  543.72                         3.7
+M2,N5,O3                           710.49  543.11                         7.4
+M2,O1,O1                           724.05  529.55                         3.7
+M2,O1,O2                           731.7   521.90                         1.2
+M2,O1,O3                           732.31  521.29                         2.5
+M2,O2,O2                           739.35  514.25                         0.4
+M2,O2,O3                           739.96  513.64                         0.8
+M2,O3,O3                           740.57  513.03                         1.6
+M3,M4,N1                            34.1   1219.50                       14.8
+M3,M4,N2                            74.31  1179.29                       14.8
+M3,M4,N3                            82.68  1170.92                       29.6
+M3,M4,N4                           146.96  1106.64                       29.6
+M3,M4,N5                           148.17  1105.43                       44.4
+M3,M4,O1                           169.99  1083.61                       14.8
+M3,M4,O2                           177.64  1075.96                        5
+M3,M4,O3                           178.25  1075.35                        9.9
+M3,M5,N1                            43.55  1210.05                       22.2
+M3,M5,N2                            83.76  1169.84                       22.2
+M3,M5,N3                            92.13  1161.47                       44.4
+M3,M5,N4                           156.41  1097.19                       44.4
+M3,M5,N5                           157.61  1095.99                       66.7
+M3,M5,O1                           179.43  1074.17                       22.2
+M3,M5,O2                           187.08  1066.52                        7.4
+M3,M5,O3                           187.69  1065.91                       14.8
+M3,N1,N1                           409.24  844.36                         7.4
+M3,N1,N2                           449.45  804.15                         7.4
+M3,N1,N3                           457.82  795.78                        14.8
+M3,N1,N4                           522.1   731.50                        14.8
+M3,N1,N5                           523.3   730.30                        22.2
+M3,N1,O1                           545.12  708.48                         7.4
+M3,N1,O2                           552.77  700.83                         2.5
+M3,N1,O3                           553.38  700.22                         4.9
+M3,N2,N2                           489.66  763.94                         7.4
+M3,N2,N3                           498.03  755.57                        14.8
+M3,N2,N4                           562.31  691.29                        14.8
+M3,N2,N5                           563.51  690.09                        22.2
+M3,N2,O1                           585.34  668.26                         7.4
+M3,N2,O2                           592.99  660.61                         2.5
+M3,N2,O3                           593.6   660.00                         4.9
+M3,N3,N3                           506.4   747.20                        29.6
+M3,N3,N4                           570.68  682.92                        29.6
+M3,N3,N5                           571.88  681.72                        44.4
+M3,N3,O1                           593.71  659.89                        14.8
+M3,N3,O2                           601.36  652.24                         5
+M3,N3,O3                           601.97  651.63                         9.9
+M3,N4,N4                           634.96  618.64                        29.6
+M3,N4,N5                           636.17  617.43                        44.4
+M3,N4,O1                           657.99  595.61                        14.8
+M3,N4,O2                           665.64  587.96                         5
+M3,N4,O3                           666.25  587.35                         9.9
+M3,N5,N5                           637.37  616.23                        66.7
+M3,N5,O1                           659.19  594.41                        22.2
+M3,N5,O2                           666.84  586.76                         7.4
+M3,N5,O3                           667.45  586.15                        14.8
+M3,O1,O1                           681.01  572.59                         7.4
+M3,O1,O2                           688.66  564.94                         2.5
+M3,O1,O3                           689.27  564.33                         4.9
+M3,O2,O2                           696.31  557.29                         0.8
+M3,O2,O3                           696.92  556.68                         1.7
+M3,O3,O3                           697.53  556.07                         3.3
+M4,N1,N1                           202.49  1051.11                        7.4
+M4,N1,N2                           242.7   1010.90                        7.4
+M4,N1,N3                           251.07  1002.53                       14.8
+M4,N1,N4                           315.35  938.25                        14.8
+M4,N1,N5                           316.55  937.05                        22.2
+M4,N1,O1                           338.38  915.22                         7.4
+M4,N1,O2                           346.02  907.58                         2.5
+M4,N1,O3                           346.63  906.97                         4.9
+M4,N2,N2                           282.91  970.69                         7.4
+M4,N2,N3                           291.28  962.32                        14.8
+M4,N2,N4                           355.56  898.04                        14.8
+M4,N2,N5                           356.76  896.84                        22.2
+M4,N2,O1                           378.59  875.01                         7.4
+M4,N2,O2                           386.24  867.36                         2.5
+M4,N2,O3                           386.85  866.75                         4.9
+M4,N3,N3                           299.65  953.95                        29.6
+M4,N3,N4                           363.93  889.67                        29.6
+M4,N3,N5                           365.13  888.47                        44.4
+M4,N3,O1                           386.96  866.64                        14.8
+M4,N3,O2                           394.61  858.99                         5
+M4,N3,O3                           395.22  858.38                         9.9
+M4,N4,N4                           428.21  825.39                        29.6
+M4,N4,N5                           429.41  824.19                        44.4
+M4,N4,O1                           451.24  802.36                        14.8
+M4,N4,O2                           458.88  794.72                         5
+M4,N4,O3                           459.5   794.10                         9.9
+M4,N5,N5                           430.62  822.98                        66.7
+M4,N5,O1                           452.44  801.16                        22.2
+M4,N5,O2                           460.09  793.51                         7.4
+M4,N5,O3                           460.7   792.90                        14.8
+M4,O1,O1                           474.26  779.34                         7.4
+M4,O1,O2                           481.91  771.69                         2.5
+M4,O1,O3                           482.52  771.08                         4.9
+M4,O2,O2                           489.56  764.04                         0.8
+M4,O2,O3                           490.17  763.43                         1.7
+M4,O3,O3                           490.78  762.82                         3.3
+M5,N1,N1                           193.54  1060.06                       11.1
+M5,N1,N2                           233.75  1019.85                       11.1
+M5,N1,N3                           242.12  1011.48                       22.2
+M5,N1,N4                           306.4   947.20                        22.2
+M5,N1,N5                           307.6   946.00                        33.3
+M5,N1,O1                           329.42  924.18                        11.1
+M5,N1,O2                           337.07  916.53                         3.7
+M5,N1,O3                           337.69  915.91                         7.4
+M5,N2,N2                           273.96  979.64                        11.1
+M5,N2,N3                           282.33  971.27                        22.2
+M5,N2,N4                           346.61  906.99                        22.2
+M5,N2,N5                           347.81  905.79                        33.3
+M5,N2,O1                           369.63  883.97                        11.1
+M5,N2,O2                           377.29  876.31                         3.7
+M5,N2,O3                           377.9   875.70                         7.4
+M5,N3,N3                           290.7   962.90                        44.4
+M5,N3,N4                           354.98  898.62                        44.4
+M5,N3,N5                           356.18  897.42                        66.7
+M5,N3,O1                           378     875.60                        22.2
+M5,N3,O2                           385.65  867.95                         7.4
+M5,N3,O3                           386.26  867.34                        14.8
+M5,N4,N4                           419.26  834.34                        44.4
+M5,N4,N5                           420.46  833.14                        66.7
+M5,N4,O1                           442.28  811.32                        22.2
+M5,N4,O2                           449.94  803.66                         7.4
+M5,N4,O3                           450.55  803.05                        14.8
+M5,N5,N5                           421.67  831.93                       100
+M5,N5,O1                           443.49  810.11                        33.3
+M5,N5,O2                           451.14  802.46                        11.2
+M5,N5,O3                           451.75  801.85                        22.2
+M5,O1,O1                           465.31  788.29                        11.1
+M5,O1,O2                           472.96  780.64                         3.7
+M5,O1,O3                           473.57  780.03                         7.4
+M5,O2,O2                           480.61  772.99                         1.2
+M5,O2,O3                           481.22  772.38                         2.5
+M5,O3,O3                           481.83  771.77                         4.9
+N1,N2,O1                            17.83  1235.77                        3.7
+N1,N2,O2                            25.48  1228.12                        1.2
+N1,N2,O3                            26.09  1227.51                        2.5
+N1,N3,N4                             3.17  1250.43                       14.8
+N1,N3,N5                             4.37  1249.23                       22.2
+N1,N3,O1                            26.19  1227.41                        7.4
+N1,N3,O2                            33.84  1219.76                        2.5
+N1,N3,O3                            34.45  1219.15                        4.9
+N1,N4,N4                            67.45  1186.15                       14.8
+N1,N4,N5                            68.66  1184.94                       22.2
+N1,N4,O1                            90.47  1163.13                        7.4
+N1,N4,O2                            98.12  1155.48                        2.5
+N1,N4,O3                            98.73  1154.87                        4.9
+N1,N5,N5                            69.86  1183.74                       33.3
+N1,N5,O1                            91.68  1161.92                       11.1
+N1,N5,O2                            99.33  1154.27                        3.7
+N1,N5,O3                            99.94  1153.66                        7.4
+N1,O1,O1                           113.5   1140.10                        3.7
+N1,O1,O2                           121.15  1132.45                        1.2
+N1,O1,O3                           121.76  1131.84                        2.5
+N1,O2,O2                           128.8   1124.80                        0.4
+N1,O2,O3                           129.41  1124.19                        0.8
+N1,O3,O3                           130.02  1123.58                        1.6
+N2,N4,N4                            28.28  1225.32                       14.8
+N2,N4,N5                            29.49  1224.11                       22.2
+N2,N4,O1                            51.31  1202.29                        7.4
+N2,N4,O2                            58.96  1194.64                        2.5
+N2,N4,O3                            59.57  1194.03                        4.9
+N2,N5,N5                            30.69  1222.91                       33.3
+N2,N5,O1                            52.51  1201.09                       11.1
+N2,N5,O2                            60.16  1193.44                        3.7
+N2,N5,O3                            60.77  1192.83                        7.4
+N2,O1,O1                            74.33  1179.27                        3.7
+N2,O1,O2                            81.98  1171.62                        1.2
+N2,O1,O3                            82.59  1171.01                        2.5
+N2,O2,O2                            89.63  1163.97                        0.4
+N2,O2,O3                            90.24  1163.36                        0.8
+N2,O3,O3                            90.85  1162.75                        1.6
+N3,N4,N4                            20.44  1233.16                       29.6
+N3,N4,N5                            21.64  1231.96                       44.4
+N3,N4,O1                            43.46  1210.14                       14.8
+N3,N4,O2                            51.11  1202.49                        5
+N3,N4,O3                            51.72  1201.88                        9.9
+N3,N5,N5                            22.85  1230.75                       66.7
+N3,N5,O1                            44.67  1208.93                       22.2
+N3,N5,O2                            52.32  1201.28                        7.4
+N3,N5,O3                            52.93  1200.67                       14.8
+N3,O1,O1                            66.49  1187.11                        7.4
+N3,O1,O2                            74.14  1179.46                        2.5
+N3,O1,O3                            74.75  1178.85                        4.9
+N3,O2,O2                            81.79  1171.81                        0.8
+N3,O2,O3                            82.4   1171.20                        1.7
+N3,O3,O3                            83.01  1170.59                        3.3
+N4,O1,O1                             4.18  1249.42                        7.4
+N4,O1,O2                            11.83  1241.77                        2.5
+N4,O1,O3                            12.44  1241.16                        4.9
+N4,O2,O2                            19.48  1234.12                        0.8
+N4,O2,O3                            20.09  1233.51                        1.7
+N4,O3,O3                            20.7   1232.90                        3.3
+N5,O1,O1                             3.08  1250.52                       11.1
+N5,O1,O2                            10.73  1242.87                        3.7
+N5,O1,O3                            11.34  1242.26                        7.4
+N5,O2,O2                            18.38  1235.22                        1.2
+N5,O2,O3                            18.99  1234.61                        2.5
+N5,O3,O3                            19.6   1234.00                        4.9

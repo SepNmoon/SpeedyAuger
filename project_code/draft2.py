@@ -359,7 +359,40 @@ def element_transition_window(index):
     clearButton=tkinter.Button(augerWindow,text='Clear',command=lambda: _click_clear_convert_button(inputConvertEntry,selectConvertPhotonButton,transitionTable,position))
     clearButton.place(relx=1065/1200,rely=70/680)
     
-    exportConvertButton=tkinter.Button(augerWindow,text='Export',bg='LightBlue')
+    
+    def _click_export_convert_button(augerWindow,transitionTable,position,atomName):
+        reminderBox=tkinter.messagebox.askquestion('Confirmation','Do you want to continue?',parent=augerWindow)
+        if reminderBox=='yes':
+            filePath=askdirectory(parent=augerWindow)
+            if filePath!='':
+                tableHeader = ['Auger Transition', 'Auger Energies (KE)', 'Auger Energies (BE)','Norm Mult']
+                tableData=[]
+                for p in range(position):
+                    temp=[]
+                    temp.append(transitionTable.set(p+1,'#1'))
+                    temp.append(transitionTable.set(p+1,'#2'))
+                    temp.append(transitionTable.set(p+1,'#3'))
+                    temp.append(transitionTable.set(p+1,'#4'))
+                    tableData.append(temp)
+                for p in range(position):
+                    try:
+                        selectValue=float(transitionTable.set(p+1,'#2'))+float(transitionTable.set(p+1,'#3'))
+                    except:
+                        pass
+                    else:                        
+                        break
+                selectValue=Decimal(selectValue).quantize(Decimal('0.00'))
+                selectValue=str(selectValue)
+                filePath=filePath+'/'+'auger_transition_'+atomName+'_'+selectValue+'.txt' 
+                with open(filePath,"w") as f:
+                    f.write(tabulate(tableData, headers=tableHeader))
+            else:
+                pass
+        else:
+            pass
+        
+        
+    exportConvertButton=tkinter.Button(augerWindow,text='Export',bg='LightBlue',command=lambda: _click_export_convert_button(augerWindow,transitionTable,position,atomName))
     exportConvertButton.place(relx=1140/1200,rely=70/680)
     
     
