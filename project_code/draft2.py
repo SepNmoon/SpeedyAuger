@@ -1045,6 +1045,7 @@ def element_transition_window(index):
     def _click_export_convert_button(augerWindow,transitionTable,position,atomName):
         reminderBox=tkinter.messagebox.askquestion('Confirmation','Do you want to continue?',parent=augerWindow)
         if reminderBox=='yes':
+            selectValue='None'
             filePath=askdirectory(parent=augerWindow)
             if filePath!='':
                 tableHeader = ['Auger Transition', 'Auger Energies (KE)', 'Auger Energies (BE)','Norm Mult']
@@ -1063,11 +1064,16 @@ def element_transition_window(index):
                         pass
                     else:                        
                         break
-                selectValue=Decimal(selectValue).quantize(Decimal('0.00'))
-                selectValue=str(selectValue)
-                filePath=filePath+'/'+'auger_transition_'+atomName+'_'+selectValue+'.txt' 
-                with open(filePath,"w") as f:
-                    f.write(tabulate(tableData, headers=tableHeader))
+                if selectValue!='None':
+                    selectValue=Decimal(selectValue).quantize(Decimal('0.00'))
+                    selectValue=str(selectValue)
+                    filePath=filePath+'/'+'auger_transition_'+atomName+'_'+selectValue+'.txt' 
+                    with open(filePath,"w") as f:
+                        f.write(tabulate(tableData, headers=tableHeader))
+                else:
+                    filePath=filePath+'/'+'auger_transition_'+atomName+'_'+selectValue+'.txt' 
+                    with open(filePath,"w") as f:
+                        f.write(tabulate(tableData, headers=tableHeader))
             else:
                 pass
         else:
@@ -1118,6 +1124,21 @@ def element_transition_window(index):
 #-------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------
 #All about root window
+
+
+#plot dataset
+def click_plot_data_button(importFilePath,root,showPlotPathText,selectPlotPhotonButton,plotXV):
+    if showPlotPathText.get()=='':
+        tkinter.messagebox.showinfo(title='ERROR',message='Please import file',parent=root)
+    elif selectPlotPhotonButton.get()=='':
+        tkinter.messagebox.showinfo(title='ERROR',message='Please select photon energy',parent=root)
+    elif len(uniqueArray2)==0:
+        tkinter.messagebox.showinfo(title='ERROR',message='Please select element',parent=root)
+    elif plotXV.get()==0:
+        tkinter.messagebox.showinfo(title='ERROR',message='Please select range of x axis',parent=root)
+    else:
+        
+
 
 #root window
 def root_window():
@@ -1439,7 +1460,7 @@ def root_window():
     selectPlotReferenceButton.place(relx=400/1000,rely=125/680)  
     selectPlotDataButton=tkinter.Radiobutton(root,text='Range of Dataset',variable=plotXV,value=2)
     selectPlotDataButton.place(relx=400/1000,rely=155/680)
-    plotButton=tkinter.Button(root,text='Plot',bg='Gold',width=5)
+    plotButton=tkinter.Button(root,text='Plot',bg='Gold',width=5,command=lambda: click_plot_data_button(importFilePath,root,showPlotPathText,selectPlotPhotonButton,plotXV))
     plotButton.place(relx=565/1000,rely=100/680)
     clearPathButton=tkinter.Button(root,text='Clear',width=5,command=lambda: _click_plot_clear_button(showPlotPathText,selectPlotPhotonButton,plotXV))
     clearPathButton.place(relx=565/1000,rely=155/680)
