@@ -1,5 +1,0 @@
-Atom    Auger Transition      Auger Energy
-------  ------------------  --------------
-W       M4,N2,N5                   1122.44
-W       M5,N1,O1                   1127.58
-W       M5,N3,N5                   1129.15

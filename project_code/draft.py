@@ -733,16 +733,24 @@ def clickExportButtonAT(auger_window,transition_table,atom_name,position):
             file_path=askdirectory(parent=auger_window)
             if file_path!='':  
  
-                table_header = ['Auger Transition', 'Auger Energies (KE)', 'Auger Energies (BE)']
+                table_header = ['Auger Transition', 'Auger Energies (KE)', 'Auger Energies (BE)','Norm Mult']
                 table_data=[]
                 for p in range(position):
                     temp=[]
                     temp.append(transition_table.set(p+1,'#1'))
                     temp.append(transition_table.set(p+1,'#2'))
                     temp.append(transition_table.set(p+1,'#3'))
+                    temp.append(transition_table.set(p+1,'#4'))
                     table_data.append(temp)
 
-                select_value=float(transition_table.set(1,'#2'))+float(transition_table.set(1,'#3'))
+                for p in range(position):
+                    try:
+                        select_value=float(transition_table.set(p+1,'#2'))+float(transition_table.set(p+1,'#3'))
+                    except:
+                        pass
+                    else:                        
+                        break   
+                #select_value=float(transition_table.set(1,'#2'))+float(transition_table.set(1,'#3'))
                 select_value=Decimal(select_value).quantize(Decimal('0.00'))
                 select_value=str(select_value)
                 file_path=file_path+'/'+'auger_transition_'+atom_name+'_'+select_value+'.txt'              
@@ -1014,17 +1022,17 @@ def clickPlotForElement(v,selectPlotButton,inputEntry2,auger_window,transition_e
 
 def selectPlot(auger_window,v,selectPlotButton,orLabel2,inputEntry2,excitationEntry,excitationLabel):   
     if v.get()==1:
-        selectPlotButton.place(x=140,y=10)
-        orLabel2.place(x=250,y=10)
-        inputEntry2.place(x=275,y=10)  
+        selectPlotButton.place(relx=140/1200,rely=10/680)
+        orLabel2.place(relx=250/1200,rely=10/680)
+        inputEntry2.place(relx=275/1200,rely=10/680)  
         excitationEntry.place_forget()
         excitationLabel.place_forget()
     else:
         selectPlotButton.place_forget()
         orLabel2.place_forget()
         inputEntry2.place_forget()
-        excitationEntry.place(x=150,y=35)
-        excitationLabel.place(x=230,y=35)
+        excitationEntry.place(relx=150/1200,rely=35/680)
+        excitationLabel.place(relx=230/1200,rely=35/680)
         
     
 #AugerGUI
@@ -1072,7 +1080,7 @@ def augerTransitionGUI(index):
     for item in nonNone_value:
         core_table.insert('',index,values=(item,nonNone_orbital[index],nonNone_value[item]))
         index+=1
-    core_table.place(x=10,y=60)
+    core_table.place(relx=10/1200,rely=60/680)
     
 
     #calculate energies and norm mult for transitions
@@ -1099,22 +1107,22 @@ def augerTransitionGUI(index):
     for t in transition_energies:
         transition_table.insert('',position,iid=position+1,values=(t,transition_energies[t],'',norm_array[position]))
         position+=1
-    transition_table.place(x=550,y=120)
+    transition_table.place(relx=550/1200,rely=120/680)
     ybar=Scrollbar(transition_table,orient='vertical', command=transition_table.yview,bg='Gray')
     transition_table.configure(yscrollcommand=ybar.set)
     ybar.place(relx=0.95, rely=0.02, relwidth=0.035, relheight=0.958)
     
     
     citationLabel1=tkinter.Label(auger_window,text="*W.A.Coghlan, R.E.Clausing, ")
-    citationLabel1.place(x=550,y=5)
+    citationLabel1.place(relx=550/1200,rely=5/680)
     citationLabel2=tkinter.Label(auger_window,text="Auger catalog calculated transition energies listed by energy and element,",font=('Times',10,'italic'))
-    citationLabel2.place(x=713,y=6)
+    citationLabel2.place(relx=713/1200,rely=6/680)
     citationLabel3=tkinter.Label(auger_window,text="Atomic Data and Nuclear Data Tables, Volume 5, Issue 4, 1973, Pages 317-469, ISSN 0092-640X,")
-    citationLabel3.place(x=550,y=25)
+    citationLabel3.place(relx=550/1200,rely=25/680)
     
    
     linkLabel1 = tkinter.Label(auger_window, text='https://doi.org/10.1016/S0092-640X(73)80005-1', fg='blue',font=('Arial', 10,'italic','underline'))
-    linkLabel1.place(x=550, y=46)
+    linkLabel1.place(relx=550/1200, rely=46/680)
  
 
     def open_url(event):
@@ -1124,31 +1132,31 @@ def augerTransitionGUI(index):
         
     #Add convert function
     selectButton=ttk.Combobox(auger_window)    
-    selectButton.place(x=550,y=70)
+    selectButton.place(relx=550/1200,rely=70/680)
     selectButton['value']=('Mg 1253.6(eV)','Al 1486.7(eV)','Ag 2984.3(eV)','Cr 5414.9(eV)','Ga 9251.74(eV)','No selection')
     selectButton.current(5)
     
     orLabel=tkinter.Label(auger_window,text='or')
-    orLabel.place(x=750,y=70)
+    orLabel.place(relx=750/1200,rely=70/680)
     
     inputEntry=tkinter.Entry(auger_window)
-    inputEntry.place(x=800,y=70)
+    inputEntry.place(relx=800/1200,rely=70/680)
     
     unitLabel=tkinter.Label(auger_window,text='(eV)')
-    unitLabel.place(x=950,y=70)
+    unitLabel.place(relx=950/1200,rely=70/680)
     
     lastLabel=tkinter.Label(auger_window,text='Values in table calculated for: %s'%lastChoice)
-    lastLabel.place(x=930,y=97)
+    lastLabel.place(relx=930/1200,rely=97/680)
     
     convertButton=tkinter.Button(auger_window,text='Convert',bg='Orange',command=lambda: clickConvertButtonAT(selectButton,transition_table,position,inputEntry,auger_window,lastLabel))
-    convertButton.place(x=1000,y=70)
+    convertButton.place(relx=1000/1200,rely=70/680)
     
     clearButton=tkinter.Button(auger_window,text='Clear',command=lambda: clickClearButtonAT(inputEntry,selectButton,transition_table,position))
-    clearButton.place(x=1065,y=70)
+    clearButton.place(relx=1065/1200,rely=70/680)
     
     
     exportButton=tkinter.Button(auger_window,text='Export',bg='LightBlue',command=lambda: clickExportButtonAT(auger_window,transition_table,atom_name,position))
-    exportButton.place(x=1140,y=70)
+    exportButton.place(relx=1140/1200,rely=70/680)
     
     selectPlotButton=ttk.Combobox(auger_window,width=12) 
     selectPlotButton['value']=('Mg 1253.6(eV)','Al 1486.7(eV)','Ag 2984.3(eV)','Cr 5414.9(eV)','Ga 9251.74(eV)','No selection')
@@ -1162,11 +1170,11 @@ def augerTransitionGUI(index):
     
     v=tkinter.IntVar()    
     plotBindingButton=tkinter.Radiobutton(auger_window,text='Binding Energies',value=1,variable=v,command=lambda: selectPlot(auger_window,v,selectPlotButton,orLabel2,inputEntry2,excitationEntry,excitationLabel))
-    plotBindingButton.place(x=5,y=10)
+    plotBindingButton.place(relx=5/1200,rely=10/680)
     plotKineticButton=tkinter.Radiobutton(auger_window,text='Kinetic Energies',value=2,variable=v,command=lambda: selectPlot(auger_window,v,selectPlotButton,orLabel2,inputEntry2,excitationEntry,excitationLabel))
-    plotKineticButton.place(x=5,y=30)
+    plotKineticButton.place(relx=5/1200,rely=30/680)
     plotButton=tkinter.Button(auger_window,text='Plot',bg='Pink',command=lambda: clickPlotForElement(v,selectPlotButton,inputEntry2,auger_window,transition_energies,norm_array,atom_number,nonNone_value,excitationEntry))
-    plotButton.place(x=360,y=10)
+    plotButton.place(relx=360/1200,rely=10/680)
     
 
     auger_window.mainloop()
@@ -1452,23 +1460,23 @@ def augerRangeGUI(selectBE,selectKE,fromEntry,toEntry,selectValue,fromAll,fromSo
         ybar.place(relx=0.95, rely=0.02, relwidth=0.035, relheight=0.958)
     
         descendingButton=tkinter.Button(range_window,text='Descending order (energies)',bg='LightPink',command=lambda: clickSortButtonRG(transition_table,position,descending=True,auger_range=True,core_state=False))
-        descendingButton.place(x=900,y=50)
+        descendingButton.place(relx=900/1200,rely=50/680)
         ascendingButton=tkinter.Button(range_window,text='Ascending order (energies)',bg='LightBlue',command=lambda: clickSortButtonRG(transition_table,position,descending=False,auger_range=True,core_state=False))
-        ascendingButton.place(x=900,y=100)
+        ascendingButton.place(relx=900/1200,rely=100/680)
         numberButton=tkinter.Button(range_window,text='Sort by atomic number',bg='LightGreen',command=lambda: clickNumberButtonRG(all_transitions,transition_table,position,auger_range=True,core_state=False))
-        numberButton.place(x=900,y=150)
+        numberButton.place(relx=900/1200,rely=150/680)
     
         exportButton=tkinter.Button(range_window,text='Export',bg='Yellow',command=lambda: clickExportButtonRG(range_window,transition_table,position,rangeMin,rangeMax,selectKE,selectBE,selectValue,fromAll,fromSome,correctAtom,auger_range=True,core_state=False))
-        exportButton.place(x=900,y=300)
+        exportButton.place(relx=900/1200,rely=300/680)
         
         citationLabel1=tkinter.Label(range_window,text='*S.T.Perkins, D.E.Cullen, et al.,')
-        citationLabel1.place(x=150,y=610)   
+        citationLabel1.place(relx=150/1200,rely=610/680)   
         citationLabel2=tkinter.Label(range_window,text='Tables and Graphs of Atomic Subshell and Relaxation Data Derived from the LLNL Evaluated Atomic Data Library (EADL), Z = 1--100, ',font=('Times',10,'italic'))
-        citationLabel2.place(x=325,y=611)
+        citationLabel2.place(relx=325/1200,rely=611/680)
         citationLabel3=tkinter.Label(range_window,text='Lawrence Livermore National Laboratory, UCRL-50400, Vol. 30,')
-        citationLabel3.place(x=150,y=630)   
+        citationLabel3.place(relx=150/1200,rely=630/680)   
         linkLabel1 = tkinter.Label(range_window, text='https://www.osti.gov/biblio/10121422-tables-graphs-atomic-subshell-relaxation-data-derived-from-llnl-evaluated-atomic-data-library-eadl', fg='blue',font=('Arial', 10,'italic','underline'))
-        linkLabel1.place(x=150, y=650)
+        linkLabel1.place(relx=150/1200, rely=650/680)
         def open_url(event):
             webbrowser.open("https://www.osti.gov/biblio/10121422-tables-graphs-atomic-subshell-relaxation-data-derived-from-llnl-evaluated-atomic-data-library-eadl", new=0)
        
@@ -1549,23 +1557,23 @@ def coreStateGUI(fromEntry,toEntry,fromAll,fromSome):
         ybar.place(relx=0.95, rely=0.02, relwidth=0.035, relheight=0.958)    
         
         descendingButton=tkinter.Button(range_window,text='Descending order (energies)',bg='LightPink',command=lambda: clickSortButtonRG(binding_table,position,descending=True,auger_range=False,core_state=True))
-        descendingButton.place(x=900,y=50)
+        descendingButton.place(relx=900/1200,rely=50/680)
         ascendingButton=tkinter.Button(range_window,text='Ascending order (energies)',bg='LightBlue',command=lambda: clickSortButtonRG(binding_table,position,descending=False,auger_range=False,core_state=True))
-        ascendingButton.place(x=900,y=100)
+        ascendingButton.place(relx=900/1200,rely=100/680)
         numberButton=tkinter.Button(range_window,text='Sort by atomic number',bg='LightGreen',command=lambda: clickNumberButtonRG(correct_core,binding_table,position,auger_range=False,core_state=True))
-        numberButton.place(x=900,y=150)
+        numberButton.place(relx=900/1200,rely=150/680)
     
         exportButton=tkinter.Button(range_window,text='Export',bg='Yellow',command=lambda: clickExportButtonRG(range_window,binding_table,position,rangeMin,rangeMax,None,None,None,fromAll,fromSome,None,auger_range=False,core_state=True))
-        exportButton.place(x=900,y=300)
+        exportButton.place(relx=900/1200,rely=300/680)
         
         citationLabel1=tkinter.Label(range_window,text='*S.T.Perkins, D.E.Cullen, et al.,')
-        citationLabel1.place(x=150,y=610)   
+        citationLabel1.place(relx=150/1200,rely=610/680)   
         citationLabel2=tkinter.Label(range_window,text='Tables and Graphs of Atomic Subshell and Relaxation Data Derived from the LLNL Evaluated Atomic Data Library (EADL), Z = 1--100, ',font=('Times',10,'italic'))
-        citationLabel2.place(x=325,y=611)
+        citationLabel2.place(relx=325/1200,rely=611/680)
         citationLabel3=tkinter.Label(range_window,text='Lawrence Livermore National Laboratory, UCRL-50400, Vol. 30,')
-        citationLabel3.place(x=150,y=630)   
+        citationLabel3.place(relx=150/1200,rely=630/680)   
         linkLabel1 = tkinter.Label(range_window, text='https://www.osti.gov/biblio/10121422-tables-graphs-atomic-subshell-relaxation-data-derived-from-llnl-evaluated-atomic-data-library-eadl', fg='blue',font=('Arial', 10,'italic','underline'))
-        linkLabel1.place(x=150, y=650)
+        linkLabel1.place(relx=150/1200, rely=650/680)
         def open_url(event):
             webbrowser.open("https://www.osti.gov/biblio/10121422-tables-graphs-atomic-subshell-relaxation-data-derived-from-llnl-evaluated-atomic-data-library-eadl", new=0)
        
@@ -2081,7 +2089,7 @@ def clickPlotButtonRT(import_file_path,root,showPathText,selectPhotonButton,v_pl
             plt.vlines(core_x_values,core_y_min,core_y_height,color=plt_color[color_index])
             index=0
             for shell in norm_shell_cross:
-                plt.text(core_x_values[index],core_y_height[index],number_name[number]+''+shell)
+                plt.text(core_x_values[index],core_y_height[index],number_name[number]+''+shell,rotation=90)
                 index+=1
             
             
@@ -2114,7 +2122,7 @@ def clickPlotButtonRT(import_file_path,root,showPathText,selectPhotonButton,v_pl
 
             index=0
             for t in auger_shell_text:
-                plt.text(auger_x_values[index],auger_y_height[index],number_name[number]+t)
+                plt.text(auger_x_values[index],auger_y_height[index],number_name[number]+t,ratation=90)
                 index+=1
             color_index+=1
             
