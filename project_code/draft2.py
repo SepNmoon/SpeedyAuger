@@ -1255,7 +1255,57 @@ def click_plot_data_button(importFilePath,root,showPlotPathText,selectPlotPhoton
         plotWindow.mainloop()
             
             
+def click_search_button(root, searchFromEntry,searchToEntry,selectTranCoreV,selectAtomV,selectEnergyV,selectSearchPhotonButton,searchInputEntry):
+    fromValue=searchFromEntry.get()
+    toValue=searchToEntry.get()
+    continueSearch=False
+    if fromValue=='' or toValue=='':
+        tkinter.messagebox.showinfo(title='ERROR',message='Please input values',parent=root)
+    else:
+        try:
+            fromValue=float(fromValue)
+            toValue=float(toValue)
+        except:
+            tkinter.messagebox.showinfo(title='ERROR',message='Please input valid values',parent=root)
+        else:
+            if selectTranCoreV.get()==0:
+                tkinter.messagebox.showinfo(title='ERROR',message='Please select Auger Transitions or core state energies',parent=root)
+            elif selectAtomV.get()==0:
+                tkinter.messagebox.showinfo(title='ERROR',message='Please select from all elements or from some elements',parent=root)
+            elif selectAtomV.get()==2 and len(uniqueArray)==0:
+                tkinter.messagebox.showinfo(title='ERROR',message='Please select elements',parent=root)
+            elif selectEnergyV.get()==0:
+                tkinter.messagebox.showinfo(title='ERROR',message='Please select by KE or BE',parent=root)
+            elif (selectSearchPhotonButton.get()=='No selection' and searchInputEntry.get()=='') or (selectSearchPhotonButton.get()!='No selection' and searchInputEntry.get()!=''):
+                tkinter.messagebox.showinfo(title='ERROR',message='Please input or select photon energy',parent=root)
+            elif searchInputEntry.get()!='':
+                try:
+                    selectPhoton=float(searchInputEntry.get())
+                except:
+                    tkinter.messagebox.showinfo(title='ERROR',message='Please input valid values',parent=root)
+                else:
+                    continueSearch=True
+            elif selectSearchPhotonButton.get()!='No selection':
+                if selectSearchPhotonButton.get()=='Mg 1253.6(eV)':                              
+                    selectPhoton=1253.6   
+                elif selectSearchPhotonButton.get()=='Al 1486.7(eV)':
+                    selectPhoton=1486.7  
+                elif selectSearchPhotonButton.get()=='Ag 2984.3(eV)':
+                    selectPhoton=2984.3  
+                elif selectSearchPhotonButton.get()=='Cr 5414.9(eV)':
+                    selectPhoton=5414.9 
+                elif selectSearchPhotonButton.get()=='Ga 9251.74(eV)':
+                    selectPhoton=9251.74 
+                continueSearch=True
+    
 
+        
+        
+
+                
+
+            
+        
 
 
 #root window
@@ -1323,12 +1373,41 @@ def root_window():
     searchUnitLabel=tkinter.Label(root,text='(eV)')
     searchUnitLabel.place(relx=500/1000,rely=10/680)
     
+    
+    
+    selectSearchPhotonButton=ttk.Combobox(root,width=11)
+    selectSearchPhotonButton['value']=('Mg 1253.6(eV)','Al 1486.7(eV)','Ag 2984.3(eV)','Cr 5414.9(eV)','Ga 9251.74(eV)','No selection')
+    selectSearchPhotonButton.current(5)
+    searchOrLabel=tkinter.Label(root,text='or')
+    searchInputEntry=tkinter.Entry(root,width=10)
+    
+    
     selectTranCoreV=tkinter.IntVar()
-    transitionRadiobutton=tkinter.Radiobutton(root,text='Auger Transitions',value=1,variable=selectTranCoreV)
+    selectEnergyV=tkinter.IntVar()
+    def _click_tran_core_radiobutton(selectTranCoreV,selectEnergyV,selectSearchPhotonButton,searchOrLabel,searchInputEntry):
+        if selectTranCoreV.get()==3:
+            selectSearchPhotonButton.place(relx=490/1000,rely=48.5/680)
+            searchOrLabel.place(relx=600/1000,rely=48/680)
+            searchInputEntry.place(relx=620/1000,rely=48.5/680)
+        elif selectTranCoreV.get()==1 and selectEnergyV.get()==2:
+            selectSearchPhotonButton.place(relx=490/1000,rely=48.5/680)
+            searchOrLabel.place(relx=600/1000,rely=48/680)
+            searchInputEntry.place(relx=620/1000,rely=48.5/680)
+        elif selectTranCoreV.get()==2 and selectEnergyV.get()==1:
+            selectSearchPhotonButton.place(relx=490/1000,rely=48.5/680)
+            searchOrLabel.place(relx=600/1000,rely=48/680)
+            searchInputEntry.place(relx=620/1000,rely=48.5/680)
+        else:
+            selectSearchPhotonButton.place_forget()
+            searchOrLabel.place_forget()
+            searchInputEntry.place_forget()
+    
+    
+    transitionRadiobutton=tkinter.Radiobutton(root,text='Auger Transitions',value=1,variable=selectTranCoreV,command=lambda: _click_tran_core_radiobutton(selectTranCoreV,selectEnergyV,selectSearchPhotonButton,searchOrLabel,searchInputEntry))
     transitionRadiobutton.place(relx=150/1000,rely=30.5/680)
-    coreRadiobutton=tkinter.Radiobutton(root,text='Core State Energies',value=2,variable=selectTranCoreV)
+    coreRadiobutton=tkinter.Radiobutton(root,text='Core State Energies',value=2,variable=selectTranCoreV,command=lambda: _click_tran_core_radiobutton(selectTranCoreV,selectEnergyV,selectSearchPhotonButton,searchOrLabel,searchInputEntry))
     coreRadiobutton.place(relx=150/1000,rely=52/680)
-    bothRadiobutton=tkinter.Radiobutton(root,text='Both',value=3,variable=selectTranCoreV)
+    bothRadiobutton=tkinter.Radiobutton(root,text='Both',value=3,variable=selectTranCoreV,command=lambda: _click_tran_core_radiobutton(selectTranCoreV,selectEnergyV,selectSearchPhotonButton,searchOrLabel,searchInputEntry))
     bothRadiobutton.place(relx=150/1000,rely=73.5/680)
     
     sep1 = ttk.Separator(root, orient='vertical')
@@ -1476,9 +1555,6 @@ def root_window():
         clearButton.place(x=1100,y=250)
 
 
-        
-        
-        
     selectAtomV=tkinter.IntVar()
     selectSearchAtomButton=tkinter.Button(root,text='Select Elements',command=lambda: _click_select_elements(root,searchFunction=True,plotFunction=False))
     def _select_elements_radionbutton(selectAtomV,selectSearchAtomButton):
@@ -1491,22 +1567,32 @@ def root_window():
     allAtomRadiobutton.place(relx=320/1000,rely=30.5/680)
     someAtomRadiobutton=tkinter.Radiobutton(root,text='From Selected Elements',value=2,variable=selectAtomV,command=lambda: _select_elements_radionbutton(selectAtomV,selectSearchAtomButton))
     someAtomRadiobutton.place(relx=320/1000,rely=52/680)
+        
+    def _select_ke_be_radionbutton(selectTranCoreV,selectEnergyV,selectSearchPhotonButton,searchOrLabel,searchInputEntry):
+        if selectTranCoreV.get()==3:
+            selectSearchPhotonButton.place(relx=490/1000,rely=48.5/680)
+            searchOrLabel.place(relx=600/1000,rely=48/680)
+            searchInputEntry.place(relx=620/1000,rely=48.5/680)
+        elif selectTranCoreV.get()==1 and selectEnergyV.get()==2:
+            selectSearchPhotonButton.place(relx=490/1000,rely=48.5/680)
+            searchOrLabel.place(relx=600/1000,rely=48/680)
+            searchInputEntry.place(relx=620/1000,rely=48.5/680)
+        elif selectTranCoreV.get()==2 and selectEnergyV.get()==1:
+            selectSearchPhotonButton.place(relx=490/1000,rely=48.5/680)
+            searchOrLabel.place(relx=600/1000,rely=48/680)
+            searchInputEntry.place(relx=620/1000,rely=48.5/680)
+        else:
+            selectSearchPhotonButton.place_forget()
+            searchOrLabel.place_forget()
+            searchInputEntry.place_forget()
     
-    selectEnergyV=tkinter.IntVar()
-    keRadiobutton=tkinter.Radiobutton(root,text='by kinetic energies',value=1,variable=selectEnergyV)
+    #selectEnergyV=tkinter.IntVar()
+    keRadiobutton=tkinter.Radiobutton(root,text='by kinetic energies',value=1,variable=selectEnergyV,command=lambda: _select_ke_be_radionbutton(selectTranCoreV,selectEnergyV,selectSearchPhotonButton,searchOrLabel,searchInputEntry))
     keRadiobutton.place(relx=530/1000,rely=1/680)
-    beRadiobutton=tkinter.Radiobutton(root,text='by binding energies',value=2,variable=selectEnergyV)
+    beRadiobutton=tkinter.Radiobutton(root,text='by binding energies',value=2,variable=selectEnergyV,command=lambda: _select_ke_be_radionbutton(selectTranCoreV,selectEnergyV,selectSearchPhotonButton,searchOrLabel,searchInputEntry))
     beRadiobutton.place(relx=530/1000,rely=21.5/680)
-    selectSearchPhotonButton=ttk.Combobox(root,width=11)
-    selectSearchPhotonButton['value']=('Mg 1253.6(eV)','Al 1486.7(eV)','Ag 2984.3(eV)','Cr 5414.9(eV)','Ga 9251.74(eV)','No selection')
-    selectSearchPhotonButton.current(5)
-    selectSearchPhotonButton.place(relx=490/1000,rely=48.5/680)
-    searchOrLabel=tkinter.Label(root,text='or')
-    searchOrLabel.place(relx=600/1000,rely=48/680)
-    searchInputEntry=tkinter.Entry(root,width=10)
-    searchInputEntry.place(relx=620/1000,rely=48.5/680)
     
-    searchButton=tkinter.Button(root,text='Search',bg='Orange')
+    searchButton=tkinter.Button(root,text='Search',bg='Orange',command=lambda: click_search_button(root, searchFromEntry,searchToEntry,selectTranCoreV,selectAtomV,selectEnergyV,selectSearchPhotonButton,searchInputEntry))
     searchButton.place(relx=685/1000,rely=10/680)
     
     def _click_clear_search_button(searchFromEntry,searchToEntry,selectTranCoreV,selectAtomV,selectEnergyV,selectSearchPhotonButton,searchInputEntry,selectAtomButton):
