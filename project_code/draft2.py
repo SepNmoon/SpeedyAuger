@@ -1232,7 +1232,7 @@ def click_plot_data_button(importFilePath,root,showPlotPathText,selectPlotPhoton
             
             index=0
             for t in transitiontext:
-                plt.text(transitionXValues[index],transitionYHeight[index],number_name[number]+t,ratation=90)
+                plt.text(transitionXValues[index],transitionYHeight[index],number_name[number]+t,rotation=90)
                 index+=1
             colorIndex+=1
             
@@ -1396,8 +1396,67 @@ def click_export_search_data_button(rangeWindow,table,position,selectTranCoreV,s
                         filePath=filePath+'/'+'Auger_transitions_'+'from_'+rangeMin+'_to_'+rangeMax+'_BE_'+selectPhoton+'_'+sortOrder+'_'+nameStr+'.txt'
                     with open(filePath,'w') as f:
                         f.write(tabulate(tableData,headers=tableHeader))
+            elif selectTranCoreV.get()==2:
+                tableHeader=['Atom','Barkla Notation','Orbital Notation','Binding Energies']
+                tableData=[]
+                for p in range(position):
+                    temp=[]
+                    temp.append(table.set(p+1,'#1'))
+                    temp.append(table.set(p+1,'#2'))
+                    temp.append(table.set(p+1,'#3'))
+                    temp.append(table.set(p+1,'#4'))
+                    tableData.append(temp)
+                if selectAtomV.get()==1:
+                    if selectEnergyV.get()==1:
+                        selectPhoton=str(selectPhoton)
+                        filePath=filePath+'/'+'Core_State_Energies_'+'from_'+rangeMin+'_to_'+rangeMax+'_KE_'+selectPhoton+'_'+sortOrder+'.txt'
+                    elif selectEnergyV.get()==2:
+                        filePath=filePath+'/'+'Core_State_Energies_'+'from_'+rangeMin+'_to_'+rangeMax+'_BE_'+sortOrder+'.txt'
+                    with open(filePath,'w') as f:
+                        f.write(tabulate(tableData,headers=tableHeader))
+                elif selectAtomV.get()==2:
+                    nameStr=''
+                    for number in uniqueArray:
+                        nameStr=nameStr+number_name[number]
+                    if selectEnergyV.get()==1:
+                        selectPhoton=str(selectPhoton)
+                        filePath=filePath+'/'+'Core_State_Energies_'+'from_'+rangeMin+'_to_'+rangeMax+'_KE_'+selectPhoton+'_'+sortOrder+'_'+nameStr+'.txt'
+                    elif selectEnergyV.get()==2:
+                        filePath=filePath+'/'+'Core_State_Energies_'+'from_'+rangeMin+'_to_'+rangeMax+'_BE_'+sortOrder+'_'+nameStr+'.txt'
+                    with open(filePath,'w') as f:
+                        f.write(tabulate(tableData,headers=tableHeader))
+            elif selectTranCoreV.get()==3:
+                tableHeader=['Atom','Auger Transition/Notation','Auger Energies/Core State Energies']
+                tableData=[]
+                for p in range(position):
+                    temp=[]
+                    temp.append(table.set(p+1,'#1'))
+                    temp.append(table.set(p+1,'#2'))
+                    temp.append(table.set(p+1,'#3'))
+                    tableData.append(temp)
+                if selectAtomV.get()==1:
+                    if selectEnergyV.get()==1:
+                        selectPhoton=str(selectPhoton)
+                        filePath=filePath+'/'+'Search_Both_'+'from_'+rangeMin+'_to_'+rangeMax+'_KE_'+selectPhoton+'_'+sortOrder+'.txt'
+                    elif selectEnergyV.get()==2:
+                        selectPhoton=str(selectPhoton)
+                        filePath=filePath+'/'+'Search_Both_'+'from_'+rangeMin+'_to_'+rangeMax+'_BE_'+selectPhoton+'_'+sortOrder+'.txt'
+                    with open(filePath,'w') as f:
+                        f.write(tabulate(tableData,headers=tableHeader))
+                elif selectAtomV.get()==2:
+                    nameStr=''
+                    for number in uniqueArray:
+                        nameStr=nameStr+number_name[number]
+                    if selectEnergyV.get()==1:
+                        selectPhoton=str(selectPhoton)
+                        filePath=filePath+'/'+'Search_Both_'+'from_'+rangeMin+'_to_'+rangeMax+'_KE_'+selectPhoton+'_'+sortOrder+'_'+nameStr+'.txt'
+                    elif selectEnergyV.get()==2:
+                        selectPhoton=str(selectPhoton)
+                        filePath=filePath+'/'+'Search_Both_'+'from_'+rangeMin+'_to_'+rangeMax+'_BE_'+selectPhoton+'_'+sortOrder+'_'+nameStr+'.txt'
+                    with open(filePath,'w') as f:
+                        f.write(tabulate(tableData,headers=tableHeader))
                         
-                
+   
         else:
             pass
         
@@ -1460,6 +1519,9 @@ def click_search_button(root, searchFromEntry,searchToEntry,selectTranCoreV,sele
         
         number_range=get_range()
         number_name=get_atom()
+        number_energies=get_energies()
+        barkla_orbital=get_notation()
+        
         rangeMin=min(float(searchFromEntry.get()),float(searchToEntry.get()))
         rangeMax=max(float(searchFromEntry.get()),float(searchToEntry.get()))
         correctAtom=[]
@@ -1576,7 +1638,293 @@ def click_search_button(root, searchFromEntry,searchToEntry,selectTranCoreV,sele
          
             else:
                 tkinter.messagebox.showinfo(title='REMINDER',message='No relevant results',parent=rangeWindow)
+        
+        elif selectTranCoreV.get()==2:    #search core state
+            correctCore={}
+            correctCoreNumber=0
+            if selectAtomV.get()==1:    #from all elements
+                if selectEnergyV.get()==1:    #search ke
+                    for number in number_energies:
+                        temp=number_energies[number]
+                        temp2=dict()
+                        for key,value in temp.items():
+                            if value!=None: 
+                                if (selectPhoton-value)<=rangeMax and (selectPhoton-value)>=rangeMin:
+                                    temp2[key]=Decimal(selectPhoton-value).quantize(Decimal('0.00'))
+                                    correctCoreNumber+=1
+                            else:
+                                pass
+                        if temp2!={} and number!=94:
+                            atom_name=number_name[number]
+                            correctCore[atom_name]=temp2
+                elif selectEnergyV.get()==2:   #search be
+                    for number in number_energies:
+                        temp=number_energies[number]
+                        temp2=dict()
+                        for key,value in temp.items():
+                            if value!=None: 
+                                if value<=rangeMax and value>=rangeMin:
+                                    temp2[key]=value
+                                    correctCoreNumber+=1 
+                            else:
+                                pass
+                        if temp2!={} and number!=94:
+                            atom_name=number_name[number]
+                            correctCore[atom_name]=temp2
+            elif selectAtomV.get()==2:    #from some elements
+                if selectEnergyV.get()==1:
+                    for number in uniqueArray:
+                        temp=number_energies[number]
+                        temp2=dict()
+                        for key,value in temp.items():
+                            if value!=None: 
+                                if (selectPhoton-value)<=rangeMax and (selectPhoton-value)>=rangeMin:
+                                    temp2[key]=Decimal(selectPhoton-value).quantize(Decimal('0.00'))
+                                    correctCoreNumber+=1
+                            else:
+                                pass
+                        if temp2!={} and number!=94:
+                            atom_name=number_name[number]
+                            correctCore[atom_name]=temp2
+                elif selectEnergyV.get()==2:
+                    for number in uniqueArray:
+                        temp=number_energies[number]
+                        temp2=dict()
+                        for key,value in temp.items():
+                            if value!=None: 
+                                if value<=rangeMax and value>=rangeMin:
+                                    temp2[key]=value
+                                    correctCoreNumber+=1 
+                            else:
+                                pass
+                        if temp2!={} and number!=94:
+                            atom_name=number_name[number]
+                            correctCore[atom_name]=temp2
+            if len(correctCore)!=0:
+                if correctCoreNumber<=29:
+                    tableRow=correctCoreNumber
+                else:
+                    tableRow=29
+                coreTable=ttk.Treeview(rangeWindow,height=tableRow,columns=['1','2','3','4'],show='headings')
+                coreTable.column('1',width=100) 
+                coreTable.column('2',width=150) 
+                coreTable.column('3',width=150) 
+                coreTable.column('4',width=160) 
+                coreTable.heading('1', text='Atom')
+                coreTable.heading('2', text='Barkla Notation')
+                coreTable.heading('3', text='Orbital Notation')
+                coreTable.heading('4', text='Binding Energies')
+                coreTable.pack()
+                position=0 
+                for name in correctCore:
+                    temp=correctCore[name]
+                    for shell in temp:
+                        coreTable.insert('',position,iid=position+1,values=(name,shell,barkla_orbital[shell],temp[shell]))
+                        position+=1
+                ybar=Scrollbar(coreTable,orient='vertical', command=coreTable.yview,bg='Gray')
+                coreTable.configure(yscrollcommand=ybar.set)
+                ybar.place(relx=0.95, rely=0.02, relwidth=0.035, relheight=0.958)
                 
+                descendingButton=tkinter.Button(rangeWindow,text='Descending order (energies)',bg='LightPink',command=lambda: clickSortButtonRG(coreTable,position,descending=True,auger_range=False,core_state=True))
+                descendingButton.place(relx=900/1200,rely=50/680)
+                ascendingButton=tkinter.Button(rangeWindow,text='Ascending order (energies)',bg='LightBlue',command=lambda: clickSortButtonRG(coreTable,position,descending=False,auger_range=False,core_state=True))
+                ascendingButton.place(relx=900/1200,rely=100/680)
+                numberButton=tkinter.Button(rangeWindow,text='Sort by atomic number',bg='LightGreen',command=lambda: clickNumberButtonRG(correctCore,coreTable,position,auger_range=False,core_state=True))
+                numberButton.place(relx=900/1200,rely=150/680)
+                exportButton=tkinter.Button(rangeWindow,text='Export',bg='Yellow',command=lambda: click_export_search_data_button(rangeWindow,coreTable,position,selectTranCoreV,selectAtomV,selectEnergyV,rangeMin,rangeMax,selectPhoton))
+                exportButton.place(relx=900/1200,rely=300/680)
+
+            else:
+                tkinter.messagebox.showinfo(title='REMINDER',message='No relevant results',parent=rangeWindow)
+                
+        elif selectTranCoreV.get()==3:     #search both
+            correctCore=dict()
+            correctCoreNumber=0
+            if selectAtomV.get()==1:    #from all elements         
+                if selectEnergyV.get()==1:    #search ke     
+                    for number in number_energies:
+                        temp=number_energies[number]
+                        temp2=dict()
+                        for key,value in temp.items():
+                            if value!=None: 
+                                if (selectPhoton-value)<=rangeMax and (selectPhoton-value)>=rangeMin:
+                                    temp2[key]=Decimal(selectPhoton-value).quantize(Decimal('0.00'))
+                                    correctCoreNumber+=1
+                            else:
+                                pass
+                        if temp2!={} and number!=94:
+                            atom_name=number_name[number]
+                            correctCore[atom_name]=temp2
+                    
+                    for number in number_range:                       
+                        temp=number_range[number]
+                        if temp['Max']<rangeMin or temp['Min']>rangeMax:                           
+                            pass
+                        else:
+                            correctAtom.append(number)
+                            
+                    correctAtomTransitions=dict()  
+                    transitionsNumber=0
+                    for number in correctAtom:
+                        temp=dict()
+                        atom_name=number_name[number]
+                        current_transitions_energies,normArray=calculate_auger(number)
+                        for transition in current_transitions_energies:
+                            if current_transitions_energies[transition]>=rangeMin and current_transitions_energies[transition]<=rangeMax:
+                                transitionsNumber+=1
+                                temp[transition]=current_transitions_energies[transition]
+                                correctAtomTransitions[atom_name]=temp
+                elif selectEnergyV.get()==2:
+                    for number in number_energies:
+                        temp=number_energies[number]
+                        temp2=dict()
+                        for key,value in temp.items():
+                            if value!=None: 
+                                if value<=rangeMax and value>=rangeMin:
+                                    temp2[key]=value
+                                    correctCoreNumber+=1 
+                            else:
+                                pass
+                        if temp2!={} and number!=94:
+                            atom_name=number_name[number]
+                            correctCore[atom_name]=temp2
+                                       
+                    for number in number_range:
+                        temp=number_range[number]
+                        tempMin=selectPhoton-temp['Max']
+                        tempMax=selectPhoton-temp['Min']
+                        if tempMax<rangeMin or tempMin>rangeMax:
+                            pass
+                        else:
+                            correctAtom.append(number)
+                    correctAtomTransitions=dict()  
+                    transitionsNumber=0
+                    for number in correctAtom:
+                        temp=dict()
+                        atom_name=number_name[number]
+                        current_transitions_energies,normArray=calculate_auger(number)
+                        for transition in current_transitions_energies:
+                            if (selectPhoton-float(current_transitions_energies[transition]))>=rangeMin and (selectPhoton-float(current_transitions_energies[transition]))<=rangeMax:
+                                transitionsNumber+=1
+                                temp[transition]=Decimal(selectPhoton-float(current_transitions_energies[transition])).quantize(Decimal('0.00'))
+                                correctAtomTransitions[atom_name]=temp
+            elif selectAtomV.get()==2:    #search some elements
+                if selectEnergyV.get()==1:    #search ke 
+                    for number in uniqueArray:
+                        temp=number_energies[number]
+                        temp2=dict()
+                        for key,value in temp.items():
+                            if value!=None: 
+                                if (selectPhoton-value)<=rangeMax and (selectPhoton-value)>=rangeMin:
+                                    temp2[key]=Decimal(selectPhoton-value).quantize(Decimal('0.00'))
+                                    correctCoreNumber+=1
+                            else:
+                                pass
+                        if temp2!={} and number!=94:
+                            atom_name=number_name[number]
+                            correctCore[atom_name]=temp2
+                    correctAtom=uniqueArray
+                    correctAtomTransitions=dict()  
+                    transitionsNumber=0
+                    for number in correctAtom:
+                        temp=dict()
+                        atom_name=number_name[number]
+                        current_transitions_energies,normArray=calculate_auger(number)
+                        for transition in current_transitions_energies:
+                            if current_transitions_energies[transition]>=rangeMin and current_transitions_energies[transition]<=rangeMax:
+                                transitionsNumber+=1
+                                temp[transition]=current_transitions_energies[transition]
+                                correctAtomTransitions[atom_name]=temp
+                elif selectEnergyV.get()==2:
+                    for number in uniqueArray:
+                        temp=number_energies[number]
+                        temp2=dict()
+                        for key,value in temp.items():
+                            if value!=None: 
+                                if value<=rangeMax and value>=rangeMin:
+                                    temp2[key]=value
+                                    correctCoreNumber+=1 
+                            else:
+                                pass
+                        if temp2!={} and number!=94:
+                            atom_name=number_name[number]
+                            correctCore[atom_name]=temp2
+                    correctAtom=uniqueArray
+                    correctAtomTransitions=dict()  
+                    transitionsNumber=0
+                    for number in correctAtom:
+                        temp=dict()
+                        atom_name=number_name[number]
+                        current_transitions_energies,normArray=calculate_auger(number)
+                        for transition in current_transitions_energies:
+                            if (selectPhoton-float(current_transitions_energies[transition]))>=rangeMin and (selectPhoton-float(current_transitions_energies[transition]))<=rangeMax:
+                                transitionsNumber+=1
+                                temp[transition]=Decimal(selectPhoton-float(current_transitions_energies[transition])).quantize(Decimal('0.00'))
+                                correctAtomTransitions[atom_name]=temp
+            tableLength=transitionsNumber+correctCoreNumber
+            if tableLength>0:
+                if tableLength<=29:
+                    tableRow=tableLength
+                else:
+                    tableRow=29
+                table=ttk.Treeview(rangeWindow,height=tableRow,columns=['1','2','3'],show='headings')
+                table.column('1',width=120) 
+                table.column('2',width=200) 
+                table.column('3',width=250) 
+                table.heading('1', text='Atom')
+                table.heading('2', text='Auger Transition / Notation')
+                table.heading('3', text='Auger Energies / Core State Energies')
+                table.pack()
+                two_tables=dict()
+                for number in number_name:
+                    name=number_name[number]
+                    if name in correctCore.keys() and name in correctAtomTransitions.keys():
+                        temp1=correctCore[name]
+                        temp2=correctAtomTransitions[name]
+                        temp3=dict()
+                        for key1 in temp1:
+                            temp3[key1]=temp1[key1]
+                        for key2 in temp2:
+                            temp3[key2]=temp2[key2]
+                        two_tables[name]=temp3
+                    elif name in correctCore.keys():
+                        two_tables[name]=correctCore[name]
+                    elif name in correctAtomTransitions.keys():
+                        two_tables[name]=correctAtomTransitions[name]
+                position=0
+                for name in two_tables:
+                    current_transitions=two_tables[name]
+                    for t in current_transitions:
+                        table.insert('',position,iid=position+1,values=(name,t,current_transitions[t]))
+                        position+=1
+                ybar=Scrollbar(table,orient='vertical', command=table.yview,bg='Gray')
+                table.configure(yscrollcommand=ybar.set)
+                ybar.place(relx=0.95, rely=0.02, relwidth=0.035, relheight=0.958)
+                descendingButton=tkinter.Button(rangeWindow,text='Descending order (energies)',bg='LightPink',command=lambda: clickSortButtonRG(table,position,descending=True,auger_range=True,core_state=True))
+                descendingButton.place(relx=900/1200,rely=50/680)
+                ascendingButton=tkinter.Button(rangeWindow,text='Ascending order (energies)',bg='LightBlue',command=lambda: clickSortButtonRG(table,position,descending=False,auger_range=True,core_state=True))
+                ascendingButton.place(relx=900/1200,rely=100/680)
+                numberButton=tkinter.Button(rangeWindow,text='Sort by atomic number',bg='LightGreen',command=lambda: clickNumberButtonRG(two_tables,table,position,auger_range=True,core_state=True))
+                numberButton.place(relx=900/1200,rely=150/680)
+    
+                exportButton=tkinter.Button(rangeWindow,text='Export',bg='Yellow',command=lambda: click_export_search_data_button(rangeWindow,table,position,selectTranCoreV,selectAtomV,selectEnergyV,rangeMin,rangeMax,selectPhoton))
+                exportButton.place(relx=900/1200,rely=300/680)
+                
+            else:
+                tkinter.messagebox.showinfo(title='REMINDER',message='No relevant results',parent=rangeWindow)
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                        
+                    
+                            
+                                
+                                
+                                
         citationLabel1=tkinter.Label(rangeWindow,text='*S.T.Perkins, D.E.Cullen, et al.,')
         citationLabel1.place(relx=150/1200,rely=610/680)   
         citationLabel2=tkinter.Label(rangeWindow,text='Tables and Graphs of Atomic Subshell and Relaxation Data Derived from the LLNL Evaluated Atomic Data Library (EADL), Z = 1--100, ',font=('Times',10,'italic'))
@@ -1591,16 +1939,7 @@ def click_search_button(root, searchFromEntry,searchToEntry,selectTranCoreV,sele
         linkLabel1.bind("<Button-1>", _open_url)
       
                                 
-                     
-                        
-                    
-   
-        
-        
-        
-        
-        
-        
+
         rangeWindow.mainloop()
             
                         
