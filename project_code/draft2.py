@@ -1137,7 +1137,125 @@ def click_plot_data_button(importFilePath,root,showPlotPathText,selectPlotPhoton
     elif plotXV.get()==0:
         tkinter.messagebox.showinfo(title='ERROR',message='Please select range of x axis',parent=root)
     else:
+        number_energies=get_energies()
+        number_name=get_atom()
+        selectPhoton=float(selectPlotPhotonButton.get())
+        bindingData=[]
+        intensityData=[]
+        normalIntensityData=[]
         
+        with open(importFilePath,'r') as f:            
+            for line in f.readlines():
+                curLine=line.strip().split(" ")
+                bindingData.append(float(curLine[0]))
+                intensityData.append(float(curLine[1]))
+        for intensity in intensityData:
+            normalIntensityData.append((intensity/max(intensityData))*100)
+        
+        plotWindow=tkinter.Toplevel()
+        plotWindow.geometry('680x680')
+        plotWindow.title('Plot imported dataset')
+        
+        figure,ax=plt.subplots(1,1)
+        
+        maxCrossEachElement=[]
+        for number in uniqueArray2:
+            norm_shell_cross,shell_cross=getCrossSection(number,selectPhoton)
+            maxCrossEachElement.append(max(shell_cross.values()))
+        
+        maxCrossAllElement=max(maxCrossEachElement)
+        plotColor=['red','green','yellow','purple','c',
+                   'lightcoral','olivedrab','darkorange','mediumorchid','aquamarine',
+                   'indianred','greenyellow','orange','thistle','turquoise',
+                   'brown','chartreuse','antiquewhite','plum','lightseagreen',
+                   'firebrick','lawngreen','tan','violet','mediumturquoise',
+                   'maroon','b','navajowhite','darkmagenta','lightcyan',
+                   'darkred','indigo','blanchedalmond','m','paleturquoise',
+                   'r','lavender','moccasin','fuchsia','darkslategray',
+                   'salmon','honeydew','burlywood','orchid','teal',
+                   'tomato','darkseagreen','wheat','mediumvioletred','cyan',
+                   'coral','palegreen','darkgoldenrod','deeppink','cadetblue',
+                   'orangered','lightgreen','goldenrod','hotpink','powderblue',
+                   'lightsalmon','forestgreen','gold','palevioletred','lightblue',
+                   'sienna','limegreen','khaki','crimson','deepskyblue',
+                   'chocolate','darkgreen','darkkhaki','pink','skyblue',
+                   'sandybrown','g','olive','lightpink','steelblue',
+                   'peru','lime','y','darkviolet','aliceblue',
+                   'black','seagreen','springgreen','mediumspringgreen','royalblue',
+                   'grey']
+        colorIndex=0
+        
+        #plot reference lines for each element
+        for number in uniqueArray2:
+            norm_shell_cross,shell_cross=getCrossSection(number,selectPhoton)
+            currentEnergies=number_energies[number]
+            nonNoneValue=dict()
+            for shell in currentEnergies:
+                if currentEnergies[shell]!=None:
+                    nonNoneValue[shell]=currentEnergies[shell]
+            norm_cross_section=dict()
+            for shell in shell_cross:
+                norm_cross_section[shell]=(shell_cross[shell]/maxCrossAllElement)*100
+            coreXValues=list(nonNoneValue.values())
+            coreYHeight=list(norm_cross_section.values())
+            coreYMin=np.zeros(len(coreXValues))
+            plt.vlines(coreXValues,coreYMin,coreYHeight,color=plotColor[colorIndex])
+            index=0
+            for shell in norm_shell_cross:
+                plt.text(coreXValues[index],coreYHeight[index],number_name[number]+''+shell,rotation=90)
+                index+=1
+            transition_energies,normArray=calculate_auger(number)
+            
+            augerValues=[]
+            normMults=[]
+            shellText=[]
+            index=0
+            for shell in transition_energies:
+                augerValues.append(selectPhoton-float(transition_energies[shell]))
+                normMults.append(normArray[index])
+                shell=shell.replace(',','')
+                shellText.append(shell)
+                index+=1
+                
+            transitionXValues=[]
+            transitionYHeight=[]
+            transitiontext=[]
+            index=0
+            for value in augerValues:
+                if value>0:
+                    transitionXValues.append(value)
+                    transitionYHeight.append(normMults[index])
+                    transitiontext.append(shellText[index])
+                index+=1
+            transitionYMin=np.zeros(len(transitionYHeight))
+            plt.vlines(transitionXValues,transitionYMin,transitionYHeight,color=plotColor[colorIndex])
+            
+            index=0
+            for t in transitiontext:
+                plt.text(transitionXValues[index],transitionYHeight[index],number_name[number]+t,ratation=90)
+                index+=1
+            colorIndex+=1
+            
+        plt.plot(bindingData,normalIntensityData)
+        
+        plt.gca().invert_xaxis() 
+        if plotXV.get()==2:
+            plt.xlim([1000,0])
+        
+        plt.xlabel('Binding Energy')
+        plt.ylabel('Normalized Intensity')
+        plt.close()        
+        canvas =FigureCanvasTkAgg(figure, master=plotWindow)
+        canvas.draw()
+        canvas.get_tk_widget().pack(side=tkinter.TOP, fill=tkinter.BOTH, expand=tkinter.YES)
+        
+        toolbar = NavigationToolbar2Tk(canvas, plotWindow)
+        toolbar.update()
+        canvas._tkcanvas.pack(side=tkinter.TOP, fill=tkinter.BOTH,expand=tkinter.YES)
+        plotWindow.mainloop()
+            
+            
+
 
 
 #root window
