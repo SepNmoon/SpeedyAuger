@@ -113,7 +113,7 @@ def get_range():
 #----------------------------------------------------------------------------------------------
 #----------------------------------------------------------------------------------------------
 #get cross section data
-def get_cross_section(number,photon_energy):
+def getCrossSection(number,photon_energy):
     photon_shell_cross=dict()
     shell_cross=dict()
     with open('Scofield_csv_database/%d.csv'%number,'r') as f:
@@ -807,7 +807,7 @@ def click_plot_for_elment_button(selectPlotV,selectPlotPhotonButton,inputPlotEnt
                 plt.text(transitionXValue[index],transitionYHeight[index],transitionText,size=fontSize,rotation=90)
                 index+=1
             
-            norm_shell_cross,shell_cross=get_cross_section(atomNumber,selectPhoton)
+            norm_shell_cross,shell_cross=getCrossSection(atomNumber,selectPhoton)
             coreXValues=list(nonNoneValue.values())
             coreYHeight=list(norm_shell_cross.values())
             coreYMin=np.zeros(len(coreXValues))
@@ -846,7 +846,7 @@ def click_plot_for_elment_button(selectPlotV,selectPlotPhotonButton,inputPlotEnt
                 plt.text(transition_energies[transition],normArray[index],newTransition,size=fontSize,rotation=90)
                 index+=1
                 
-            norm_shell_cross,shell_cross=get_cross_section(atomNumber,selectPhoton)
+            norm_shell_cross,shell_cross=getCrossSection(atomNumber,selectPhoton)
             coreKineticEnergy=[]
             for shell in nonNoneValue:
                 coreKineticEnergy.append(selectPhoton-nonNoneValue[shell])
@@ -1160,7 +1160,7 @@ def click_plot_data_button(importFilePath,root,showPlotPathText,selectPlotPhoton
         
         maxCrossEachElement=[]
         for number in uniqueArray2:
-            norm_shell_cross,shell_cross=get_cross_section(number,selectPhoton)
+            norm_shell_cross,shell_cross=getCrossSection(number,selectPhoton)
             maxCrossEachElement.append(max(shell_cross.values()))
         
         maxCrossAllElement=max(maxCrossEachElement)
@@ -1187,7 +1187,7 @@ def click_plot_data_button(importFilePath,root,showPlotPathText,selectPlotPhoton
         
         #plot reference lines for each element
         for number in uniqueArray2:
-            norm_shell_cross,shell_cross=get_cross_section(number,selectPhoton)
+            norm_shell_cross,shell_cross=getCrossSection(number,selectPhoton)
             currentEnergies=number_energies[number]
             nonNoneValue=dict()
             for shell in currentEnergies:
@@ -1256,7 +1256,7 @@ def click_plot_data_button(importFilePath,root,showPlotPathText,selectPlotPhoton
   
 
           
-def click_sort_search_button(table,position,descending,auger_range,core_state):
+def clickSortButtonRG(table,position,descending,auger_range,core_state):
     
     global sortOrder
     position_energies=dict()
@@ -1317,7 +1317,7 @@ def click_sort_search_button(table,position,descending,auger_range,core_state):
 
  
 
-def click_sort_number_search_button(correct_energies,table,position,auger_range,core_state):
+def clickNumberButtonRG(correct_energies,table,position,auger_range,core_state):
     global sortOrder
     barkla_orbital=get_notation()
     sortOrder='by_number'
@@ -1621,11 +1621,11 @@ def click_search_button(root, searchFromEntry,searchToEntry,selectTranCoreV,sele
                 transitionTable.configure(yscrollcommand=ybar.set)
                 ybar.place(relx=0.95, rely=0.02, relwidth=0.035, relheight=0.958)
                 
-                descendingButton=tkinter.Button(rangeWindow,text='Descending order (energies)',bg='LightPink',command=lambda: click_sort_search_button(transitionTable,position,descending=True,auger_range=True,core_state=False))
+                descendingButton=tkinter.Button(rangeWindow,text='Descending order (energies)',bg='LightPink',command=lambda: clickSortButtonRG(transitionTable,position,descending=True,auger_range=True,core_state=False))
                 descendingButton.place(relx=900/1200,rely=50/680)
-                ascendingButton=tkinter.Button(rangeWindow,text='Ascending order (energies)',bg='LightBlue',command=lambda: click_sort_search_button(transitionTable,position,descending=False,auger_range=True,core_state=False))
+                ascendingButton=tkinter.Button(rangeWindow,text='Ascending order (energies)',bg='LightBlue',command=lambda: clickSortButtonRG(transitionTable,position,descending=False,auger_range=True,core_state=False))
                 ascendingButton.place(relx=900/1200,rely=100/680)
-                numberButton=tkinter.Button(rangeWindow,text='Sort by atomic number',bg='LightGreen',command=lambda: click_sort_number_search_button(correctAtomTransitions,transitionTable,position,auger_range=True,core_state=False))
+                numberButton=tkinter.Button(rangeWindow,text='Sort by atomic number',bg='LightGreen',command=lambda: clickNumberButtonRG(correctAtomTransitions,transitionTable,position,auger_range=True,core_state=False))
                 numberButton.place(relx=900/1200,rely=150/680)
                 exportButton=tkinter.Button(rangeWindow,text='Export',bg='Yellow',command=lambda: click_export_search_data_button(rangeWindow,transitionTable,position,selectTranCoreV,selectAtomV,selectEnergyV,rangeMin,rangeMax,selectPhoton))
                 exportButton.place(relx=900/1200,rely=300/680)
@@ -1725,11 +1725,11 @@ def click_search_button(root, searchFromEntry,searchToEntry,selectTranCoreV,sele
                 coreTable.configure(yscrollcommand=ybar.set)
                 ybar.place(relx=0.95, rely=0.02, relwidth=0.035, relheight=0.958)
                 
-                descendingButton=tkinter.Button(rangeWindow,text='Descending order (energies)',bg='LightPink',command=lambda: click_sort_search_button(coreTable,position,descending=True,auger_range=False,core_state=True))
+                descendingButton=tkinter.Button(rangeWindow,text='Descending order (energies)',bg='LightPink',command=lambda: clickSortButtonRG(coreTable,position,descending=True,auger_range=False,core_state=True))
                 descendingButton.place(relx=900/1200,rely=50/680)
-                ascendingButton=tkinter.Button(rangeWindow,text='Ascending order (energies)',bg='LightBlue',command=lambda: click_sort_search_button(coreTable,position,descending=False,auger_range=False,core_state=True))
+                ascendingButton=tkinter.Button(rangeWindow,text='Ascending order (energies)',bg='LightBlue',command=lambda: clickSortButtonRG(coreTable,position,descending=False,auger_range=False,core_state=True))
                 ascendingButton.place(relx=900/1200,rely=100/680)
-                numberButton=tkinter.Button(rangeWindow,text='Sort by atomic number',bg='LightGreen',command=lambda: click_sort_number_search_button(correctCore,coreTable,position,auger_range=False,core_state=True))
+                numberButton=tkinter.Button(rangeWindow,text='Sort by atomic number',bg='LightGreen',command=lambda: clickNumberButtonRG(correctCore,coreTable,position,auger_range=False,core_state=True))
                 numberButton.place(relx=900/1200,rely=150/680)
                 exportButton=tkinter.Button(rangeWindow,text='Export',bg='Yellow',command=lambda: click_export_search_data_button(rangeWindow,coreTable,position,selectTranCoreV,selectAtomV,selectEnergyV,rangeMin,rangeMax,selectPhoton))
                 exportButton.place(relx=900/1200,rely=300/680)
@@ -1900,11 +1900,11 @@ def click_search_button(root, searchFromEntry,searchToEntry,selectTranCoreV,sele
                 ybar=Scrollbar(table,orient='vertical', command=table.yview,bg='Gray')
                 table.configure(yscrollcommand=ybar.set)
                 ybar.place(relx=0.95, rely=0.02, relwidth=0.035, relheight=0.958)
-                descendingButton=tkinter.Button(rangeWindow,text='Descending order (energies)',bg='LightPink',command=lambda: click_sort_search_button(table,position,descending=True,auger_range=True,core_state=True))
+                descendingButton=tkinter.Button(rangeWindow,text='Descending order (energies)',bg='LightPink',command=lambda: clickSortButtonRG(table,position,descending=True,auger_range=True,core_state=True))
                 descendingButton.place(relx=900/1200,rely=50/680)
-                ascendingButton=tkinter.Button(rangeWindow,text='Ascending order (energies)',bg='LightBlue',command=lambda: click_sort_search_button(table,position,descending=False,auger_range=True,core_state=True))
+                ascendingButton=tkinter.Button(rangeWindow,text='Ascending order (energies)',bg='LightBlue',command=lambda: clickSortButtonRG(table,position,descending=False,auger_range=True,core_state=True))
                 ascendingButton.place(relx=900/1200,rely=100/680)
-                numberButton=tkinter.Button(rangeWindow,text='Sort by atomic number',bg='LightGreen',command=lambda: click_sort_number_search_button(two_tables,table,position,auger_range=True,core_state=True))
+                numberButton=tkinter.Button(rangeWindow,text='Sort by atomic number',bg='LightGreen',command=lambda: clickNumberButtonRG(two_tables,table,position,auger_range=True,core_state=True))
                 numberButton.place(relx=900/1200,rely=150/680)
     
                 exportButton=tkinter.Button(rangeWindow,text='Export',bg='Yellow',command=lambda: click_export_search_data_button(rangeWindow,table,position,selectTranCoreV,selectAtomV,selectEnergyV,rangeMin,rangeMax,selectPhoton))
@@ -1913,7 +1913,18 @@ def click_search_button(root, searchFromEntry,searchToEntry,selectTranCoreV,sele
             else:
                 tkinter.messagebox.showinfo(title='REMINDER',message='No relevant results',parent=rangeWindow)
                     
-     
+                    
+                    
+                    
+                    
+                    
+                    
+                        
+                    
+                            
+                                
+                                
+                                
         citationLabel1=tkinter.Label(rangeWindow,text='*S.T.Perkins, D.E.Cullen, et al.,')
         citationLabel1.place(relx=150/1200,rely=610/680)   
         citationLabel2=tkinter.Label(rangeWindow,text='Tables and Graphs of Atomic Subshell and Relaxation Data Derived from the LLNL Evaluated Atomic Data Library (EADL), Z = 1--100, ',font=('Times',10,'italic'))
@@ -1931,7 +1942,17 @@ def click_search_button(root, searchFromEntry,searchToEntry,selectTranCoreV,sele
 
         rangeWindow.mainloop()
             
+                        
+                
+    
 
+        
+        
+
+                
+
+            
+        
 
 
 #root window
@@ -2258,28 +2279,9 @@ def root_window():
     def _click_import_file_button(root,showPlotPathText):
         global importFilePath
         importFilePath=askopenfilename(parent=root)
-        splitPath=importFilePath.split('/')
-        splitFile=splitPath[-1].split('.')
-        if splitFile[-1]!='txt' and splitFile[-1]!='csv':
-            tkinter.messagebox.showinfo(title='REMINDER',message='Please import txt or csv',parent=root)
-            showPlotPathText.config(state='normal')
-            showPlotPathText.delete(0,'end')
-            showPlotPathText.config(state='readonly')            
-        else: 
-            try:
-                bindingData=[]
-                intensityData=[]
-                with open(importFilePath,'r') as f:
-                    for line in f.readlines():
-                        curLine=line.strip().split(" ")
-                        bindingData.append(float(curLine[0]))
-                        intensityData.append(float(curLine[1]))
-            except:
-                tkinter.messagebox.showinfo(title='REMINDER',message='Please import valid data format',parent=root)
-            else:                
-                showPlotPathText.config(state='normal')
-                showPlotPathText.insert(0,importFilePath)
-                showPlotPathText.config(state='readonly')
+        showPlotPathText.config(state='normal')
+        showPlotPathText.insert(0,importFilePath)
+        showPlotPathText.config(state='readonly')
         
     showPlotPathText=tkinter.Entry(root,state='readonly')
     showPlotPathText.place(relx=140/1000,rely=160/680)   
