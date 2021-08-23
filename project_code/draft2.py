@@ -20,7 +20,7 @@ import matplotlib.pyplot as plt
 #get atomic number and atomic name 
 def get_atom():
     number_name=dict()
-    with open('EADL_Values/atom.txt','r') as f: 
+    with open('EADL_database/atom.txt','r') as f: 
         for line in f.readlines():
             curLine=line.strip().split(" ")
             number_name[int(curLine[0])]=curLine[1]
@@ -30,7 +30,7 @@ def get_atom():
 #get electron configuration
 def get_shell():
     number_shell=dict()
-    with open('EADL_Values/shell.txt','r') as f:
+    with open('EADL_database/shell.txt','r') as f:
         for line in f.readlines():        
             curLine=line.strip().split(" ")
             curLine=['0' if i=='' else i for i in curLine]         
@@ -57,7 +57,7 @@ def get_shell():
 #get electrons energies
 def get_energies():  
     number_energies=dict()
-    with open('EADL_Values/energies.txt','r') as f:
+    with open('EADL_database/energies.txt','r') as f:
         for line in f.readlines():        
             curLine=line.strip().split(" ")
             curLine=['0' if i=='' else i for i in curLine]         
@@ -84,7 +84,7 @@ def get_energies():
 #get barkla and orbital notation
 def get_notation():
     barkla_orbital=dict()
-    with open('EADL_Values/notation.txt','r') as f:
+    with open('EADL_database/notation.txt','r') as f:
         for line in f.readlines():
             curLine=line.strip().split(" ")
             barkla_orbital[curLine[0]]=curLine[1]+' '+curLine[2]
@@ -93,7 +93,7 @@ def get_notation():
 
 def get_range():
     number_range=dict()
-    with open('EADL_Values/energies_range.txt','r') as f:
+    with open('EADL_database/energies_range.txt','r') as f:
         for line in f.readlines():
             curLine=line.strip().split(" ")
             temp=dict()
