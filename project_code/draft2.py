@@ -1291,7 +1291,7 @@ def click_sort_search_button(table,position,descending,auger_range,core_state):
             table.set(p,'#1',new_table[p-1][0])
             table.set(p,'#2',new_table[p-1][1])
             table.set(p,'#3',new_table[p-1][2])
-    elif auger_range==False or (auger_range==True and core_state==True):
+    elif auger_range==False:
         for i in sort_position:
             p=i[0]
             temp=[]
@@ -1307,11 +1307,31 @@ def click_sort_search_button(table,position,descending,auger_range,core_state):
             table.set(p,'#2',new_table[p-1][1])
             table.set(p,'#3',new_table[p-1][2])
             table.set(p,'#4',new_table[p-1][3])
+            
+    elif (auger_range==True and core_state==True):
+        for i in sort_position:
+            p=i[0]
+            temp=[]
+            temp.append(table.set(p,'#1'))
+            temp.append(table.set(p,'#2'))
+            temp.append(table.set(p,'#3'))
+            temp.append(table.set(p,'#4'))
+            temp.append(table.set(p,'#5'))
+            new_table.append(temp)
+            
+        for p in range(position):
+            p+=1              
+            table.set(p,'#1',new_table[p-1][0])
+            table.set(p,'#2',new_table[p-1][1])
+            table.set(p,'#3',new_table[p-1][2])
+            table.set(p,'#4',new_table[p-1][3])
+            table.set(p,'#5',new_table[p-1][4])
+    
 
 
  
 
-def click_sort_number_search_button(correct_energies,table,position,orbitalNotationList,auger_range,core_state):
+def click_sort_number_search_button(correct_energies,table,position,orbitalNotationList,normColumnList,auger_range,core_state):
     global sortOrder
     barkla_orbital=get_notation()
     sortOrder='by_number'
@@ -1362,7 +1382,8 @@ def click_sort_number_search_button(correct_energies,table,position,orbitalNotat
                 temp.append(atom_name)
                 temp.append(transition)
                 temp.append(orbitalNotationList[index])
-                temp.append(current_transitions[transition])                
+                temp.append(current_transitions[transition]) 
+                temp.append(normColumnList[index])
                 new_table.append(temp)
                 index+=1
                 
@@ -1372,6 +1393,7 @@ def click_sort_number_search_button(correct_energies,table,position,orbitalNotat
             table.set(p,'#2',new_table[p-1][1])
             table.set(p,'#3',new_table[p-1][2])
             table.set(p,'#4',new_table[p-1][3])
+            table.set(p,'#5',new_table[p-1][4])
 
 
 def click_export_search_data_button(rangeWindow,table,position,selectTranCoreV,selectAtomV,selectEnergyV,rangeMin,rangeMax,selectPhoton):
@@ -1440,7 +1462,7 @@ def click_export_search_data_button(rangeWindow,table,position,selectTranCoreV,s
                     with open(filePath,'w') as f:
                         f.write(tabulate(tableData,headers=tableHeader))
             elif selectTranCoreV.get()==3:
-                tableHeader=['Atom','Auger Transition/Notation(Barkla)','Auger Transition/Notation(Orbital)','Auger Energies/Core State Energies']
+                tableHeader=['Atom','Auger Transition/Notation(Barkla)','Auger Transition/Notation(Orbital)','Auger Energies/Core State Energies','Norm Mult']
                 tableData=[]
                 for p in range(position):
                     temp=[]
@@ -1448,6 +1470,7 @@ def click_export_search_data_button(rangeWindow,table,position,selectTranCoreV,s
                     temp.append(table.set(p+1,'#2'))
                     temp.append(table.set(p+1,'#3'))
                     temp.append(table.set(p+1,'#4'))
+                    temp.append(table.set(p+1,'#5'))
                     tableData.append(temp)
                 if selectAtomV.get()==1:
                     if selectEnergyV.get()==1:
@@ -1776,15 +1799,19 @@ def click_search_button(root, searchFromEntry,searchToEntry,selectTranCoreV,sele
                             
                     correctAtomTransitions=dict()  
                     transitionsNumber=0
+                    normArrayList=[]
                     for number in correctAtom:
                         temp=dict()
                         atom_name=number_name[number]
                         current_transitions_energies,normArray=calculate_auger(number)
+                        index=0
                         for transition in current_transitions_energies:
                             if current_transitions_energies[transition]>=rangeMin and current_transitions_energies[transition]<=rangeMax:
                                 transitionsNumber+=1
                                 temp[transition]=current_transitions_energies[transition]
                                 correctAtomTransitions[atom_name]=temp
+                                normArrayList.append(normArray[index])
+                            index+=1                    
                 elif selectEnergyV.get()==2:
                     for number in number_energies:
                         temp=number_energies[number]
@@ -1810,15 +1837,20 @@ def click_search_button(root, searchFromEntry,searchToEntry,selectTranCoreV,sele
                             correctAtom.append(number)
                     correctAtomTransitions=dict()  
                     transitionsNumber=0
+                    normArrayList=[]
                     for number in correctAtom:
                         temp=dict()
                         atom_name=number_name[number]
                         current_transitions_energies,normArray=calculate_auger(number)
+                        index=0
                         for transition in current_transitions_energies:
                             if (selectPhoton-float(current_transitions_energies[transition]))>=rangeMin and (selectPhoton-float(current_transitions_energies[transition]))<=rangeMax:
                                 transitionsNumber+=1
                                 temp[transition]=Decimal(selectPhoton-float(current_transitions_energies[transition])).quantize(Decimal('0.00'))
                                 correctAtomTransitions[atom_name]=temp
+                                normArrayList.append(normArray[index])                                
+                            index+=1
+                                                      
             elif selectAtomV.get()==2:    #search some elements                
                 if selectEnergyV.get()==1:    #search ke 
                     for number in uniqueArray:
@@ -1837,15 +1869,19 @@ def click_search_button(root, searchFromEntry,searchToEntry,selectTranCoreV,sele
                     correctAtom=uniqueArray
                     correctAtomTransitions=dict()  
                     transitionsNumber=0
+                    normArrayList=[]
                     for number in correctAtom:
                         temp=dict()
                         atom_name=number_name[number]
                         current_transitions_energies,normArray=calculate_auger(number)
+                        index=0
                         for transition in current_transitions_energies:
                             if current_transitions_energies[transition]>=rangeMin and current_transitions_energies[transition]<=rangeMax:
                                 transitionsNumber+=1
                                 temp[transition]=current_transitions_energies[transition]
                                 correctAtomTransitions[atom_name]=temp
+                                normArrayList.append(normArray[index])
+                            index+=1
                 elif selectEnergyV.get()==2:
                     for number in uniqueArray:
                         temp=number_energies[number]
@@ -1863,32 +1899,38 @@ def click_search_button(root, searchFromEntry,searchToEntry,selectTranCoreV,sele
                     correctAtom=uniqueArray
                     correctAtomTransitions=dict()  
                     transitionsNumber=0
+                    normArrayList=[]
                     for number in correctAtom:
                         temp=dict()
                         atom_name=number_name[number]
                         current_transitions_energies,normArray=calculate_auger(number)
+                        index=0
                         for transition in current_transitions_energies:
                             if (selectPhoton-float(current_transitions_energies[transition]))>=rangeMin and (selectPhoton-float(current_transitions_energies[transition]))<=rangeMax:
                                 transitionsNumber+=1
                                 temp[transition]=Decimal(selectPhoton-float(current_transitions_energies[transition])).quantize(Decimal('0.00'))
                                 correctAtomTransitions[atom_name]=temp
+                                normArrayList.append(normArray[index])
+                            index+=1
             tableLength=transitionsNumber+correctCoreNumber
-            
+                 
             
             if tableLength>0:
                 if tableLength<=29:
                     tableRow=tableLength
                 else:
                     tableRow=29
-                table=ttk.Treeview(rangeWindow,height=tableRow,columns=['1','2','3','4'],show='headings')
+                table=ttk.Treeview(rangeWindow,height=tableRow,columns=['1','2','3','4','5'],show='headings')
                 table.column('1',width=50) 
                 table.column('2',width=180) 
                 table.column('3',width=180)
                 table.column('4',width=250) 
+                table.column('5',width=120) 
                 table.heading('1', text='Atom')
                 table.heading('2', text='Auger Transition / Notation')
                 table.heading('3', text='Auger Transition / Notation')
                 table.heading('4', text='Auger Energies / Core State Energies')
+                table.heading('5', text='Norm Mult')
                 table.pack()
                 two_tables=dict()
                 for number in number_name:
@@ -1910,32 +1952,41 @@ def click_search_button(root, searchFromEntry,searchToEntry,selectTranCoreV,sele
                 #print(two_tables)
                 orbitalNotation=''
                 orbitalNotationList=[]
+                normColumn=''
+                normColumnList=[]
+                index=0
                 for name in two_tables:
                     current_transitions=two_tables[name]
                     for t in current_transitions:
                         if len(t)==2:
                             orbitalNotation=barkla_orbital[t]
                             orbitalNotationList.append(orbitalNotation)
+                            normColumn=''
+                            normColumnList.append(normColumn)
                         elif len(t)==8:
                             splitTransition=t.split(',')
                             orbitalTransition=barkla_orbital[splitTransition[0]].replace(' ','')+' '+barkla_orbital[splitTransition[1]].replace(' ','')+' '+barkla_orbital[splitTransition[2]].replace(' ','')
                             orbitalNotation=orbitalTransition
-                            orbitalNotationList.append(orbitalNotation)                            
-                        table.insert('',position,iid=position+1,values=(name,t,orbitalNotation,current_transitions[t]))
+                            orbitalNotationList.append(orbitalNotation)
+                            normColumn=normArrayList[index]    
+                            normColumnList.append(normColumn)
+                            index+=1
+                        table.insert('',position,iid=position+1,values=(name,t,orbitalNotation,current_transitions[t],normColumn))
                         position+=1
+                        
                 
                 ybar=Scrollbar(table,orient='vertical', command=table.yview,bg='Gray')
                 table.configure(yscrollcommand=ybar.set)
-                ybar.place(relx=0.95, rely=0.02, relwidth=0.035, relheight=0.958)
+                ybar.place(relx=0.95, rely=0.02, relwidth=0.025, relheight=0.958)
                 descendingButton=tkinter.Button(rangeWindow,text='Descending order (energies)',bg='LightPink',command=lambda: click_sort_search_button(table,position,descending=True,auger_range=True,core_state=True))
-                descendingButton.place(relx=950/1200,rely=50/680)
+                descendingButton.place(relx=1000/1200,rely=50/680)
                 ascendingButton=tkinter.Button(rangeWindow,text='Ascending order (energies)',bg='LightBlue',command=lambda: click_sort_search_button(table,position,descending=False,auger_range=True,core_state=True))
-                ascendingButton.place(relx=950/1200,rely=100/680)
-                numberButton=tkinter.Button(rangeWindow,text='Sort by atomic number',bg='LightGreen',command=lambda: click_sort_number_search_button(two_tables,table,position,orbitalNotationList,auger_range=True,core_state=True))
-                numberButton.place(relx=950/1200,rely=150/680)
+                ascendingButton.place(relx=1000/1200,rely=100/680)
+                numberButton=tkinter.Button(rangeWindow,text='Sort by atomic number',bg='LightGreen',command=lambda: click_sort_number_search_button(two_tables,table,position,orbitalNotationList,normColumnList,auger_range=True,core_state=True))
+                numberButton.place(relx=1000/1200,rely=150/680)
     
                 exportButton=tkinter.Button(rangeWindow,text='Export',bg='Yellow',command=lambda: click_export_search_data_button(rangeWindow,table,position,selectTranCoreV,selectAtomV,selectEnergyV,rangeMin,rangeMax,selectPhoton))
-                exportButton.place(relx=950/1200,rely=300/680)
+                exportButton.place(relx=1000/1200,rely=300/680)
                 
             else:
                 tkinter.messagebox.showinfo(title='REMINDER',message='No relevant results',parent=rangeWindow)
