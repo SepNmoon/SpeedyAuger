@@ -923,6 +923,7 @@ def element_transition_window(index):
     
     #calculate energies and norm mult for transitions
     transition_energies,normArray=calculate_auger(atomNumber)
+
     
     #transition table
     if len(transition_energies)<=26:
