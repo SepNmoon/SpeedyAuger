@@ -926,10 +926,10 @@ def element_transition_window(index):
 
     
     #transition table
-    if len(transition_energies)<=26:
+    if len(transition_energies)<=28:
         tableRow=len(transition_energies)
     else:
-        tableRow=26
+        tableRow=28
     
     transitionTable=ttk.Treeview(augerWindow,height=tableRow,columns=['1','2','3','4'],show='headings')
     transitionTable.column('1', width=150) 
@@ -945,39 +945,25 @@ def element_transition_window(index):
     for t in transition_energies:
         transitionTable.insert('',position,iid=position+1,values=(t,transition_energies[t],'',normArray[position]))
         position+=1
-    transitionTable.place(relx=550/1200,rely=120/680)
+    transitionTable.place(relx=550/1200,rely=70/680)
     ybar=Scrollbar(transitionTable,orient='vertical', command=transitionTable.yview,bg='Gray')
     transitionTable.configure(yscrollcommand=ybar.set)
     ybar.place(relx=0.95, rely=0.02, relwidth=0.035, relheight=0.958)
     
-    #citation
-    citationLabel1=tkinter.Label(augerWindow,text="*W.A.Coghlan, R.E.Clausing, ")
-    citationLabel1.place(relx=550/1200,rely=5/680)
-    citationLabel2=tkinter.Label(augerWindow,text="Auger catalog calculated transition energies listed by energy and element,",font=('Times',10,'italic'))
-    citationLabel2.place(relx=713/1200,rely=6/680)
-    citationLabel3=tkinter.Label(augerWindow,text="Atomic Data and Nuclear Data Tables, Volume 5, Issue 4, 1973, Pages 317-469, ISSN 0092-640X,")
-    citationLabel3.place(relx=550/1200,rely=25/680)   
-    linkLabel1 = tkinter.Label(augerWindow, text='https://doi.org/10.1016/S0092-640X(73)80005-1', fg='blue',font=('Arial', 10,'italic','underline'))
-    linkLabel1.place(relx=550/1200, rely=46/680)
-    def _open_url(event):
-        webbrowser.open("https://doi.org/10.1016/S0092-640X(73)80005-1", new=0)       
-    linkLabel1.bind("<Button-1>", _open_url)
-    
-    #Add convert function
     selectConvertPhotonButton=ttk.Combobox(augerWindow)    
-    selectConvertPhotonButton.place(relx=550/1200,rely=70/680)
+    selectConvertPhotonButton.place(relx=550/1200,rely=20/680)
     selectConvertPhotonButton['value']=('Mg 1253.6(eV)','Al 1486.7(eV)','Ag 2984.3(eV)','Cr 5414.9(eV)','Ga 9251.74(eV)','No selection')
     selectConvertPhotonButton.current(5)
     orConvertLabel=tkinter.Label(augerWindow,text='or')
-    orConvertLabel.place(relx=750/1200,rely=70/680)
+    orConvertLabel.place(relx=750/1200,rely=20/680)
     inputConvertEntry=tkinter.Entry(augerWindow)
-    inputConvertEntry.place(relx=800/1200,rely=70/680)    
+    inputConvertEntry.place(relx=800/1200,rely=20/680)    
     unitConvertLabel=tkinter.Label(augerWindow,text='(eV)')
-    unitConvertLabel.place(relx=950/1200,rely=70/680)
+    unitConvertLabel.place(relx=950/1200,rely=20/680)
     
 
     lastConvertLabel=tkinter.Label(augerWindow,text='Values in table calculated for: %s'%lastChoice)
-    lastConvertLabel.place(relx=930/1200,rely=97/680)
+    lastConvertLabel.place(relx=930/1200,rely=50/680)
     
     
     def _click_convert_button(selectConvertPhotonButton,transitionTable,position,inputConvertEntry,augerWindow,lastConvertLabel):
@@ -1025,7 +1011,7 @@ def element_transition_window(index):
             _update_table(transitionTable,selectValue,position)
         
     convertButton=tkinter.Button(augerWindow,text='Convert',bg='Orange',command=lambda: _click_convert_button(selectConvertPhotonButton,transitionTable,position,inputConvertEntry,augerWindow,lastConvertLabel))
-    convertButton.place(relx=1000/1200,rely=70/680)    
+    convertButton.place(relx=1000/1200,rely=20/680)    
     
     
     def _click_clear_convert_button(inputConvertEntry,selectConvertPhotonButton,transitionTable,position):
@@ -1035,7 +1021,7 @@ def element_transition_window(index):
             index+=1
             transitionTable.set(index,'#3','') 
     clearButton=tkinter.Button(augerWindow,text='Clear',command=lambda: _click_clear_convert_button(inputConvertEntry,selectConvertPhotonButton,transitionTable,position))
-    clearButton.place(relx=1065/1200,rely=70/680)
+    clearButton.place(relx=1065/1200,rely=20/680)
     
     
     def _click_export_convert_button(augerWindow,transitionTable,position,atomName):
@@ -1077,7 +1063,7 @@ def element_transition_window(index):
         
         
     exportConvertButton=tkinter.Button(augerWindow,text='Export',bg='LightBlue',command=lambda: _click_export_convert_button(augerWindow,transitionTable,position,atomName))
-    exportConvertButton.place(relx=1140/1200,rely=70/680)
+    exportConvertButton.place(relx=1140/1200,rely=20/680)
     
     
     
@@ -1124,9 +1110,9 @@ def element_transition_window(index):
 
 #plot dataset
 def click_plot_data_button(importFilePath,root,showPlotPathText,selectPlotPhotonButton,plotXV):
-    if showPlotPathText.get()=='':
-        tkinter.messagebox.showinfo(title='ERROR',message='Please import file',parent=root)
-    elif selectPlotPhotonButton.get()=='':
+    #if showPlotPathText.get()=='':
+        #tkinter.messagebox.showinfo(title='ERROR',message='Please import file',parent=root)
+    if selectPlotPhotonButton.get()=='':
         tkinter.messagebox.showinfo(title='ERROR',message='Please select photon energy',parent=root)
     elif len(uniqueArray2)==0:
         tkinter.messagebox.showinfo(title='ERROR',message='Please select element',parent=root)
@@ -1135,18 +1121,22 @@ def click_plot_data_button(importFilePath,root,showPlotPathText,selectPlotPhoton
     else:
         number_energies=get_energies()
         number_name=get_atom()
-        selectPhoton=float(selectPlotPhotonButton.get())
+        selectPhoton=selectPlotPhotonButton.get()
+        selectPhoton=float(selectPhoton.replace('keV',''))
         bindingData=[]
         intensityData=[]
         normalIntensityData=[]
         
-        with open(importFilePath,'r') as f:            
-            for line in f.readlines():
-                curLine=line.strip().split(" ")
-                bindingData.append(float(curLine[0]))
-                intensityData.append(float(curLine[1]))
-        for intensity in intensityData:
-            normalIntensityData.append((intensity/max(intensityData))*100)
+        if importFilePath!='':           
+            with open(importFilePath,'r') as f:            
+                for line in f.readlines():
+                    curLine=line.strip().split(" ")
+                    bindingData.append(float(curLine[0]))
+                    intensityData.append(float(curLine[1]))
+            for intensity in intensityData:
+                normalIntensityData.append((intensity/max(intensityData))*100)
+        else:
+            pass
         
         plotWindow=tkinter.Toplevel()
         plotWindow.geometry('680x680')
@@ -1231,13 +1221,18 @@ def click_plot_data_button(importFilePath,root,showPlotPathText,selectPlotPhoton
                 plt.text(transitionXValues[index],transitionYHeight[index],number_name[number]+t,rotation=90)
                 index+=1
             colorIndex+=1
-            
-        plt.plot(bindingData,normalIntensityData)
+        
+        if importFilePath!='':
+            plt.plot(bindingData,normalIntensityData)
+        else:
+            pass
         
         plt.gca().invert_xaxis() 
-        if plotXV.get()==2:
-            plt.xlim([1000,0])
+        if importFilePath!='':
+            if plotXV.get()==2:
+                plt.xlim([max(bindingData),0])
         
+                       
         plt.xlabel('Binding Energy')
         plt.ylabel('Normalized Intensity')
         plt.close()        
@@ -1661,10 +1656,10 @@ def click_search_button(root, searchFromEntry,searchToEntry,selectTranCoreV,sele
                                                       
                 
             if transitionsNumber>0:
-                if transitionsNumber<=29:
+                if transitionsNumber<=32:
                     tableRow=transitionsNumber
                 else:
-                    tableRow=29
+                    tableRow=32
                 transitionTable=ttk.Treeview(rangeWindow,height=tableRow,columns=['1','2','3','4'],show='headings')
                 transitionTable.column('1',width=100) 
                 transitionTable.column('2',width=200) 
@@ -1761,10 +1756,10 @@ def click_search_button(root, searchFromEntry,searchToEntry,selectTranCoreV,sele
                             atom_name=number_name[number]
                             correctCore[atom_name]=temp2
             if len(correctCore)!=0:
-                if correctCoreNumber<=29:
+                if correctCoreNumber<=32:
                     tableRow=correctCoreNumber
                 else:
-                    tableRow=29
+                    tableRow=32
                 coreTable=ttk.Treeview(rangeWindow,height=tableRow,columns=['1','2','3','4'],show='headings')
                 coreTable.column('1',width=100) 
                 coreTable.column('2',width=150) 
@@ -1942,10 +1937,10 @@ def click_search_button(root, searchFromEntry,searchToEntry,selectTranCoreV,sele
                  
             
             if tableLength>0:
-                if tableLength<=29:
+                if tableLength<=32:
                     tableRow=tableLength
                 else:
-                    tableRow=29
+                    tableRow=32
                 table=ttk.Treeview(rangeWindow,height=tableRow,columns=['1','2','3','4','5'],show='headings')
                 table.column('1',width=50) 
                 table.column('2',width=180) 
@@ -2017,19 +2012,7 @@ def click_search_button(root, searchFromEntry,searchToEntry,selectTranCoreV,sele
             else:
                 tkinter.messagebox.showinfo(title='REMINDER',message='No relevant results',parent=rangeWindow)
                     
-     
-        #citationLabel1=tkinter.Label(rangeWindow,text='*S.T.Perkins, D.E.Cullen, et al.,')
-        #citationLabel1.place(relx=150/1200,rely=610/680)   
-        #citationLabel2=tkinter.Label(rangeWindow,text='Tables and Graphs of Atomic Subshell and Relaxation Data Derived from the LLNL Evaluated Atomic Data Library (EADL), Z = 1--100, ',font=('Times',10,'italic'))
-        #citationLabel2.place(relx=325/1200,rely=611/680)
-        #citationLabel3=tkinter.Label(rangeWindow,text='Lawrence Livermore National Laboratory, UCRL-50400, Vol. 30,')
-        #citationLabel3.place(relx=150/1200,rely=630/680)   
-        #linkLabel1 = tkinter.Label(rangeWindow, text='https://www.osti.gov/biblio/10121422-tables-graphs-atomic-subshell-relaxation-data-derived-from-llnl-evaluated-atomic-data-library-eadl', fg='blue',font=('Arial', 10,'italic','underline'))
-        #linkLabel1.place(relx=150/1200, rely=650/680)
-        #def _open_url(event):
-            #webbrowser.open("https://www.osti.gov/biblio/10121422-tables-graphs-atomic-subshell-relaxation-data-derived-from-llnl-evaluated-atomic-data-library-eadl", new=0)
-       
-        #linkLabel1.bind("<Button-1>", _open_url)
+
       
                                 
 
@@ -2042,7 +2025,7 @@ def click_search_button(root, searchFromEntry,searchToEntry,selectTranCoreV,sele
 def root_window():
     root=tkinter.Tk() 
     root.geometry("1000x680")
-    root.title('All Atom')
+    root.title('SpeedyAuger')
     tkinter.Button(root,text='1 H',width=5,height=2,bg='Gray').place(relx=30/1000,rely=10/680) #1
     tkinter.Button(root,text='2 He',width=5,height=2,bg='Gray').place(relx=880/1000,rely=10/680) #18
     uncover_atom=dict()
@@ -2052,7 +2035,7 @@ def root_window():
     uncover_atom[113],uncover_atom[114],uncover_atom[115],uncover_atom[116],uncover_atom[117],uncover_atom[118]='Nh','Fl','Mc','Lv','Ts','Og'
     for i in range(25):
         if i<=8:
-            tkinter.Button(root,text='%(number)d %(name)s'%{'number':i+94,'name':uncover_atom[i+94]},width=5,height=2,bg='Gray').place(relx=(380+i*50)/1000, rely=520/680)
+            tkinter.Button(root,text='%(number)d %(name)s'%{'number':i+94,'name':uncover_atom[i+94]},width=5,height=2,bg='Gray').place(relx=(380+i*50)/1000, rely=500/680)
         else:
             tkinter.Button(root,text='%(number)d %(name)s'%{'number':i+94,'name':uncover_atom[i+94]},width=5,height=2,bg='Gray').place(relx=(130+(i-9)*50)/1000, rely=370/680)  
     number_name=get_atom()    
@@ -2081,7 +2064,7 @@ def root_window():
         elif i==52 or i==53:
             tkinter.Button(root,text='%(number)d %(name)s'%{'number':i+3,'name':atom_name},command = lambda text=i: element_transition_window(text),width=5,height=2,bg='Salmon').place(relx=(30+(i-52)*50)/1000, rely=310/680)
         elif i>=54 and i<=67:
-            tkinter.Button(root,text='%(number)d %(name)s'%{'number':i+3,'name':atom_name},command = lambda text=i: element_transition_window(text),width=5,height=2,bg='LightGreen').place(relx=(30+(i-52)*50)/1000, rely=460/680)
+            tkinter.Button(root,text='%(number)d %(name)s'%{'number':i+3,'name':atom_name},command = lambda text=i: element_transition_window(text),width=5,height=2,bg='LightGreen').place(relx=(30+(i-52)*50)/1000, rely=440/680)
         elif i<=77:
             tkinter.Button(root,text='%(number)d %(name)s'%{'number':i+3,'name':atom_name},command = lambda text=i: element_transition_window(text),width=5,height=2,bg='PowderBlue').place(relx=(130+(i-68)*50)/1000, rely=310/680)
         elif i<=83:
@@ -2089,7 +2072,7 @@ def root_window():
         elif i==84 or i==85:
             tkinter.Button(root,text='%(number)d %(name)s'%{'number':i+3,'name':atom_name},command = lambda text=i: element_transition_window(text),width=5,height=2,bg='Salmon').place(relx=(30+(i-84)*50)/1000, rely=370/680)
         else:
-            tkinter.Button(root,text='%(number)d %(name)s'%{'number':i+3,'name':atom_name},command = lambda text=i: element_transition_window(text),width=5,height=2,bg='LightGreen').place(relx=(30+(i-84)*50)/1000, rely=520/680)
+            tkinter.Button(root,text='%(number)d %(name)s'%{'number':i+3,'name':atom_name},command = lambda text=i: element_transition_window(text),width=5,height=2,bg='LightGreen').place(relx=(30+(i-84)*50)/1000, rely=500/680)
     
     #components of search function
     searchFromLabel=tkinter.Label(root,text='from')
@@ -2343,55 +2326,79 @@ def root_window():
     clearSearchButton.place(relx=750/1000,rely=10/680)
     
     #citation label
-    citationLabel1=tkinter.Label(root,text='*S.T.Perkins, D.E.Cullen, et al.,')
-    citationLabel1.place(relx=150/1000,rely=590/680)   
-    citationLabel2=tkinter.Label(root,text='Tables and Graphs of Atomic Subshell and Relaxation Data Derived from the LLNL Evaluated',font=('Times',10,'italic'))
-    citationLabel2.place(relx=325/1000,rely=591/680)  
-    citationLabel3=tkinter.Label(root,text='Atomic Data Library (EADL), Z = 1--100,',font=('Times',10,'italic'))
-    citationLabel3.place(relx=150/1000,rely=610/680)  
-    citationLabel4=tkinter.Label(root,text='Lawrence Livermore National Laboratory, UCRL-50400, Vol. 30,')
-    citationLabel4.place(relx=377/1000,rely=610/680) 
-    linkLabel1 = tkinter.Label(root, text='https://www.osti.gov/biblio/10121422-tables-graphs-atomic-subshell-relaxation-data-derived-from-llnl-evaluated-atomic-data-library-eadl', fg='blue',font=('Arial', 10,'italic','underline'))
-    linkLabel1.place(relx=150/1000, rely=630/680)
-    def _open_url(event):
-       webbrowser.open("https://www.osti.gov/biblio/10121422-tables-graphs-atomic-subshell-relaxation-data-derived-from-llnl-evaluated-atomic-data-library-eadl", new=0)       
-    linkLabel1.bind("<Button-1>", _open_url)
+    citationLabel1=tkinter.Label(root,text='The listed core level binding energy values are taken from the following reference and were used to compute all possible Auger transition energies:')
+    citationLabel1.place(relx=70/1000,rely=555/680)
+    citationLabel2=tkinter.Label(root,text='[1] S.T.Perkins, D.E.Cullen, et al.,')
+    citationLabel2.place(relx=70/1000,rely=575/680)   
+    citationLabel3=tkinter.Label(root,text='Tables and Graphs of Atomic Subshell and Relaxation Data Derived from the LLNL Evaluated Atomic Data Library (EADL),', fg='blue',font=('Times',10,'italic'))
+    citationLabel3.place(relx=260/1000,rely=575/680)
+    citationLabel4=tkinter.Label(root,text='Z = 1--100', fg='blue',font=('Times',10,'italic'))
+    citationLabel4.place(relx=70/1000,rely=595/680)
+    citationLabel5=tkinter.Label(root,text='Lawrence Livermore National Laboratory, UCRL-50400, Vol. 30,')
+    citationLabel5.place(relx=135/1000,rely=595/680)
+    def _open_EADL_url(event):
+       webbrowser.open("https://www.osti.gov/biblio/10121422-tables-graphs-atomic-subshell-relaxation-data-derived-from-llnl-evaluated-atomic-data-library-eadl", new=0)    
+    citationLabel3.bind("<Button-1>", _open_EADL_url)
+    citationLabel4.bind("<Button-1>", _open_EADL_url)
     
-        
+    citationLabel6=tkinter.Label(root,text='The digitised version [2] of the Scofield tabulated data [3] was implemented to scale the intensity of the core lines in the plotting function:')
+    citationLabel6.place(relx=70/1000,rely=615/680)
+    citationLabel7=tkinter.Label(root,text='[2] C. Kalha, N. K. Fernando, A. Regoutz,')
+    citationLabel7.place(relx=70/1000,rely=635/680)
+    citationLabel8=tkinter.Label(root,text='Digitisation of Scofield Photoionisation Cross Section Tabulated Data, 2020, figshare, Dataset',fg='blue',font=('Times',10,'italic'))
+    citationLabel8.place(relx=306/1000,rely=635/680)
+    citationLabel9=tkinter.Label(root,text='[3] J.H. Scofield,')
+    citationLabel9.place(relx=70/1000,rely=655/680)
+    citationLabel10=tkinter.Label(root,text='Theoretical photoionization cross sections from 1 to 1500 keV,',fg='blue',font=('Times',10,'italic'))
+    citationLabel10.place(relx=165/1000,rely=655/680)
+    citationLabel11=tkinter.Label(root,text='Technical Report UCRL-51326, Lawrence Livermore Laboratory, 1973')
+    citationLabel11.place(relx=509/1000,rely=655/680)
+    def _open_figshare_url(event):
+        webbrowser.open("https://doi.org/10.6084/m9.figshare.12967079.v1", new=0) 
+    citationLabel8.bind("<Button-1>", _open_figshare_url)
+    def _open_scorfield_url(event):
+        webbrowser.open("https://doi.org/10.2172/4545040", new=0)
+    citationLabel10.bind("<Button-1>", _open_scorfield_url)
+
     #components of plot function
     def _click_import_file_button(root,showPlotPathText):
         global importFilePath
         importFilePath=askopenfilename(parent=root)
-        splitPath=importFilePath.split('/')
-        splitFile=splitPath[-1].split('.')
-        if splitFile[-1]!='txt' and splitFile[-1]!='csv':
-            tkinter.messagebox.showinfo(title='REMINDER',message='Please import txt or csv',parent=root)
-            showPlotPathText.config(state='normal')
-            showPlotPathText.delete(0,'end')
-            showPlotPathText.config(state='readonly')            
-        else: 
-            try:
-                bindingData=[]
-                intensityData=[]
-                with open(importFilePath,'r') as f:
-                    for line in f.readlines():
-                        curLine=line.strip().split(" ")
-                        bindingData.append(float(curLine[0]))
-                        intensityData.append(float(curLine[1]))
-            except:
-                tkinter.messagebox.showinfo(title='REMINDER',message='Please import valid data format',parent=root)
-            else:                
+        if importFilePath!='':            
+            splitPath=importFilePath.split('/')
+            splitFile=splitPath[-1].split('.')
+            if splitFile[-1]!='txt' and splitFile[-1]!='csv':
+                tkinter.messagebox.showinfo(title='REMINDER',message='Please import txt or csv',parent=root)
                 showPlotPathText.config(state='normal')
-                showPlotPathText.insert(0,importFilePath)
-                showPlotPathText.config(state='readonly')
+                showPlotPathText.delete(0,'end')
+                showPlotPathText.config(state='readonly')            
+            else: 
+                try:
+                    bindingData=[]
+                    intensityData=[]
+                    with open(importFilePath,'r') as f:
+                        for line in f.readlines():
+                            curLine=line.strip().split(" ")
+                            bindingData.append(float(curLine[0]))
+                            intensityData.append(float(curLine[1]))
+                except:
+                    tkinter.messagebox.showinfo(title='REMINDER',message='Please import valid data format',parent=root)
+                else:                
+                    showPlotPathText.config(state='normal')
+                    showPlotPathText.insert(0,importFilePath)
+                    showPlotPathText.config(state='readonly')
+        else:
+            pass
         
     showPlotPathText=tkinter.Entry(root,state='readonly')
     showPlotPathText.place(relx=140/1000,rely=160/680)   
     importFileButton=tkinter.Button(root,text='Import File (.txt or .csv)',bg='Pink',command=lambda: _click_import_file_button(root,showPlotPathText))
-    importFileButton.place(relx=140/1000,rely=120/680)   
-    selectPlotPhotonButton=ttk.Combobox(root,width=10)
-    selectPlotPhotonButton['value']=[1,1.5,2,3,4,5,6,8,10,15]
-    selectPlotPhotonButton.place(relx=295/1000,rely=125/680)
+    importFileButton.place(relx=140/1000,rely=120/680)
+    
+    selectPlotPhotonButton=ttk.Combobox(root,width=12)
+    selectPlotPhotonButton.set('Select Photon')
+    selectPlotPhotonButton['value']=['1keV','1.5keV','2keV','3keV','4keV','5keV','6keV','8keV','10keV','15keV']
+    selectPlotPhotonButton.place(relx=292/1000,rely=125/680)
     selectPlotElementButton=tkinter.Button(root,text='Select Elements',command=lambda: _click_select_elements(root,searchFunction=False,plotFunction=True))
     selectPlotElementButton.place(relx=295/1000,rely=155/680)
     rangePlotLabel=tkinter.Label(root,text='Please select range of x axis:')
@@ -2401,7 +2408,9 @@ def root_window():
         showPlotPathText.config(state='normal')
         showPlotPathText.delete(0, 'end')
         showPlotPathText.config(state='readonly')
-        selectPlotPhotonButton.set('')
+        selectPlotPhotonButton.set('Select Photon')
+        global importFilePath
+        importFilePath=''
         global uniqueArray2
         for element in uniqueArray2:
             _click_elements_checkbutton2(element,elementArray2)
