@@ -1,4 +1,3 @@
-
 import tkinter
 import numpy as np
 from tkinter import ttk
@@ -13,19 +12,17 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg,NavigationToolba
 import matplotlib.pyplot as plt
 
 
-#-------------------------------------------------------------------------------------------
-#-------------------------------------------------------------------------------------------
-#connect database
-
+'''-------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------
+read Auger data from EADL_database'''
 #get atomic number and atomic name 
 def get_atom():
     number_name=dict()
     with open('EADL_database/atom.txt','r') as f: 
-        for line in f.readlines():
+        for line in f.readlines(): #read each line
             curLine=line.strip().split(" ")
             number_name[int(curLine[0])]=curLine[1]
     return number_name
-
 
 #get electron configuration
 def get_shell():
@@ -33,12 +30,12 @@ def get_shell():
     with open('EADL_database/shell.txt','r') as f:
         for line in f.readlines():        
             curLine=line.strip().split(" ")
-            curLine=['0' if i=='' else i for i in curLine]         
+            curLine=['0' if i=='' else i for i in curLine]    
             if len(curLine)==30:
                 pass
             else:
                 for i in range(30-len(curLine)):
-                    curLine.append('0')
+                    curLine.append('0') #add 0 for empty space
             temp=dict()
             temp['K']=float(curLine[1])
             temp['L1'],temp['L2'],temp['L3']=float(curLine[2]),float(curLine[3]),float(curLine[4])
@@ -49,10 +46,9 @@ def get_shell():
             temp['Q1']=float(curLine[29])
             for key in temp:
                 if temp[key]==0:
-                    temp[key]=None
+                    temp[key]=None #replace 0 with None 
             number_shell[int(curLine[0])]=temp
     return number_shell
-
 
 #get electrons energies
 def get_energies():  
@@ -80,7 +76,6 @@ def get_energies():
             number_energies[int(curLine[0])]=temp
     return number_energies
 
-
 #get barkla and orbital notation
 def get_notation():
     barkla_orbital=dict()
@@ -90,7 +85,7 @@ def get_notation():
             barkla_orbital[curLine[0]]=curLine[1]+' '+curLine[2]
     return barkla_orbital
 
-
+#get the max and min Auger energies for each element
 def get_range():
     number_range=dict()
     with open('EADL_database/energies_range.txt','r') as f:
@@ -102,18 +97,17 @@ def get_range():
             number_range[int(curLine[0])]=temp
     return number_range
 
-
-
-
-#----------------------------------------------------------------------------------------------
-#----------------------------------------------------------------------------------------------
-#get cross section data
+'''----------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------
+read cross section data from Scofield_csv_database'''
+#get cross section data for specified photon and number
 def get_cross_section(number,photon_energy):
     photon_shell_cross=dict()
     shell_cross=dict()
-    with open('Scofield_csv_database/%d.csv'%number,'r') as f:
+    with open('Scofield_csv_database/%d.csv'%number,'r') as f: 
         f.readline()
         for line in f.readlines():
+        # store all cross section for different photon energies
             if number<=4:
                 curLine=line.strip().split(",")
                 temp=dict()
@@ -507,14 +501,12 @@ def get_cross_section(number,photon_energy):
                 temp['6d5/2']=float(curLine[28])
                 temp['7s1/2']=float(curLine[29])
                 photon_shell_cross[float(curLine[0])]=temp
-                  
-                   
-    #print(photon_shell_cross)
-    
 
-    if photon_energy in photon_shell_cross:
+    '''To get the cross section for different photon, if the selected photon is one of the standard photon recorded in file,
+     get the cross section from the table directly. If not, use linear interpolation to calculate cross section'''                                    
+    if photon_energy in photon_shell_cross: 
         shell_cross=photon_shell_cross[photon_energy]
-    elif photon_energy>1 and photon_energy<1.5:
+    elif photon_energy>1 and photon_energy<1.5: 
         start_cross=photon_shell_cross[1]
         end_cross=photon_shell_cross[1.5]
         for shell in start_cross:
@@ -645,41 +637,38 @@ def get_cross_section(number,photon_energy):
         for shell in start_cross:
             shell_cross[shell]=((end_cross[shell]-start_cross[shell])/(1500-1000))*(photon_energy-1500)+end_cross[shell]
         
-
-
-    norm_shell_cross=dict()
+    norm_shell_cross=dict() #norm the cross section for each single element
     for shell in shell_cross:
         norm_shell_cross[shell]=(shell_cross[shell]/max(shell_cross.values()))*100
             
-    #print(norm_shell_cross)
     return norm_shell_cross,shell_cross
 
 
-#-------------------------------------------------------------------------------------------
-#-------------------------------------------------------------------------------------------
-#All about Auger Transition window
+'''-------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------
+All about Auger Transition window'''
 
-#Calculate Auger energies for transitions
-def calculate_auger(number):
-    #read from database
-    number_shell=get_shell()
-    shell_electrons=number_shell[number]
+#Calculate Auger energies for specified element
+def calculate_auger(number):    
+    number_shell=get_shell() #read from database
+    shell_electrons=number_shell[number] #shell configuration for specfied element
     number_energies=get_energies()
-    currentEnergies=number_energies[number]
-    nextEnergies=number_energies[number+1]
+    currentEnergies=number_energies[number] #core energies for current element with atomic number Z
+    nextEnergies=number_energies[number+1]  #core configuration for element with atomic number Z+1
     
-    nonNoneEnergies=dict()
+    nonNoneEnergies=dict() #delete subshell without energies
     for energy in currentEnergies:
         if currentEnergies[energy]!=None:
             nonNoneEnergies[energy]=currentEnergies[energy]
     
-    #get Auger transition and Auger energies
+    #get Auger transition and energies of current element
     transitionArray=[]
-    for i in itertools.combinations_with_replacement(nonNoneEnergies.keys(), 3): 
+    for i in itertools.combinations_with_replacement(nonNoneEnergies.keys(), 3): #permutation and combination
         temp=','.join(i)
         transitionArray.append(temp)
     transitionArrayCopy=transitionArray.copy()
     for transition in transitionArrayCopy:
+        #delete impossible combination 
         temp=shlex.shlex(transition,posix=True)
         temp.whitespace += ','
         temp.whitespace_split = True
@@ -721,9 +710,11 @@ def calculate_auger(number):
         vacancy=temp[0]
         inter1=temp[1]
         inter2=temp[2]
+        
+        #calculate Auger energies 
         energies=currentEnergies[vacancy]-0.5*(currentEnergies[inter1]+nextEnergies[inter1])-0.5*(currentEnergies[inter2]+nextEnergies[inter2])
         energies=Decimal(energies).quantize(Decimal('0.00'))
-        if energies>0:
+        if energies>0: #delete impossible transition whose energies is less than 0
            transition_energies[transition]=energies
     
     #get Auger Intensity
@@ -733,6 +724,8 @@ def calculate_auger(number):
         temp.whitespace += ','
         temp.whitespace_split = True
         temp=list(temp)
+        
+        #calculate multplicity
         mult=shell_electrons[temp[0]]*shell_electrons[temp[1]]*shell_electrons[temp[2]]      
         mult=Decimal(mult).quantize(Decimal('0.0000'))
         multArray.append(mult)
@@ -740,17 +733,18 @@ def calculate_auger(number):
     
     normArray=[]
     for mult in multArray:
+        #calculate norm mult
         norm=(100*mult)/maxMult
         norm=Decimal(norm).quantize(Decimal('0.0'))
         normArray.append(norm)
         
     return transition_energies,normArray
         
-                              
-    
-    
+#Click plot button on Auger Transition window                                 
 def click_plot_for_elment_button(selectPlotV,selectPlotPhotonButton,inputPlotEntry,augerWindow,transition_energies,normArray,atomNumber,nonNoneValue):
     continuePlot=False
+    
+    #message box for error user inputs or selects
     if (selectPlotPhotonButton.get()=='No selection' and  inputPlotEntry.get()=='') or (selectPlotPhotonButton.get()!='No selection' and  inputPlotEntry.get()!=''):
         tkinter.messagebox.showinfo(title='ERROR',message='Please input or select',parent=augerWindow)
     elif selectPlotPhotonButton.get()=='No selection' and inputPlotEntry.get()!='':
@@ -773,8 +767,9 @@ def click_plot_for_elment_button(selectPlotV,selectPlotPhotonButton,inputPlotEnt
         elif selectPlotPhotonButton.get()=='Ga 9251.74(eV)':
             selectPhoton=9251.74
     
+    #user selects all the options, program plots the figure
     if continuePlot==True:
-        if selectPlotV.get()==1: #binding
+        if selectPlotV.get()==1: #select plot binding energies
             if len(transition_energies)<=10:
                 fontSize=10
             else:
@@ -788,6 +783,7 @@ def click_plot_for_elment_button(selectPlotV,selectPlotPhotonButton,inputPlotEnt
             
             index=0
             for transition in transition_energies:
+                #calculate binding energies of Auger transitions
                 if (selectPhoton-float(transition_energies[transition]))>=0:                
                     transitionXValue.append(Decimal(selectPhoton-float(transition_energies[transition])).quantize(Decimal('0.00')))
                     transitionYHeight.append(normArray[index])
@@ -795,7 +791,7 @@ def click_plot_for_elment_button(selectPlotV,selectPlotPhotonButton,inputPlotEnt
                 index+=1
             figure, ax = plt.subplots(1,1)
             transitionYMin=np.zeros(len(transitionXValue))
-            plt.vlines(transitionXValue,transitionYMin,transitionYHeight)
+            plt.vlines(transitionXValue,transitionYMin,transitionYHeight) #plot Auger lines
             index=0
             for transition in positiveTransitions:
                 transitionText=transition.replace(',','')
@@ -806,7 +802,7 @@ def click_plot_for_elment_button(selectPlotV,selectPlotPhotonButton,inputPlotEnt
             coreXValues=list(nonNoneValue.values())
             coreYHeight=list(norm_shell_cross.values())
             coreYMin=np.zeros(len(coreXValues))
-            plt.vlines(coreXValues,coreYMin,coreYHeight,color='red')
+            plt.vlines(coreXValues,coreYMin,coreYHeight,color='red') #plot core lines
             index=0
             for shell in norm_shell_cross:
                 plt.text(coreXValues[index],coreYHeight[index],shell,rotation=90)
@@ -822,7 +818,7 @@ def click_plot_for_elment_button(selectPlotV,selectPlotPhotonButton,inputPlotEnt
             toolbar.update()
             canvas._tkcanvas.pack(side=tkinter.TOP, fill=tkinter.BOTH,expand=tkinter.YES)
             plotWindow.mainloop()
-        elif selectPlotV.get()==2: #kinetic
+        elif selectPlotV.get()==2: #select plot kinetic energies
             if len(transition_energies)<=10:
                 fontSize=10
             else:
@@ -844,11 +840,10 @@ def click_plot_for_elment_button(selectPlotV,selectPlotPhotonButton,inputPlotEnt
             norm_shell_cross,shell_cross=get_cross_section(atomNumber,selectPhoton)
             coreKineticEnergy=[]
             for shell in nonNoneValue:
-                coreKineticEnergy.append(selectPhoton-nonNoneValue[shell])
+                coreKineticEnergy.append(selectPhoton-nonNoneValue[shell]) #calculte kinetic energies of core state energies
                 
             shell_list=list(norm_shell_cross.keys())
-            norm_cross_list=list(norm_shell_cross.values())
-            
+            norm_cross_list=list(norm_shell_cross.values())           
             coreXValues=[]
             coreYHeight=[]            
             coreText=[]
@@ -862,7 +857,7 @@ def click_plot_for_elment_button(selectPlotV,selectPlotPhotonButton,inputPlotEnt
                 index+=1
             
             coreYMin=np.zeros(len(coreXValues))
-            plt.vlines(coreXValues,coreYMin,coreYHeight,color='red')
+            plt.vlines(coreXValues,coreYMin,coreYHeight,color='red') #plot core lines
             index=0
             for text in coreText:
                 plt.text(coreXValues[index],coreYHeight[index],text,rotation=90)
@@ -881,9 +876,9 @@ def click_plot_for_elment_button(selectPlotV,selectPlotPhotonButton,inputPlotEnt
             tkinter.messagebox.showinfo(title='ERROR',message='Please select BE or KE',parent=augerWindow)
             
 
-
+#window of Auger transitions for corresponding element
 def element_transition_window(index):
-    global lastChoice
+    global lastChoice # last computed photon energy
     lastChoice=''
     atomNumber=index+3
     augerWindow=tkinter.Toplevel()
@@ -923,7 +918,6 @@ def element_transition_window(index):
     
     #calculate energies and norm mult for transitions
     transition_energies,normArray=calculate_auger(atomNumber)
-
     
     #transition table
     if len(transition_energies)<=28:
@@ -950,6 +944,7 @@ def element_transition_window(index):
     transitionTable.configure(yscrollcommand=ybar.set)
     ybar.place(relx=0.95, rely=0.02, relwidth=0.035, relheight=0.958)
     
+    #add convert function componetns
     selectConvertPhotonButton=ttk.Combobox(augerWindow)    
     selectConvertPhotonButton.place(relx=550/1200,rely=20/680)
     selectConvertPhotonButton['value']=('Mg 1253.6(eV)','Al 1486.7(eV)','Ag 2984.3(eV)','Cr 5414.9(eV)','Ga 9251.74(eV)','No selection')
@@ -960,12 +955,10 @@ def element_transition_window(index):
     inputConvertEntry.place(relx=800/1200,rely=20/680)    
     unitConvertLabel=tkinter.Label(augerWindow,text='(eV)')
     unitConvertLabel.place(relx=950/1200,rely=20/680)
-    
-
     lastConvertLabel=tkinter.Label(augerWindow,text='Values in table calculated for: %s'%lastChoice)
     lastConvertLabel.place(relx=930/1200,rely=50/680)
     
-    
+    #Click convert button
     def _click_convert_button(selectConvertPhotonButton,transitionTable,position,inputConvertEntry,augerWindow,lastConvertLabel):
         def _update_table(transitionTable,inputValue,position):
             for index in range(position):
@@ -982,6 +975,8 @@ def element_transition_window(index):
         lastConvertLabel['text']='Values in table calculated for: %s'%lastChoice
         inputValue=inputConvertEntry.get()  
         selectChoice=selectConvertPhotonButton.get()
+        
+        #Check user selection and input
         if (selectChoice=='No selection' and inputValue=='') or (selectChoice!='No selection' and inputValue!=''):
             tkinter.messagebox.showinfo(title='ERROR',message='Please input or select',parent=augerWindow)
         elif selectChoice=='No selection' and inputValue!='':
@@ -1013,8 +1008,9 @@ def element_transition_window(index):
     convertButton=tkinter.Button(augerWindow,text='Convert',bg='Orange',command=lambda: _click_convert_button(selectConvertPhotonButton,transitionTable,position,inputConvertEntry,augerWindow,lastConvertLabel))
     convertButton.place(relx=1000/1200,rely=20/680)    
     
-    
+    #Click clear button
     def _click_clear_convert_button(inputConvertEntry,selectConvertPhotonButton,transitionTable,position):
+        #Clear selection and entry
         inputConvertEntry.delete(0,'end')
         selectConvertPhotonButton.current(5)
         for index in range(position):
@@ -1023,7 +1019,7 @@ def element_transition_window(index):
     clearButton=tkinter.Button(augerWindow,text='Clear',command=lambda: _click_clear_convert_button(inputConvertEntry,selectConvertPhotonButton,transitionTable,position))
     clearButton.place(relx=1065/1200,rely=20/680)
     
-    
+    #Click export button
     def _click_export_convert_button(augerWindow,transitionTable,position,atomName):
         reminderBox=tkinter.messagebox.askquestion('Confirmation','Do you want to continue?',parent=augerWindow)
         if reminderBox=='yes':
@@ -1065,8 +1061,7 @@ def element_transition_window(index):
     exportConvertButton=tkinter.Button(augerWindow,text='Export',bg='LightBlue',command=lambda: _click_export_convert_button(augerWindow,transitionTable,position,atomName))
     exportConvertButton.place(relx=1140/1200,rely=20/680)
     
-    
-    
+    #Plot function components
     selectPlotPhotonButton=ttk.Combobox(augerWindow,width=11)
     selectPlotPhotonButton['value']=('Mg 1253.6(eV)','Al 1486.7(eV)','Ag 2984.3(eV)','Cr 5414.9(eV)','Ga 9251.74(eV)','No selection')
     selectPlotPhotonButton.current(5)
@@ -1092,26 +1087,18 @@ def element_transition_window(index):
     clearPlotButton=tkinter.Button(augerWindow,text='Clear',command=lambda: _click_clear_plot_button(selectPlotPhotonButton,inputPlotEntry,selectPlotV))
     clearPlotButton.place(relx=430/1200,rely=15/680)
     
-    
-    
-    
-    
-    
-    
     augerWindow.mainloop()
 
 
 
 
-#-------------------------------------------------------------------------------------------
-#-------------------------------------------------------------------------------------------
-#All about root window
+'''-------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------
+All about root window'''
 
-
-#plot dataset
+#Click plot button on root window
 def click_plot_data_button(importFilePath,root,showPlotPathText,selectPlotPhotonButton,plotXV):
-    #if showPlotPathText.get()=='':
-        #tkinter.messagebox.showinfo(title='ERROR',message='Please import file',parent=root)
+    #Check user selection and input, pop up message box to catch error
     if selectPlotPhotonButton.get()=='':
         tkinter.messagebox.showinfo(title='ERROR',message='Please select photon energy',parent=root)
     elif len(uniqueArray2)==0:
@@ -1127,6 +1114,7 @@ def click_plot_data_button(importFilePath,root,showPlotPathText,selectPlotPhoton
         intensityData=[]
         normalIntensityData=[]
         
+        #user import file
         if importFilePath!='':           
             with open(importFilePath,'r') as f:            
                 for line in f.readlines():
@@ -1144,12 +1132,14 @@ def click_plot_data_button(importFilePath,root,showPlotPathText,selectPlotPhoton
         
         figure,ax=plt.subplots(1,1)
         
-        maxCrossEachElement=[]
+        maxCrossEachElement=[] #max cross section for each element
         for number in uniqueArray2:
             norm_shell_cross,shell_cross=get_cross_section(number,selectPhoton)
             maxCrossEachElement.append(max(shell_cross.values()))
         
-        maxCrossAllElement=max(maxCrossEachElement)
+        maxCrossAllElement=max(maxCrossEachElement) #max cross section for selected elements
+        
+        #define a set of colors to plot different elements
         plotColor=['red','green','yellow','purple','c',
                    'lightcoral','olivedrab','darkorange','mediumorchid','aquamarine',
                    'indianred','greenyellow','orange','thistle','turquoise',
@@ -1185,10 +1175,10 @@ def click_plot_data_button(importFilePath,root,showPlotPathText,selectPlotPhoton
             coreXValues=list(nonNoneValue.values())
             coreYHeight=list(norm_cross_section.values())
             coreYMin=np.zeros(len(coreXValues))
-            plt.vlines(coreXValues,coreYMin,coreYHeight,color=plotColor[colorIndex])
+            plt.vlines(coreXValues,coreYMin,coreYHeight,color=plotColor[colorIndex]) #plot core lines
             index=0
             for shell in norm_shell_cross:
-                plt.text(coreXValues[index],coreYHeight[index],number_name[number]+''+shell,rotation=90)
+                plt.text(coreXValues[index],coreYHeight[index],number_name[number]+''+shell,rotation=90) #add core label
                 index+=1
             transition_energies,normArray=calculate_auger(number)
             
@@ -1214,16 +1204,16 @@ def click_plot_data_button(importFilePath,root,showPlotPathText,selectPlotPhoton
                     transitiontext.append(shellText[index])
                 index+=1
             transitionYMin=np.zeros(len(transitionYHeight))
-            plt.vlines(transitionXValues,transitionYMin,transitionYHeight,color=plotColor[colorIndex])
+            plt.vlines(transitionXValues,transitionYMin,transitionYHeight,color=plotColor[colorIndex]) #plot transition lines
             
             index=0
             for t in transitiontext:
-                plt.text(transitionXValues[index],transitionYHeight[index],number_name[number]+t,rotation=90)
+                plt.text(transitionXValues[index],transitionYHeight[index],number_name[number]+t,rotation=90) #add transition label
                 index+=1
             colorIndex+=1
         
         if importFilePath!='':
-            plt.plot(bindingData,normalIntensityData)
+            plt.plot(bindingData,normalIntensityData) #plot dataset if user imports file
         else:
             pass
         
@@ -1246,24 +1236,21 @@ def click_plot_data_button(importFilePath,root,showPlotPathText,selectPlotPhoton
         plotWindow.mainloop()
   
 
-          
-def click_sort_search_button(table,position,descending,auger_range,core_state):
+#click descending or ascending button on search window          
+def click_sort_search_button(table,position,descending,auger_range,core_state):   
+    global sortOrder #descending, ascending or sort by number
+    position_energies=dict() 
     
-    global sortOrder
-    position_energies=dict()
-    
-    
-    if auger_range==True and core_state==False:
+    if auger_range==True and core_state==False: #search Auger transition
         for p in range(position):
             p+=1
-            position_energies[p]=float(table.set(p,'#3'))
-          
-    elif auger_range==False or (auger_range==True and core_state==True):
+            position_energies[p]=float(table.set(p,'#3'))          
+    elif auger_range==False or (auger_range==True and core_state==True): #search core energies or both
         for p in range(position):
             p+=1
             position_energies[p]=float(table.set(p,'#4'))
 
-        
+    #sort the table by energies    
     if descending==True: 
         sortOrder='descending'
         sort_position=sorted(position_energies.items(),key=lambda x:x[1],reverse=True)
@@ -1273,7 +1260,7 @@ def click_sort_search_button(table,position,descending,auger_range,core_state):
     
     
     new_table=[]
-    if auger_range==True and core_state==False:        
+    if auger_range==True and core_state==False: #search Auger        
         for i in sort_position:
             p=i[0]
             temp=[]
@@ -1289,7 +1276,7 @@ def click_sort_search_button(table,position,descending,auger_range,core_state):
             table.set(p,'#2',new_table[p-1][1])
             table.set(p,'#3',new_table[p-1][2])
             table.set(p,'#4',new_table[p-1][3])
-    elif auger_range==False:
+    elif auger_range==False: #search core state
         for i in sort_position:
             p=i[0]
             temp=[]
@@ -1306,7 +1293,7 @@ def click_sort_search_button(table,position,descending,auger_range,core_state):
             table.set(p,'#3',new_table[p-1][2])
             table.set(p,'#4',new_table[p-1][3])
             
-    elif (auger_range==True and core_state==True):
+    elif (auger_range==True and core_state==True): #search both
         for i in sort_position:
             p=i[0]
             temp=[]
@@ -1325,17 +1312,14 @@ def click_sort_search_button(table,position,descending,auger_range,core_state):
             table.set(p,'#4',new_table[p-1][3])
             table.set(p,'#5',new_table[p-1][4])
     
-
-
- 
-
+#click sort by number button on search window
 def click_sort_number_search_button(correct_energies,table,position,orbitalNotationList,normColumnList,auger_range,core_state):
     global sortOrder
     barkla_orbital=get_notation()
     sortOrder='by_number'
     new_table=[]
 
-    if auger_range==True and core_state==False:
+    if auger_range==True and core_state==False: #search Auger
         index=0
         for atom_name in correct_energies: 
             current_transitions=correct_energies[atom_name]
@@ -1356,7 +1340,7 @@ def click_sort_number_search_button(correct_energies,table,position,orbitalNotat
             table.set(p,'#4',new_table[p-1][3])
             
             
-    elif auger_range==False:
+    elif auger_range==False:  #search core state
         for atom_name in correct_energies:
             current_energies=correct_energies[atom_name]
             for shell in current_energies:
@@ -1375,7 +1359,7 @@ def click_sort_number_search_button(correct_energies,table,position,orbitalNotat
             table.set(p,'#3',new_table[p-1][2])
             table.set(p,'#4',new_table[p-1][3])
             
-    elif auger_range==True and core_state==True:
+    elif auger_range==True and core_state==True:  #search both
         index=0
         for atom_name in correct_energies: 
             current_transitions=correct_energies[atom_name]
@@ -1397,7 +1381,7 @@ def click_sort_number_search_button(correct_energies,table,position,orbitalNotat
             table.set(p,'#4',new_table[p-1][3])
             table.set(p,'#5',new_table[p-1][4])
 
-
+#click export button on search window
 def click_export_search_data_button(rangeWindow,table,position,selectTranCoreV,selectAtomV,selectEnergyV,rangeMin,rangeMax,selectPhoton):
     number_name=get_atom()
     reminderBox=tkinter.messagebox.askquestion('Confirmation','Do you want to continue?',parent=rangeWindow)
@@ -1406,8 +1390,8 @@ def click_export_search_data_button(rangeWindow,table,position,selectTranCoreV,s
     if reminderBox=='yes':
         filePath=askdirectory(parent=rangeWindow)
         if filePath!='':
-            if selectTranCoreV.get()==1:
-                tableHeader=['Atom','Auger Transition','Auger Energy','Norm Mult']
+            if selectTranCoreV.get()==1: #search Auger
+                tableHeader=['Atom','Auger Transition','Auger Energy','Norm Mult'] #define the table header
                 tableData=[]
                 for p in range(position):
                     temp=[]
@@ -1416,15 +1400,15 @@ def click_export_search_data_button(rangeWindow,table,position,selectTranCoreV,s
                     temp.append(table.set(p+1,'#3'))
                     temp.append(table.set(p+1,'#4'))
                     tableData.append(temp)
-                if selectAtomV.get()==1:
+                if selectAtomV.get()==1: #select all elements
                     if selectEnergyV.get()==1:
                         filePath=filePath+'/'+'Auger_transitions_'+'from_'+rangeMin+'_to_'+rangeMax+'_KE_'+sortOrder+'.txt'
                     elif selectEnergyV.get()==2:
                         selectPhoton=str(selectPhoton)
                         filePath=filePath+'/'+'Auger_transitions_'+'from_'+rangeMin+'_to_'+rangeMax+'_BE_'+selectPhoton+'_'+sortOrder+'.txt'
-                    with open(filePath,'w') as f:
+                    with open(filePath,'w') as f: #write data to file
                         f.write(tabulate(tableData,headers=tableHeader))
-                elif selectAtomV.get()==2:
+                elif selectAtomV.get()==2: #select some elements
                     nameStr=''
                     for number in uniqueArray:
                         nameStr=nameStr+number_name[number]
@@ -1435,7 +1419,7 @@ def click_export_search_data_button(rangeWindow,table,position,selectTranCoreV,s
                         filePath=filePath+'/'+'Auger_transitions_'+'from_'+rangeMin+'_to_'+rangeMax+'_BE_'+selectPhoton+'_'+sortOrder+'_'+nameStr+'.txt'
                     with open(filePath,'w') as f:
                         f.write(tabulate(tableData,headers=tableHeader))
-            elif selectTranCoreV.get()==2:
+            elif selectTranCoreV.get()==2: #search core state
                 tableHeader=['Atom','Barkla Notation','Orbital Notation','Binding Energies']
                 tableData=[]
                 for p in range(position):
@@ -1445,7 +1429,7 @@ def click_export_search_data_button(rangeWindow,table,position,selectTranCoreV,s
                     temp.append(table.set(p+1,'#3'))
                     temp.append(table.set(p+1,'#4'))
                     tableData.append(temp)
-                if selectAtomV.get()==1:
+                if selectAtomV.get()==1: #select all elements
                     if selectEnergyV.get()==1:
                         selectPhoton=str(selectPhoton)
                         filePath=filePath+'/'+'Core_State_Energies_'+'from_'+rangeMin+'_to_'+rangeMax+'_KE_'+selectPhoton+'_'+sortOrder+'.txt'
@@ -1453,7 +1437,7 @@ def click_export_search_data_button(rangeWindow,table,position,selectTranCoreV,s
                         filePath=filePath+'/'+'Core_State_Energies_'+'from_'+rangeMin+'_to_'+rangeMax+'_BE_'+sortOrder+'.txt'
                     with open(filePath,'w') as f:
                         f.write(tabulate(tableData,headers=tableHeader))
-                elif selectAtomV.get()==2:
+                elif selectAtomV.get()==2: #select some elements
                     nameStr=''
                     for number in uniqueArray:
                         nameStr=nameStr+number_name[number]
@@ -1464,7 +1448,7 @@ def click_export_search_data_button(rangeWindow,table,position,selectTranCoreV,s
                         filePath=filePath+'/'+'Core_State_Energies_'+'from_'+rangeMin+'_to_'+rangeMax+'_BE_'+sortOrder+'_'+nameStr+'.txt'
                     with open(filePath,'w') as f:
                         f.write(tabulate(tableData,headers=tableHeader))
-            elif selectTranCoreV.get()==3:
+            elif selectTranCoreV.get()==3: #search both
                 tableHeader=['Atom','Auger Transition/Notation(Barkla)','Auger Transition/Notation(Orbital)','Auger Energies/Core State Energies','Norm Mult']
                 tableData=[]
                 for p in range(position):
@@ -1496,8 +1480,6 @@ def click_export_search_data_button(rangeWindow,table,position,selectTranCoreV,s
                         filePath=filePath+'/'+'Search_Both_'+'from_'+rangeMin+'_to_'+rangeMax+'_BE_'+selectPhoton+'_'+sortOrder+'_'+nameStr+'.txt'
                     with open(filePath,'w') as f:
                         f.write(tabulate(tableData,headers=tableHeader))
-                        
-   
         else:
             pass
         
@@ -1506,12 +1488,14 @@ def click_export_search_data_button(rangeWindow,table,position,selectTranCoreV,s
 
 
 
-            
+#click search button on root window            
 def click_search_button(root, searchFromEntry,searchToEntry,selectTranCoreV,selectAtomV,selectEnergyV,selectSearchPhotonButton,searchInputEntry):
     fromValue=searchFromEntry.get()
     toValue=searchToEntry.get()
     continueSearch=False
     selectPhoton=0
+    
+    #check user selection and input
     if fromValue=='' or toValue=='':
         tkinter.messagebox.showinfo(title='ERROR',message='Please input values',parent=root)
     else:
@@ -1553,6 +1537,8 @@ def click_search_button(root, searchFromEntry,searchToEntry,selectTranCoreV,sele
                         selectPhoton=9251.74 
             else:
                 continueSearch=True
+    
+    #user selects and inpus correct options, execute search algorithm
     if continueSearch==True:
         rangeWindow=tkinter.Tk()
         rangeWindow.geometry("1200x680")
@@ -1576,11 +1562,11 @@ def click_search_button(root, searchFromEntry,searchToEntry,selectTranCoreV,sele
                         if temp['Max']<rangeMin or temp['Min']>rangeMax:                           
                             pass
                         else:
-                            correctAtom.append(number)       
+                            correctAtom.append(number)    #all elements whose range is in the specfied range   
                     correctAtomTransitions=dict()  
                     transitionsNumber=0
                     normArrayList=[]
-                    for number in correctAtom:
+                    for number in correctAtom: #check all transitions for correct atom
                         temp=dict()
                         atom_name=number_name[number]
                         current_transitions_energies,normArray=calculate_auger(number)
@@ -1589,11 +1575,11 @@ def click_search_button(root, searchFromEntry,searchToEntry,selectTranCoreV,sele
                             if current_transitions_energies[transition]>=rangeMin and current_transitions_energies[transition]<=rangeMax:
                                 transitionsNumber+=1
                                 temp[transition]=current_transitions_energies[transition]
-                                correctAtomTransitions[atom_name]=temp
+                                correctAtomTransitions[atom_name]=temp #add correct transitions
                                 normArrayList.append(normArray[index])
                             index+=1
 
-                elif selectEnergyV.get()==2:
+                elif selectEnergyV.get()==2:  #search be
                     for number in number_range:
                         temp=number_range[number]
                         tempMin=selectPhoton-temp['Max']
@@ -1651,15 +1637,13 @@ def click_search_button(root, searchFromEntry,searchToEntry,selectTranCoreV,sele
                                 correctAtomTransitions[atom_name]=temp
                                 normArrayList.append(normArray[index])
                             index+=1
-                    
-                                                      
-                                                      
-                
+
             if transitionsNumber>0:
                 if transitionsNumber<=32:
                     tableRow=transitionsNumber
                 else:
                     tableRow=32
+                #table displays all transitions with the energies in the range
                 transitionTable=ttk.Treeview(rangeWindow,height=tableRow,columns=['1','2','3','4'],show='headings')
                 transitionTable.column('1',width=100) 
                 transitionTable.column('2',width=200) 
@@ -1681,6 +1665,7 @@ def click_search_button(root, searchFromEntry,searchToEntry,selectTranCoreV,sele
                 transitionTable.configure(yscrollcommand=ybar.set)
                 ybar.place(relx=0.95, rely=0.02, relwidth=0.035, relheight=0.958)
                 
+                #add sort and export button
                 descendingButton=tkinter.Button(rangeWindow,text='Descending order (energies)',bg='LightPink',command=lambda: click_sort_search_button(transitionTable,position,descending=True,auger_range=True,core_state=False))
                 descendingButton.place(relx=950/1200,rely=50/680)
                 ascendingButton=tkinter.Button(rangeWindow,text='Ascending order (energies)',bg='LightBlue',command=lambda: click_sort_search_button(transitionTable,position,descending=False,auger_range=True,core_state=False))
@@ -1690,7 +1675,6 @@ def click_search_button(root, searchFromEntry,searchToEntry,selectTranCoreV,sele
                 exportButton=tkinter.Button(rangeWindow,text='Export',bg='Yellow',command=lambda: click_export_search_data_button(rangeWindow,transitionTable,position,selectTranCoreV,selectAtomV,selectEnergyV,rangeMin,rangeMax,selectPhoton))
                 exportButton.place(relx=950/1200,rely=300/680)
 
-         
             else:
                 tkinter.messagebox.showinfo(title='REMINDER',message='No relevant results',parent=rangeWindow)
         
@@ -1953,7 +1937,7 @@ def click_search_button(root, searchFromEntry,searchToEntry,selectTranCoreV,sele
                 table.heading('4', text='Auger Energies / Core State Energies')
                 table.heading('5', text='Norm Mult')
                 table.pack()
-                two_tables=dict()
+                two_tables=dict() #combine the core energies and Auger together
                 for number in number_name:
                     name=number_name[number]
                     if name in correctCore.keys() and name in correctAtomTransitions.keys():
@@ -1970,7 +1954,6 @@ def click_search_button(root, searchFromEntry,searchToEntry,selectTranCoreV,sele
                     elif name in correctAtomTransitions.keys():
                         two_tables[name]=correctAtomTransitions[name]
                 position=0
-                #print(two_tables)
                 orbitalNotation=''
                 orbitalNotationList=[]
                 normColumn=''
@@ -1979,12 +1962,12 @@ def click_search_button(root, searchFromEntry,searchToEntry,selectTranCoreV,sele
                 for name in two_tables:
                     current_transitions=two_tables[name]
                     for t in current_transitions:
-                        if len(t)==2:
+                        if len(t)==2 or len(t)==1:
                             orbitalNotation=barkla_orbital[t]
                             orbitalNotationList.append(orbitalNotation)
                             normColumn=''
                             normColumnList.append(normColumn)
-                        elif len(t)==8:
+                        elif len(t)==8 or len(t)==7:
                             splitTransition=t.split(',')
                             orbitalTransition=barkla_orbital[splitTransition[0]].replace(' ','')+' '+barkla_orbital[splitTransition[1]].replace(' ','')+' '+barkla_orbital[splitTransition[2]].replace(' ','')
                             orbitalNotation=orbitalTransition
@@ -1992,10 +1975,11 @@ def click_search_button(root, searchFromEntry,searchToEntry,selectTranCoreV,sele
                             normColumn=normArrayList[index]    
                             normColumnList.append(normColumn)
                             index+=1
+
+
                         table.insert('',position,iid=position+1,values=(name,t,orbitalNotation,current_transitions[t],normColumn))
                         position+=1
-                        
-                
+
                 ybar=Scrollbar(table,orient='vertical', command=table.yview,bg='Gray')
                 table.configure(yscrollcommand=ybar.set)
                 ybar.place(relx=0.95, rely=0.02, relwidth=0.025, relheight=0.958)
@@ -2011,21 +1995,16 @@ def click_search_button(root, searchFromEntry,searchToEntry,selectTranCoreV,sele
                 
             else:
                 tkinter.messagebox.showinfo(title='REMINDER',message='No relevant results',parent=rangeWindow)
-                    
-
-      
-                                
 
         rangeWindow.mainloop()
-            
-
-
 
 #root window
 def root_window():
     root=tkinter.Tk() 
     root.geometry("1000x680")
     root.title('SpeedyAuger')
+    
+    #define buttons for corresponding elements 3-93
     tkinter.Button(root,text='1 H',width=5,height=2,bg='Gray').place(relx=30/1000,rely=10/680) #1
     tkinter.Button(root,text='2 He',width=5,height=2,bg='Gray').place(relx=880/1000,rely=10/680) #18
     uncover_atom=dict()
@@ -2035,7 +2014,7 @@ def root_window():
     uncover_atom[113],uncover_atom[114],uncover_atom[115],uncover_atom[116],uncover_atom[117],uncover_atom[118]='Nh','Fl','Mc','Lv','Ts','Og'
     for i in range(25):
         if i<=8:
-            tkinter.Button(root,text='%(number)d %(name)s'%{'number':i+94,'name':uncover_atom[i+94]},width=5,height=2,bg='Gray').place(relx=(380+i*50)/1000, rely=500/680)
+            tkinter.Button(root,text='%(number)d %(name)s'%{'number':i+94,'name':uncover_atom[i+94]},width=5,height=2,bg='Gray').place(relx=(380+i*50)/1000, rely=490/680)
         else:
             tkinter.Button(root,text='%(number)d %(name)s'%{'number':i+94,'name':uncover_atom[i+94]},width=5,height=2,bg='Gray').place(relx=(130+(i-9)*50)/1000, rely=370/680)  
     number_name=get_atom()    
@@ -2064,7 +2043,7 @@ def root_window():
         elif i==52 or i==53:
             tkinter.Button(root,text='%(number)d %(name)s'%{'number':i+3,'name':atom_name},command = lambda text=i: element_transition_window(text),width=5,height=2,bg='Salmon').place(relx=(30+(i-52)*50)/1000, rely=310/680)
         elif i>=54 and i<=67:
-            tkinter.Button(root,text='%(number)d %(name)s'%{'number':i+3,'name':atom_name},command = lambda text=i: element_transition_window(text),width=5,height=2,bg='LightGreen').place(relx=(30+(i-52)*50)/1000, rely=440/680)
+            tkinter.Button(root,text='%(number)d %(name)s'%{'number':i+3,'name':atom_name},command = lambda text=i: element_transition_window(text),width=5,height=2,bg='LightGreen').place(relx=(30+(i-52)*50)/1000, rely=430/680)
         elif i<=77:
             tkinter.Button(root,text='%(number)d %(name)s'%{'number':i+3,'name':atom_name},command = lambda text=i: element_transition_window(text),width=5,height=2,bg='PowderBlue').place(relx=(130+(i-68)*50)/1000, rely=310/680)
         elif i<=83:
@@ -2072,7 +2051,7 @@ def root_window():
         elif i==84 or i==85:
             tkinter.Button(root,text='%(number)d %(name)s'%{'number':i+3,'name':atom_name},command = lambda text=i: element_transition_window(text),width=5,height=2,bg='Salmon').place(relx=(30+(i-84)*50)/1000, rely=370/680)
         else:
-            tkinter.Button(root,text='%(number)d %(name)s'%{'number':i+3,'name':atom_name},command = lambda text=i: element_transition_window(text),width=5,height=2,bg='LightGreen').place(relx=(30+(i-84)*50)/1000, rely=500/680)
+            tkinter.Button(root,text='%(number)d %(name)s'%{'number':i+3,'name':atom_name},command = lambda text=i: element_transition_window(text),width=5,height=2,bg='LightGreen').place(relx=(30+(i-84)*50)/1000, rely=490/680)
     
     #components of search function
     searchFromLabel=tkinter.Label(root,text='from')
@@ -2086,17 +2065,20 @@ def root_window():
     searchUnitLabel=tkinter.Label(root,text='(eV)')
     searchUnitLabel.place(relx=500/1000,rely=10/680)
     
-    
-    
     selectSearchPhotonButton=ttk.Combobox(root,width=11)
     selectSearchPhotonButton['value']=('Mg 1253.6(eV)','Al 1486.7(eV)','Ag 2984.3(eV)','Cr 5414.9(eV)','Ga 9251.74(eV)','No selection')
     selectSearchPhotonButton.current(5)
     searchOrLabel=tkinter.Label(root,text='or')
     searchInputEntry=tkinter.Entry(root,width=10)
     
-    
     selectTranCoreV=tkinter.IntVar()
     selectEnergyV=tkinter.IntVar()
+
+    
+    '''user needs to select or input photon energy with 3 conditions:
+    1. Select Auger and search by binding energies
+    2. Select core state and search by kinetic energies
+    3. select search both'''
     def _click_tran_core_radiobutton(selectTranCoreV,selectEnergyV,selectSearchPhotonButton,searchOrLabel,searchInputEntry):
         if selectTranCoreV.get()==3:
             selectSearchPhotonButton.place(relx=490/1000,rely=48.5/680)
@@ -2126,6 +2108,7 @@ def root_window():
     sep1 = ttk.Separator(root, orient='vertical')
     sep1.place(relx=0.3, rely=0.05, relheight=0.1, relwidth=0.0005)
     
+    #select elements for search function
     def _click_elements_checkbutton(element,elementArray):
         elementArray.append(element)
         elementArray=sorted(elementArray)
@@ -2144,6 +2127,7 @@ def root_window():
         global uniqueArray
         uniqueArray=newArray
         
+    #select elements for plot function    
     def _click_elements_checkbutton2(element,elementArray2):
         elementArray2.append(element)
         elementArray2=sorted(elementArray2)
@@ -2162,8 +2146,9 @@ def root_window():
         global uniqueArray2
         uniqueArray2=newArray
     
-    #function of select elements
-    def _click_select_elements(root,searchFunction,plotFunction):              
+    #click search elements
+    def _click_select_elements(root,searchFunction,plotFunction): 
+        #click clear button for search function    
         def _click_clear_elements_button(elementArray,elementBox):
             for number in elementBox:
                 elementBox[number].deselect()
@@ -2171,6 +2156,7 @@ def root_window():
             for element in uniqueArray:
                 _click_elements_checkbutton(element,elementArray)
                 
+        #click clear button for plot function         
         def _click_clear_elements_button2(elementArray2,elementBox):
             for number in elementBox:
                 elementBox[number].deselect()
@@ -2178,7 +2164,6 @@ def root_window():
             for element in uniqueArray2:
                 _click_elements_checkbutton2(element,elementArray2)
             
-      
         selectAtomWindow=tkinter.Tk()
         selectAtomWindow.geometry("1200x300")
         selectAtomWindow.title('Select Elements')
@@ -2193,7 +2178,8 @@ def root_window():
         H_Label.place(x=20,y=10)
         He_Label=tkinter.Label(selectAtomWindow,text='2 He')
         He_Label.place(x=1125,y=10)
-        #print(uniqueArray2)           
+        
+        #organize the check button 
         for number in number_name:
             v=tkinter.IntVar()
             atomName=number_name[number]      
@@ -2299,7 +2285,7 @@ def root_window():
             searchOrLabel.place_forget()
             searchInputEntry.place_forget()
     
-    #selectEnergyV=tkinter.IntVar()
+  
     keRadiobutton=tkinter.Radiobutton(root,text='by kinetic energies',value=1,variable=selectEnergyV,command=lambda: _select_ke_be_radionbutton(selectTranCoreV,selectEnergyV,selectSearchPhotonButton,searchOrLabel,searchInputEntry))
     keRadiobutton.place(relx=530/1000,rely=1/680)
     beRadiobutton=tkinter.Radiobutton(root,text='by binding energies',value=2,variable=selectEnergyV,command=lambda: _select_ke_be_radionbutton(selectTranCoreV,selectEnergyV,selectSearchPhotonButton,searchOrLabel,searchInputEntry))
@@ -2308,13 +2294,15 @@ def root_window():
     searchButton=tkinter.Button(root,text='Search',bg='Orange',command=lambda: click_search_button(root, searchFromEntry,searchToEntry,selectTranCoreV,selectAtomV,selectEnergyV,selectSearchPhotonButton,searchInputEntry))
     searchButton.place(relx=685/1000,rely=10/680)
     
-    def _click_clear_search_button(searchFromEntry,searchToEntry,selectTranCoreV,selectAtomV,selectEnergyV,selectSearchPhotonButton,searchInputEntry,selectAtomButton):
+    #click clear button for search function
+    def _click_clear_search_button(searchFromEntry,searchToEntry,selectTranCoreV,selectAtomV,selectEnergyV,selectSearchPhotonButton,searchInputEntry,selectAtomButton,searchOrLabel):
         selectAtomButton.place_forget()
         searchFromEntry.delete(0,'end')
         searchToEntry.delete(0,'end')
         selectTranCoreV.set(0)
         selectAtomV.set(0)
         selectEnergyV.set(0)
+        searchOrLabel.place_forget()
         selectSearchPhotonButton.place_forget()
         searchInputEntry.place_forget()
         global uniqueArray
@@ -2322,37 +2310,39 @@ def root_window():
             _click_elements_checkbutton(element,elementArray)
         uniqueArray=[]
   
-    clearSearchButton=tkinter.Button(root,text='Clear',command=lambda: _click_clear_search_button(searchFromEntry,searchToEntry,selectTranCoreV,selectAtomV,selectEnergyV,selectSearchPhotonButton,searchInputEntry,selectSearchAtomButton))
+    clearSearchButton=tkinter.Button(root,text='Clear',command=lambda: _click_clear_search_button(searchFromEntry,searchToEntry,selectTranCoreV,selectAtomV,selectEnergyV,selectSearchPhotonButton,searchInputEntry,selectSearchAtomButton,searchOrLabel))
     clearSearchButton.place(relx=750/1000,rely=10/680)
     
     #citation label
     citationLabel1=tkinter.Label(root,text='The listed core level binding energy values are taken from the following reference and were used to compute all possible Auger transition energies:')
-    citationLabel1.place(relx=70/1000,rely=555/680)
+    citationLabel1.place(relx=70/1000,rely=540/680)
     citationLabel2=tkinter.Label(root,text='[1] S.T.Perkins, D.E.Cullen, et al.,')
-    citationLabel2.place(relx=70/1000,rely=575/680)   
+    citationLabel2.place(relx=70/1000,rely=560/680)   
     citationLabel3=tkinter.Label(root,text='Tables and Graphs of Atomic Subshell and Relaxation Data Derived from the LLNL Evaluated Atomic Data Library (EADL),', fg='blue',font=('Times',10,'italic'))
-    citationLabel3.place(relx=260/1000,rely=575/680)
+    citationLabel3.place(relx=260/1000,rely=560/680)
     citationLabel4=tkinter.Label(root,text='Z = 1--100', fg='blue',font=('Times',10,'italic'))
-    citationLabel4.place(relx=70/1000,rely=595/680)
+    citationLabel4.place(relx=70/1000,rely=580/680)
     citationLabel5=tkinter.Label(root,text='Lawrence Livermore National Laboratory, UCRL-50400, Vol. 30,')
-    citationLabel5.place(relx=135/1000,rely=595/680)
+    citationLabel5.place(relx=135/1000,rely=580/680)
     def _open_EADL_url(event):
        webbrowser.open("https://www.osti.gov/biblio/10121422-tables-graphs-atomic-subshell-relaxation-data-derived-from-llnl-evaluated-atomic-data-library-eadl", new=0)    
     citationLabel3.bind("<Button-1>", _open_EADL_url)
     citationLabel4.bind("<Button-1>", _open_EADL_url)
     
     citationLabel6=tkinter.Label(root,text='The digitised version [2] of the Scofield tabulated data [3] was implemented to scale the intensity of the core lines in the plotting function:')
-    citationLabel6.place(relx=70/1000,rely=615/680)
+    citationLabel6.place(relx=70/1000,rely=600/680)
     citationLabel7=tkinter.Label(root,text='[2] C. Kalha, N. K. Fernando, A. Regoutz,')
-    citationLabel7.place(relx=70/1000,rely=635/680)
+    citationLabel7.place(relx=70/1000,rely=620/680)
     citationLabel8=tkinter.Label(root,text='Digitisation of Scofield Photoionisation Cross Section Tabulated Data, 2020, figshare, Dataset',fg='blue',font=('Times',10,'italic'))
-    citationLabel8.place(relx=306/1000,rely=635/680)
+    citationLabel8.place(relx=306/1000,rely=620/680)
     citationLabel9=tkinter.Label(root,text='[3] J.H. Scofield,')
-    citationLabel9.place(relx=70/1000,rely=655/680)
+    citationLabel9.place(relx=70/1000,rely=640/680)
     citationLabel10=tkinter.Label(root,text='Theoretical photoionization cross sections from 1 to 1500 keV,',fg='blue',font=('Times',10,'italic'))
-    citationLabel10.place(relx=165/1000,rely=655/680)
+    citationLabel10.place(relx=165/1000,rely=640/680)
     citationLabel11=tkinter.Label(root,text='Technical Report UCRL-51326, Lawrence Livermore Laboratory, 1973')
-    citationLabel11.place(relx=509/1000,rely=655/680)
+    citationLabel11.place(relx=509/1000,rely=640/680)
+    citationLabel12=tkinter.Label(root,text='See README documentation for further information.')
+    citationLabel12.place(relx=70/1000,rely=660/680)
     def _open_figshare_url(event):
         webbrowser.open("https://doi.org/10.6084/m9.figshare.12967079.v1", new=0) 
     citationLabel8.bind("<Button-1>", _open_figshare_url)
@@ -2360,7 +2350,7 @@ def root_window():
         webbrowser.open("https://doi.org/10.2172/4545040", new=0)
     citationLabel10.bind("<Button-1>", _open_scorfield_url)
 
-    #components of plot function
+    #click import file button for plot function
     def _click_import_file_button(root,showPlotPathText):
         global importFilePath
         importFilePath=askopenfilename(parent=root)
@@ -2390,6 +2380,7 @@ def root_window():
         else:
             pass
         
+    #components of plot function    
     showPlotPathText=tkinter.Entry(root,state='readonly')
     showPlotPathText.place(relx=140/1000,rely=160/680)   
     importFileButton=tkinter.Button(root,text='Import File (.txt or .csv)',bg='Pink',command=lambda: _click_import_file_button(root,showPlotPathText))
@@ -2426,10 +2417,7 @@ def root_window():
     plotButton.place(relx=565/1000,rely=100/680)
     clearPathButton=tkinter.Button(root,text='Clear',width=5,command=lambda: _click_plot_clear_button(showPlotPathText,selectPlotPhotonButton,plotXV))
     clearPathButton.place(relx=565/1000,rely=155/680)
-    
-    
-    
-    
+
     root.mainloop()
 
 
@@ -2441,8 +2429,7 @@ if __name__ == "__main__":
     uniqueArray=[]
     elementArray2=[]
     uniqueArray2=[]
-    importFilePath=''
-    
+    importFilePath=''   
     sortOrder='by_number'
     
     root_window()
