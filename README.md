@@ -125,7 +125,7 @@ Group: Applied X-ray Spectroscopy (https://a-x-s.org/group/)
 Author: Lu Liu  
 Supervisor: Anna Regoutz, Curran Kalha  
 Institution: University College London  
-Contact: Liulu199807@hotmail.com
+Contact: Liulu199807@hotmail.com  
 The icon is designed by Curran Kalha
 
 version: 1.0 26/08/2021
