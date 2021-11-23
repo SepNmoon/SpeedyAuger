@@ -1,0 +1,15 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: SpeedyAuger
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - given-names: Lu
+    family-names: Liu
+    email: Liulu199807@hotmail.com
+version: '1.0'
+date-released: '2021-08-26'
